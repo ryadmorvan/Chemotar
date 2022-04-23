@@ -14,14 +14,14 @@ sf::Texture image;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML Works");
+	sf::RenderWindow window(sf::VideoMode(1280, 720), "Chemical Properties Calculator");
 	ImGui::SFML::Init(window);
 	std::string fname = "NULL";
 	std::string species;
 	double temperature1 = 0;
 	double temperature2 = 0;
-	std::cout << "Type out the species name: ";
-	std::cin >> species;
+	//std::cout << "Type out the species name: ";
+	//std::cin >> species;
 	std::cout << "Type out the species reference temperature: ";
 	std::cin >> temperature1;
 	std::cout << "Type out the spcies final temperature: ";
@@ -33,7 +33,7 @@ int main()
 	std::string line, word;
 
 	std::fstream file;
-
+	bool tableLoaded = 0;
 	bool CheckBox[3] = { 0, 0, 0 };
 	std::stringstream results;
 	std::string finalResult = "NULL";
@@ -44,35 +44,28 @@ int main()
 	sf::Sprite backgroundtexture;
 	backgroundtexture.setTexture(image);
 
-		while (window.isOpen())
+	while (window.isOpen())
+	{
+		sf::Event event;
+		window.draw(backgroundtexture);
+		while (window.pollEvent(event))
 		{
-			sf::Event event;
-			window.draw(backgroundtexture);
-			while (window.pollEvent(event))
-			{
-				ImGui::SFML::ProcessEvent(event);
-				if (event.type == sf::Event::Closed)
-					window.close();
-			}
-			ImGui::SFML::Update(window, deltaClock.restart());
+			ImGui::SFML::ProcessEvent(event);
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+		ImGui::SFML::Update(window, deltaClock.restart());
 
-			ImGui::Begin("Chemical Enthalpy Calculation");
-			CheckBoxUI(CheckBox, fname);
+		ImGui::Begin("Chemical Enthalpy Calculation");
 
-
-
-
-
-
-
-
+		if (CheckBoxUI(CheckBox, fname, file, species))
+		{
 			if (ImGui::Button("Calculate"))
 			{
 				results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
 				std::getline(results, finalResult);
 			}
-
-
+		}
 
 
 
