@@ -19,7 +19,7 @@ double EnthalpyEvolved(double coeff1, double coeff2, double coeff3, double coeff
 	return Enthalpy;
 }
 
-std::stringstream CalculateEnthalpy(std::string& species, double& temperature1, double& temperature2, std::fstream& file, std::string& line, std::string& word, std::string fname)
+std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, float& temperature2, std::fstream& file, std::string& line, std::string& word, std::string fname)
 {
 	file.open(fname, std::ios::in);
 	std::stringstream finalResult;
