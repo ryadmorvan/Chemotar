@@ -34,12 +34,14 @@ int main()
 	ImGui::SFML::UpdateFontTexture();
 	std::stringstream results;
 	std::string finalResult = "";
-	if (!image.loadFromFile("color.jpg"))
+	if (!image.loadFromFile("Assets\\color.tga"))
 	{
 		std::cout << "Error" << std::endl;
 	}
 	sf::Sprite backgroundtexture;
 	backgroundtexture.setTexture(image);
+	bool ShowDeveloperInfo = 1;
+	window.setFramerateLimit(60);
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -54,8 +56,15 @@ int main()
 
 
 
-
-
+		ImGui::PushFont(font2);
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("Developer"))
+			{
+				ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
+			}
+		}
+		ImGui::PopFont();
 		//Chemical Enthalpy Calculation Window
 		ImGui::PushFont(font);
 		ImGui::Begin("Chemical Enthalpy Calculation");
@@ -84,14 +93,17 @@ int main()
 
 
 		//Developer Window
-		ImGui::PushFont(font2);
-		ImGui::Begin("Developer");
-		ImGui::Text("Designed and Developed By Riyadh Al-Khamees\n");
-		ImGui::Text("Email: riyadhalkhamees@gmail.com\n");
-		ImGui::Text("Github: https://github.com/ryadmorvan\n\n");
-		ImGui::Text("Credits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike");
-		ImGui::PopFont();
-		ImGui::End();
+		if (ShowDeveloperInfo)
+		{
+			ImGui::PushFont(font2);
+			ImGui::Begin("Developer");
+			ImGui::Text("Designed and Developed By Riyadh Al-Khamees\n");
+			ImGui::Text("Email: riyadhalkhamees@gmail.com\n");
+			ImGui::Text("Github: https://github.com/ryadmorvan\n\n");
+			ImGui::Text("Credits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike");
+			ImGui::End();
+			ImGui::PopFont();
+		}
 
 		//window.clear(sf::Color::Color(176, 216, 30));
 		ImGui::SFML::Render(window);

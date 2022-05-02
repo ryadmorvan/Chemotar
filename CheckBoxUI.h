@@ -107,7 +107,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 	const int vectorSize = ChemicalsVector.size();
 	if (CheckBox[0] && ((CheckBox[1] == 0) && (CheckBox[2] == 0)))
 	{
-		fname = "ElliotLiquid.csv";
+		fname = "Empirical Tables\\ElliotLiquid.csv";
 		static int ChemicalSpecie = 0;
 
 		if (TabeLoaded == 0)
@@ -126,12 +126,11 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 		specie = ChemicalsVector.at(ChemicalSpecie);
 		tempMin = TempRange.at(ChemicalSpecie).min;
 		tempMax = TempRange.at(ChemicalSpecie).max;
-
 		return 1;
 	}
 	else if (CheckBox[1] && ((CheckBox[0] == 0) && (CheckBox[2] == 0)))
 	{
-		fname = "GasEnthalpy.csv";
+		fname = "Empirical Tables\\GasEnthalpy.csv";
 		static int ChemicalSpecie = 0;
 		if (TabeLoaded == 0)
 		{
@@ -153,7 +152,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 	}
 	else if (CheckBox[2] && ((CheckBox[1] == 0) && (CheckBox[0] == 0)))
 	{
-		fname = "LiquidEnthalpy.csv";
+		fname = "Empirical Tables\\LiquidEnthalpy.csv";
 		static int ChemicalSpecie = 0;
 		if (TabeLoaded == 0)
 		{
