@@ -28,9 +28,10 @@ int main()
 	std::fstream file;
 	bool tableLoaded = 0;
 	bool CheckBox[3] = { 0, 0, 0 };
+	float fontSize = 16;
 	ImGuiIO& io = ImGui::GetIO();
-	ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16);
-	ImFont* font2 = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 18);
+	ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
+	ImFont* font2 = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
 	ImGui::SFML::UpdateFontTexture();
 	std::stringstream results;
 	std::string finalResult = "";
@@ -41,6 +42,7 @@ int main()
 	sf::Sprite backgroundtexture;
 	backgroundtexture.setTexture(image);
 	bool ShowDeveloperInfo = 1;
+	bool FontSettings = 0;
 	window.setFramerateLimit(60);
 	while (window.isOpen())
 	{
@@ -62,6 +64,7 @@ int main()
 			if (ImGui::BeginMenu("Developer"))
 			{
 				ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
+				ImGui::MenuItem("Font Size", NULL, &FontSettings);
 			}
 		}
 		ImGui::PopFont();
@@ -87,7 +90,16 @@ int main()
 		ImGui::End();
 
 
-
+		if (FontSettings)
+		{
+			ImGui::PushFont(font2);
+			ImGui::Begin("Settings");
+			ImGui::InputFloat("Input the size of the font", &fontSize);
+			ImGui::SliderFloat("Font Size:", &fontSize, 16, 32);
+			font->FontSize = fontSize;
+			font2->FontSize = fontSize;
+			ImGui::PopFont();
+		}
 
 
 

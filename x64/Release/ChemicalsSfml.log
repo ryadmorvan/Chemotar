@@ -1,18 +1,12 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (ChemicalsSfml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  imgui-SFML.cpp
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\imgui\imgui-SFML.cpp(559,67): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\imgui\imgui-SFML.cpp(559,48): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-  imgui.cpp
-  imgui_draw.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
   Source.cpp
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(51,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(52,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(107,47): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(107,47): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
   Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 1924 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  1 of 1924 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    20 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ChemicalsSfml.vcxproj -> C:\Users\riyad\source\repos\Chemicals\x64\Release\Chemical Properties Calculator.exe
