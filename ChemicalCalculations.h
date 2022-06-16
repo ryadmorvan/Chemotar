@@ -19,6 +19,23 @@ double EnthalpyEvolved(double coeff1, double coeff2, double coeff3, double coeff
 	return Enthalpy;
 }
 
+double HeatCapacity(double coeff1, double coeff2, double coeff3, double coeff4, double coeff5, double temperature1)
+{
+	double HeatCapacity = 0;
+	HeatCapacity = coeff1 + coeff2 * temperature1 + coeff3 * pow(temperature1, 2) + coeff4 * pow(temperature1, 3) + coeff5 * pow(temperature1, 4);
+	return HeatCapacity;
+}
+
+std::string insertInfo(std::stringstream &results, std::string &finalResult)
+{
+	std::string placeholder;
+	while (std::getline(results, placeholder))
+	{
+		finalResult.append(placeholder);
+		finalResult.append("\n");
+	}
+}
+
 std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, float& temperature2, std::fstream& file, std::string& line, std::string& word, std::string fname)
 {
 	file.open(fname, std::ios::in);
@@ -75,7 +92,10 @@ std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, f
 		}
 		std::cout << "Coeff1: " << coeff1 << " Coeff2: " << coeff2 << " Coeff3: " << coeff3 << " Coeff4: " << coeff4 << " Coeff5: " << coeff5 << std::endl;
 		std::cout << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
+		std::cout << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << std::endl;
 		finalResult << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
+		finalResult << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << " J/Mol*K" << std::endl;
+		finalResult << "Heat Capacity at (" << temperature2 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature2) << " J/Mol*K" << std::endl;
 	}
 	else
 		finalResult << "Could not open file" << std::endl;
@@ -83,4 +103,16 @@ std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, f
 	
 	file.close();
 	return finalResult;
+}
+
+void ShowInfo(ImFont* font2)
+{
+	ImGui::PushFont(font2);
+	ImGui::Begin("Developer");
+	ImGui::Text("Designed and Developed By Riyadh Al-Khamees\n");
+	ImGui::Text("Email: riyadhalkhamees@gmail.com\n");
+	ImGui::Text("Github: https://github.com/ryadmorvan\n\n");
+	ImGui::Text("Credits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike");
+	ImGui::End();
+	ImGui::PopFont();
 }

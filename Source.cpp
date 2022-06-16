@@ -64,13 +64,13 @@ int main()
 			if (ImGui::BeginMenu("Developer"))
 			{
 				ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
-				ImGui::MenuItem("Font Size", NULL, &FontSettings);
+				//ImGui::MenuItem("Font Size", NULL, &FontSettings);
 			}
 		}
 		ImGui::PopFont();
 		//Chemical Enthalpy Calculation Window
 		ImGui::PushFont(font);
-		ImGui::Begin("Chemical Enthalpy Calculation");
+		ImGui::Begin("Physical Properties Calculation");
 		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp))
 		{
 			ImGui::InputFloat("Input Inital Temperature", &temperature1);
@@ -80,26 +80,29 @@ int main()
 
 			if (ImGui::Button("Calculate"))
 			{
+				finalResult.clear();
 				results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
-				std::getline(results, finalResult);
+				insertInfo(results, finalResult);
 			}
 		}
+		else
+			finalResult.clear();
 			
 		ImGui::Text(finalResult.c_str());
 		ImGui::PopFont();
 		ImGui::End();
 
 
-		if (FontSettings)
-		{
-			ImGui::PushFont(font2);
-			ImGui::Begin("Settings");
-			ImGui::InputFloat("Input the size of the font", &fontSize);
-			ImGui::SliderFloat("Font Size:", &fontSize, 16, 32);
-			font->FontSize = fontSize;
-			font2->FontSize = fontSize;
-			ImGui::PopFont();
-		}
+		//if (FontSettings)
+		//{
+		//	ImGui::PushFont(font2);
+		//	ImGui::Begin("Settings");
+		//	ImGui::InputFloat("Input the size of the font", &fontSize);
+		//	ImGui::SliderFloat("Font Size:", &fontSize, 16, 32);
+		//	font->FontSize = fontSize;
+		//	font2->FontSize = fontSize;
+		//	ImGui::PopFont();
+		//}
 
 
 
@@ -107,14 +110,7 @@ int main()
 		//Developer Window
 		if (ShowDeveloperInfo)
 		{
-			ImGui::PushFont(font2);
-			ImGui::Begin("Developer");
-			ImGui::Text("Designed and Developed By Riyadh Al-Khamees\n");
-			ImGui::Text("Email: riyadhalkhamees@gmail.com\n");
-			ImGui::Text("Github: https://github.com/ryadmorvan\n\n");
-			ImGui::Text("Credits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike");
-			ImGui::End();
-			ImGui::PopFont();
+			ShowInfo(font2);
 		}
 
 		//window.clear(sf::Color::Color(176, 216, 30));

@@ -178,6 +178,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 		specie = "";
 		tempMin = NULL;
 		tempMax = NULL;
+
 		return 0;
 	}
 	tempMin = NULL;
