@@ -13,6 +13,8 @@
 
 sf::Texture image;
 
+std::string filePath = " ";
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Chemical Properties Calculator");
@@ -66,12 +68,20 @@ int main()
 				ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
 				//ImGui::MenuItem("Font Size", NULL, &FontSettings);
 			}
+			if (ImGui::BeginMenu("Add"))
+			{
+				if (ImGui::MenuItem("Table", NULL))
+				{
+					_AddTable(filePath);
+				}
+
+			}
 		}
 		ImGui::PopFont();
 		//Chemical Enthalpy Calculation Window
 		ImGui::PushFont(font);
 		ImGui::Begin("Physical Properties Calculation");
-		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp))
+		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath))
 		{
 			ImGui::InputFloat("Input Inital Temperature", &temperature1);
 			ImGui::InputFloat("Input Final Temperature", &temperature2);

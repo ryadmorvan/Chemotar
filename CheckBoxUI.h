@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <Windows.h>
+#include <ShObjIdl.h>
 #include <vector>
 #include <fstream>
 #include <imgui.h>
@@ -8,7 +10,38 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 #include <map>
+#include <algorithm>
 #include "ChemicalCalculations.h"
+#include "Windows_FileHandling.h"
+
+
+
+bool _AddTable(std::string &filePath)
+{
+	bool result = FALSE;
+	std::string sSelectedFile;
+	std::string sFilePath;
+	result = _openFile(sSelectedFile, sFilePath);
+	std::replace(sFilePath.begin(), sFilePath.end(), '\\', '/');
+	filePath = sFilePath;
+	if (result)
+	{
+		std::cout << "File name:" << sSelectedFile << " File Path: " << sFilePath << " " << std::endl;
+	}
+	else
+		std::cout << "Failed to Open" << std::endl;
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 struct TemperatureRange
@@ -97,7 +130,7 @@ std::vector<std::string> loadTableNames(std::string fname, std::fstream& file)
 }
 
 bool TabeLoaded = 0;
-bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::string &specie, float &tempMin, float &tempMax)
+bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::string &specie, float &tempMin, float &tempMax, std::string &filePath)
 {
 	ImGui::Checkbox("Elliot Liquid", &CheckBox[0]);
 	ImGui::Checkbox("Gas Enthalpy", &CheckBox[1]);
@@ -107,7 +140,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 	const int vectorSize = ChemicalsVector.size();
 	if (CheckBox[0] && ((CheckBox[1] == 0) && (CheckBox[2] == 0)))
 	{
-		fname = "Empirical Tables\\ElliotLiquid.csv";
+		fname = "C:/Users/riyad/source/repos/Chemicals/ChemicalsSfml/Empirical Tables/ElliotLiquid.csv";
 		static int ChemicalSpecie = 0;
 
 		if (TabeLoaded == 0)
@@ -130,7 +163,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 	}
 	else if (CheckBox[1] && ((CheckBox[0] == 0) && (CheckBox[2] == 0)))
 	{
-		fname = "Empirical Tables\\GasEnthalpy.csv";
+		fname = "C:\\Users\\riyad\\source\\repos\\Chemicals\\ChemicalsSfml\\Empirical Tables\\GasEnthalpy.csv";
 		static int ChemicalSpecie = 0;
 		if (TabeLoaded == 0)
 		{
@@ -152,7 +185,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 	}
 	else if (CheckBox[2] && ((CheckBox[1] == 0) && (CheckBox[0] == 0)))
 	{
-		fname = "Empirical Tables\\LiquidEnthalpy.csv";
+		fname = "C:\\Users\\riyad\\source\\repos\\Chemicals\\ChemicalsSfml\\Empirical Tables\\LiquidEnthalpy.csv";
 		static int ChemicalSpecie = 0;
 		if (TabeLoaded == 0)
 		{
@@ -184,3 +217,20 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 	tempMin = NULL;
 	tempMax = NULL;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
