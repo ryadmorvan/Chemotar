@@ -27,6 +27,15 @@ bool _AddTable(std::string &filePath)
 	if (result)
 	{
 		std::cout << "File name:" << sSelectedFile << " File Path: " << sFilePath << " " << std::endl;
+		std::fstream outfile("save.ini", std::fstream::in | std::fstream::out | std::fstream::app);
+		if (_Find_File(sSelectedFile))
+		{
+			sSelectedFile.append("\n");
+			sFilePath.append("\n");
+			outfile.write(sSelectedFile.data(), sSelectedFile.size());
+			outfile.write(sFilePath.data(), sFilePath.size());
+		}
+		outfile.close();
 	}
 	else
 		std::cout << "Failed to Open" << std::endl;
@@ -50,7 +59,7 @@ struct TemperatureRange
 	float max = 0;
 };
 
-std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::map<int, TemperatureRange> &TempRange)
+std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::map<int, TemperatureRange> &TempRange, int &vectorSize)
 {
 	std::string word, line;
 	std::vector<std::string> Chemicals;
@@ -85,6 +94,7 @@ std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::m
 			TempRange[iterateMap].min = min;
 			++iterateMap;
 		}
+		vectorSize = iterateMap;
 		//for (int i = 0; i < Chemicals.size(); ++i)
 		//{
 		//	std::cout << Chemicals.at(i) << std::endl;
@@ -129,16 +139,112 @@ std::vector<std::string> loadTableNames(std::string fname, std::fstream& file)
 	return Chemicals;
 }
 
-bool TabeLoaded = 0;
-bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::string &specie, float &tempMin, float &tempMax, std::string &filePath)
+
+
+void _LoadTables(std::vector<std::string>& TableNames, std::vector<std::string> &TablePaths, std::fstream& SaveFile)
 {
-	ImGui::Checkbox("Elliot Liquid", &CheckBox[0]);
-	ImGui::Checkbox("Gas Enthalpy", &CheckBox[1]);
-	ImGui::Checkbox("Liquid Enthalpy", &CheckBox[2]);
+	int count = 0;
+	std::string line;
+	while (std::getline(SaveFile, line))
+	{
+		if (count % 2 == 0)
+		{
+			TableNames.push_back(line);
+		}
+		else
+			TablePaths.push_back(line);
+		++count;
+	}
+}
+
+
+
+
+bool _TabeLoaded = 0;
+int _vectorSize = 0; //Vector Size for different files
+bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, float& tempMin, float& tempMax, std::string& filePath)
+{
+	std::vector<std::string> TableNames;
+	std::vector<std::string> TablePaths;
+	std::fstream SaveFile;
+	SaveFile.open("save.ini", std::ios::in);
+	_LoadTables(TableNames, TablePaths, SaveFile);
+
+	int _countNumberofBools = 0;
+	for (int i = 0; i < TableNames.size(); ++i)
+	{
+		ImGui::Checkbox(TableNames.at(i).c_str(), &CheckBox[i]);
+		if (CheckBox[i] == 0)
+		{
+			_countNumberofBools++;
+		}
+	}
+	if (_countNumberofBools == TableNames.size())
+	{
+		_TabeLoaded = 0;
+	}
+	SaveFile.close();
+
 	static std::vector<std::string> ChemicalsVector;
 	static std::map<int, TemperatureRange> TempRange;
-	const int vectorSize = ChemicalsVector.size();
-	if (CheckBox[0] && ((CheckBox[1] == 0) && (CheckBox[2] == 0)))
+
+
+
+	for (int i = 0; i < TableNames.size(); ++i)
+	{
+		if (CheckBox[i])
+		{
+			fname = TablePaths.at(i);
+			static int ChemicalSpecie = 0;
+			if (_TabeLoaded == 0)
+			{
+				ChemicalsVector = loadTable(fname, file, TempRange, _vectorSize);
+				_TabeLoaded = 1;
+			}
+				
+			static const char* current_item = "Choose";
+
+			if (ImGui::BeginCombo("Chemicals", current_item)) // The second parameter is the label previewed before opening the combo.
+			{
+				for (int n = 0; n < _vectorSize; n++)
+				{
+					bool is_selected = (current_item == ChemicalsVector.at(n).c_str()); // You can store your selection however you want, outside or inside your objects
+					if (ImGui::Selectable(ChemicalsVector.at(n).c_str(), is_selected))
+					{
+						current_item = ChemicalsVector.at(n).c_str();
+						specie = ChemicalsVector.at(n);
+						tempMax = TempRange.at(n).max;
+						tempMin = TempRange.at(n).min;
+						return 1;
+					}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+				}
+				ImGui::EndCombo();
+			}
+
+			return 1;
+		}
+		else
+		{
+			//_TabeLoaded = 0;
+			//break;
+			//memset(CheckBox, NULL, sizeof(CheckBox));
+			//std::cout << "Table didn't load properly" << std::endl;
+		}
+
+	}
+
+	return 0;
+
+
+
+
+
+
+
+
+	/*if (CheckBox[0] && ((CheckBox[1] == 0) && (CheckBox[2] == 0)))
 	{
 		fname = "C:/Users/riyad/source/repos/Chemicals/ChemicalsSfml/Empirical Tables/ElliotLiquid.csv";
 		static int ChemicalSpecie = 0;
@@ -215,13 +321,8 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream &file, std::str
 		return 0;
 	}
 	tempMin = NULL;
-	tempMax = NULL;
+	tempMax = NULL;*/
 }
-
-
-
-
-
 
 
 

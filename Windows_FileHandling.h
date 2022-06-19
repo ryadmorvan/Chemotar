@@ -72,3 +72,33 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 	}
 	return str;
 }
+
+bool _Find_File(std::string &name)
+{
+	std::string line;
+	std::ifstream file;
+	file.open("save.ini", std::ios::in);
+	while (std::getline(file, line))
+	{
+		if (line == name)
+		{
+			return 0;
+			file.close();
+		}
+	}
+	file.close();
+	return 1;
+}
+
+int _Tables_Count()
+{
+	std::ifstream file;
+	std::string placeholder;
+	int count = 0;
+	file.open("save.ini", std::ios::in);
+	while (std::getline(file, placeholder))
+	{
+		++count;
+	}
+	return count / 2;
+}

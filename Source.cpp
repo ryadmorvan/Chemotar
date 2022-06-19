@@ -29,7 +29,8 @@ int main()
 	std::string line, word;
 	std::fstream file;
 	bool tableLoaded = 0;
-	bool CheckBox[3] = { 0, 0, 0 };
+	bool CheckBox[50];
+	memset(CheckBox, 0, sizeof(CheckBox));
 	float fontSize = 16;
 	ImGuiIO& io = ImGui::GetIO();
 	ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
@@ -103,6 +104,12 @@ int main()
 		ImGui::End();
 
 
+
+
+
+
+
+
 		//if (FontSettings)
 		//{
 		//	ImGui::PushFont(font2);
@@ -114,7 +121,11 @@ int main()
 		//	ImGui::PopFont();
 		//}
 
-
+		//ImGui::Begin("Chemical Properties Calculation");
+		//ImGui::Checkbox("Elliot Liquid", &CheckBox[0]);
+		//ImGui::Checkbox("Gas Enthalpy", &CheckBox[1]);
+		//ImGui::Checkbox("Liquid Enthalpy", &CheckBox[2]);
+		//ImGui::End();
 
 
 		//Developer Window
