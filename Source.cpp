@@ -10,14 +10,18 @@
 #include <SFML/Graphics.hpp>
 #include "ChemicalCalculations.h"
 #include "CheckBoxUI.h"
+#include "Graphics Simulation.h"
+
 
 sf::Texture image;
 
 std::string filePath = " ";
 
+bool p_open = true;
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "Chemical Properties Calculator");
+	sf::RenderWindow window(sf::VideoMode(1280, 768), "Chemical Properties Calculator");
 	ImGui::SFML::Init(window);
 	std::string fname = "";
 	std::string species;
@@ -29,7 +33,7 @@ int main()
 	std::string line, word;
 	std::fstream file;
 	bool tableLoaded = 0;
-	bool CheckBox[50];
+	bool CheckBox[150];
 	memset(CheckBox, 0, sizeof(CheckBox));
 	float fontSize = 16;
 	ImGuiIO& io = ImGui::GetIO();
@@ -43,10 +47,24 @@ int main()
 		std::cout << "Error" << std::endl;
 	}
 	sf::Sprite backgroundtexture;
-	backgroundtexture.setTexture(image);
-	bool ShowDeveloperInfo = 1;
+	backgroundtexture.setTexture(image); 
+
+
+	//Flags of windows
+	bool ShowDeveloperInfo = FALSE;
+	bool ShowPropertiesCalculator = FALSE;
 	bool FontSettings = 0;
 	window.setFramerateLimit(60);
+
+
+
+
+
+	//Rectangle Properties
+	////////////////////////////////////////
+
+
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -64,51 +82,66 @@ int main()
 		ImGui::PushFont(font2);
 		if (ImGui::BeginMainMenuBar())
 		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Add Table", NULL))
+				{
+					_AddTable(filePath);
+				}
+				ImGui::EndMenu();
+
+			}
+			if (ImGui::BeginMenu("View"))
+			{
+				if (ImGui::MenuItem("Chemical Properties Calculator", NULL, &ShowPropertiesCalculator))
+				{
+
+				}
+				ImGui::EndMenu();
+			}
 			if (ImGui::BeginMenu("Developer"))
 			{
 				ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
 				//ImGui::MenuItem("Font Size", NULL, &FontSettings);
-			}
-			if (ImGui::BeginMenu("Add"))
-			{
-				if (ImGui::MenuItem("Table", NULL))
-				{
-					_AddTable(filePath);
-				}
-
+				ImGui::EndMenu();
 			}
 		}
 		ImGui::PopFont();
 		//Chemical Enthalpy Calculation Window
-		ImGui::PushFont(font);
-		ImGui::Begin("Physical Properties Calculation");
-		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath))
+		if (ShowPropertiesCalculator == TRUE)
 		{
-			ImGui::InputFloat("Input Inital Temperature", &temperature1);
-			ImGui::InputFloat("Input Final Temperature", &temperature2);
-			ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
-			ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
-
-			if (ImGui::Button("Calculate"))
+			ImGui::PushFont(font);
+			ImGui::Begin("Physical Properties Calculation", &ShowPropertiesCalculator);
+			if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath))
 			{
-				finalResult.clear();
-				results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
-				insertInfo(results, finalResult);
+				ImGui::InputFloat("Input Inital Temperature", &temperature1);
+				ImGui::InputFloat("Input Final Temperature", &temperature2);
+				ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
+				ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
+
+				if (ImGui::Button("Calculate"))
+				{
+					finalResult.clear();
+					results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
+					insertInfo(results, finalResult);
+				}
 			}
+			else
+				finalResult.clear();
+
+			ImGui::Text(finalResult.c_str());
+			ImGui::PopFont();
+			ImGui::End();
 		}
-		else
-			finalResult.clear();
-			
-		ImGui::Text(finalResult.c_str());
+		
+
+
+
+
+
+		ImGui::PushFont(font);
+		ShowExampleAppCustomRendering(&p_open);
 		ImGui::PopFont();
-		ImGui::End();
-
-
-
-
-
-
-
 
 		//if (FontSettings)
 		//{
@@ -126,7 +159,6 @@ int main()
 		//ImGui::Checkbox("Gas Enthalpy", &CheckBox[1]);
 		//ImGui::Checkbox("Liquid Enthalpy", &CheckBox[2]);
 		//ImGui::End();
-
 
 		//Developer Window
 		if (ShowDeveloperInfo)

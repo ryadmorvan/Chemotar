@@ -102,3 +102,37 @@ int _Tables_Count()
 	}
 	return count / 2;
 }
+
+void replace_all(
+	std::string& s,
+	std::string const& toReplace,
+	std::string const& replaceWith
+) {
+	std::ostringstream oss;
+	std::size_t pos = 0;
+	std::size_t prevPos = pos;
+
+	while (true) {
+		prevPos = pos;
+		pos = s.find(toReplace, pos);
+		if (pos == std::string::npos)
+			break;
+		oss << s.substr(prevPos, pos - prevPos);
+		oss << replaceWith;
+		pos += toReplace.size();
+	}
+
+	oss << s.substr(prevPos);
+	s = oss.str();
+}
+
+
+
+
+void _TableNamesCorrection(std::vector<std::string>& TableNames)
+{
+	for (auto& Table : TableNames)
+	{
+		replace_all(Table, ".csv", "");
+	}
+}

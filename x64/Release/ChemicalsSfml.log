@@ -1,7 +1,8 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (ChemicalsSfml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Piston.cpp
   Source.cpp
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(93,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(94,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(95,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(2584,23): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
           [
@@ -42,9 +43,8 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(51): 
               _Alloc=std::allocator<char>
           ]
   Generating code
-  Previous IPDB and IOBJ mismatch, fall back to full compilation.
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\ChemicalCalculations.h(37): warning C4715: 'insertInfo': not all control paths return a value
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(43): warning C4715: '_AddTable': not all control paths return a value
-  All 2020 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  3 of 2132 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    24 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ChemicalsSfml.vcxproj -> C:\Users\riyad\source\repos\Chemicals\x64\Release\Chemical Properties Calculator.exe

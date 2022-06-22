@@ -19,9 +19,9 @@
 bool _AddTable(std::string &filePath)
 {
 	bool result = FALSE;
-	std::string sSelectedFile;
-	std::string sFilePath;
-	result = _openFile(sSelectedFile, sFilePath);
+	std::string sSelectedFile; //Storing the file name
+	std::string sFilePath; //Stores the path
+	result = _openFile(sSelectedFile, sFilePath); //After opening the file the it will return boolean
 	std::replace(sFilePath.begin(), sFilePath.end(), '\\', '/');
 	filePath = sFilePath;
 	if (result)
@@ -30,6 +30,7 @@ bool _AddTable(std::string &filePath)
 		std::fstream outfile("save.ini", std::fstream::in | std::fstream::out | std::fstream::app);
 		if (_Find_File(sSelectedFile))
 		{
+			//Append changes to the file after opening it 
 			sSelectedFile.append("\n");
 			sFilePath.append("\n");
 			outfile.write(sSelectedFile.data(), sSelectedFile.size());
@@ -169,6 +170,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 	std::fstream SaveFile;
 	SaveFile.open("save.ini", std::ios::in);
 	_LoadTables(TableNames, TablePaths, SaveFile);
+	_TableNamesCorrection(TableNames);
 
 	int _countNumberofBools = 0;
 	for (int i = 0; i < TableNames.size(); ++i)
@@ -202,7 +204,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 				_TabeLoaded = 1;
 			}
 				
-			static const char* current_item = "Choose";
+			static const char* current_item = "";
 
 			if (ImGui::BeginCombo("Chemicals", current_item)) // The second parameter is the label previewed before opening the combo.
 			{
