@@ -2,7 +2,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <ShObjIdl.h>
-
+#include <iomanip>
 
 
 bool _openFile(std::string& sSelectedFile, std::string& sFilePath)
@@ -135,4 +135,24 @@ void _TableNamesCorrection(std::vector<std::string>& TableNames)
 	{
 		replace_all(Table, ".csv", "");
 	}
+}
+
+
+
+
+int _Round(double number)
+{
+	return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
+}
+
+std::string _Format(double f, int n)
+{
+	if (f == 0) {
+		return "0";
+	}
+	int d = (int)::ceil(::log10(f < 0 ? -f : f)); /*digits before decimal point*/
+	double order = ::pow(10., n - d);
+	std::stringstream ss;
+	ss << std::fixed << std::setprecision(std::max(n - d, 0)) << round(f * order) / order;
+	return ss.str();
 }
