@@ -17,7 +17,7 @@ sf::Texture image;
 
 std::string filePath = " ";
 
-bool p_open = true;
+bool p_open = 0;
 
 int main()
 {
@@ -47,12 +47,13 @@ int main()
 		std::cout << "Error" << std::endl;
 	}
 	sf::Sprite backgroundtexture;
-	backgroundtexture.setTexture(image); 
+	backgroundtexture.setTexture(image);
 
 
 	//Flags of windows
 	bool ShowDeveloperInfo = FALSE;
 	bool ShowPropertiesCalculator = FALSE;
+	bool ShowIdealGasLaw = FALSE;
 	bool FontSettings = 0;
 	window.setFramerateLimit(60);
 
@@ -97,6 +98,10 @@ int main()
 				{
 
 				}
+				if (ImGui::MenuItem("Ideal Gas Law Simulation", NULL, &ShowIdealGasLaw))
+				{
+
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Developer"))
@@ -127,11 +132,17 @@ int main()
 				}
 			}
 			else
-				finalResult.clear();
+			{
+				finalResult.clear(); species = "";
+			}
 
 			ImGui::Text(finalResult.c_str());
 			ImGui::PopFont();
 			ImGui::End();
+		}
+		else
+		{
+			temperature1 = 0, temperature2 = 0, memset(CheckBox, FALSE, sizeof(CheckBox));
 		}
 		
 
@@ -140,7 +151,11 @@ int main()
 
 
 		ImGui::PushFont(font);
-		ShowExampleAppCustomRendering(&p_open);
+		if (ShowIdealGasLaw == TRUE)
+		{
+			IdealGasLaw(&ShowIdealGasLaw);
+		}
+
 		ImGui::PopFont();
 
 		//if (FontSettings)

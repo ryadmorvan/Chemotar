@@ -22,8 +22,10 @@ public:
 	double moles;
 	double pressure;
 	double heat;
-	double HeatCapacity;
-	enum process {constant_pressure = 5, constant_volume = 6, constant_temperature = 7};
+	double HeatCapacityConstPressure;
+	double HeatCapacityConstVolume;
+	double work = 0;
+	enum process {Non = 0, constant_pressure = 5, constant_volume = 6, constant_temperature = 7, constant_heat = 8};
 	enum species { Air = 0 };
 public:
 	int Round(double number)
@@ -48,13 +50,15 @@ public:
 	{
 		if (specie == Piston::species::Air)
 		{
-			HeatCapacity = 29.19; // J/mol*k
+			HeatCapacityConstPressure = 29.19; // J/mol*k
+			HeatCapacityConstVolume = 20.85;
 		}
 		volume = 22.4;
 		temperature = 273;
 		moles = 1;
 		pressure = 1;
 		heat = 0;
+		work = 0.0;
 	}
 	void VolumeChange(double volumeChange, Piston::process state)
 	{
@@ -85,6 +89,14 @@ public:
 			heat = moles * 8.314 * temperature * log(1 / pressureChange) / 1000;
 			pressure = pressureChange;
 			volume = moles * 0.08206 * temperature / pressure;
+			work = -heat;
+		}
+		if (state == Piston::process::constant_heat)
+		{
+			temperature = temperature * pow(pressureChange / 1.0, 8.314 / HeatCapacityConstPressure);
+			pressure = pressureChange;
+			volume = moles * 0.08206 * temperature / pressure;
+			work = moles * HeatCapacityConstVolume * (temperature - 273.15) / 1000;
 		}
 	}
 	void AddHeat(float Heat, Piston::process state)
@@ -92,13 +104,14 @@ public:
 		if (state == Piston::constant_pressure)
 		{
 			heat = Heat/1000;
-			temperature = (Heat + HeatCapacity * temperature) / HeatCapacity;
+			temperature = (Heat + HeatCapacityConstPressure * temperature) / HeatCapacityConstPressure;
 			volume = moles * 0.08206 * temperature / pressure;
+			work = pressure * (101325) * ((volume - 22.4) / 1000) / 1000;
 		}
 		if (state == Piston::constant_volume)
 		{
 			heat = Heat / 1000;
-			temperature = (Heat + HeatCapacity * temperature) / HeatCapacity;
+			temperature = (Heat + moles* HeatCapacityConstVolume * temperature) / (HeatCapacityConstVolume * moles);
 			pressure = moles * 0.08206 * temperature / volume;
 		}
 
@@ -123,6 +136,15 @@ public:
 	std::string returnHeatText()
 	{
 		return "Heat Evolved: " + Format(heat, 3) + " KJ";
+	}
+	std::string returnWorkText()
+	{
+		return "Work Done: " + Format(work, 3) + " KJ";
+	}
+
+	double returnHeat()
+	{
+		return heat;
 	}
 	float returnChangeInPistonHeight()
 	{

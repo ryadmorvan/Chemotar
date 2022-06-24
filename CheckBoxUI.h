@@ -194,6 +194,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 
 	for (int i = 0; i < TableNames.size(); ++i)
 	{
+		static const char* current_item = "Choose";
 		if (CheckBox[i])
 		{
 			fname = TablePaths.at(i);
@@ -202,9 +203,10 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 			{
 				ChemicalsVector = loadTable(fname, file, TempRange, _vectorSize);
 				_TabeLoaded = 1;
+				current_item = "Choose";
 			}
 				
-			static const char* current_item = "";
+			
 
 			if (ImGui::BeginCombo("Chemicals", current_item)) // The second parameter is the label previewed before opening the combo.
 			{
@@ -219,12 +221,11 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 						tempMin = TempRange.at(n).min;
 						return 1;
 					}
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
 				}
 				ImGui::EndCombo();
 			}
-
 			return 1;
 		}
 		else
@@ -234,7 +235,6 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 			//memset(CheckBox, NULL, sizeof(CheckBox));
 			//std::cout << "Table didn't load properly" << std::endl;
 		}
-
 	}
 
 	return 0;

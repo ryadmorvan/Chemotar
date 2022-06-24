@@ -2,9 +2,13 @@
   Source.cpp
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(94,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(95,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(129,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(46,79): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(47,68): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(151,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(49,79): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(50,96): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(51,68): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(52,70): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(53,65): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(187,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(2584,23): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
           [
@@ -45,7 +49,7 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(51): 
               _Alloc=std::allocator<char>
           ]
   Generating code
-  1 of 2075 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 2078 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     22 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
