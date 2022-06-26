@@ -1,14 +1,68 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (ChemicalsSfml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Graph.cpp
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(98,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(47,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(47,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(52,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(52,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(53,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(53,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(67,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(67,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(68,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(68,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(69,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(69,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(70,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(70,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(72,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(72,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(73,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(73,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(86,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(92,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(104,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(110,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(130,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(131,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Source.cpp
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(94,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(95,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(151,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(49,79): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(50,96): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(51,68): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(52,70): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(53,65): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(187,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(98,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(47,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(47,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(52,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(52,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(53,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(53,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(67,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(67,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(68,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(68,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(69,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(69,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(70,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(70,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(72,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(72,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(73,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(73,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(86,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(92,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(104,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(110,1): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(130,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(131,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(50,79): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(51,96): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(52,68): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(53,70): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(54,65): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(195,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(2584,23): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
           [
@@ -49,7 +103,7 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(51): 
               _Alloc=std::allocator<char>
           ]
   Generating code
-  1 of 2078 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  2 of 2136 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     22 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
