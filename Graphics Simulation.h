@@ -90,14 +90,13 @@ static void IdealGasLaw(bool* p_open)
     }
     else if((current_state == Piston::process::constant_temperature) or (current_state == Piston::process::constant_heat))
     {
-        ImGui::DragFloat("Pressure in atm", &SurroundingPressure, 0.01f, 1, 4);
+        ImGui::DragFloat("Pressure in atm", &SurroundingPressure, 0.01f, 1, 5);
     }
     HeatColor = 0;
     //Constant Pressure
     if (current_state == Piston::process::constant_pressure)
     {
-        piston.AddHeat(HeatEvolved * 1000, Piston::process::constant_pressure);
-        raise = piston.returnChangeInPistonHeight();
+
 
         const ImVec2 p = ImGui::GetCursorScreenPos();
         const ImU32 col32 = ImColor(col);
@@ -110,12 +109,15 @@ static void IdealGasLaw(bool* p_open)
         float x_board = p.x + 5, y_board = p.y + 20, board_spacing = 15.0f;
         Graph graph(x + 370, y + 300, x + 720, y - 50, 2);
         // First line uses a thickness of 1.0, second line uses the configurable thickness 
+        piston.AddHeat(HeatEvolved * 1000, Piston::process::constant_pressure);
+        raise = piston.returnChangeInPistonHeight();
         float th = thickness;
         draw_list->AddRect(ImVec2(x, y - 100), ImVec2(x + sz + 100, y + sz + 190), col32, 10.0f, ImDrawCornerFlags_All, th);
         draw_list->AddRect(ImVec2(x_board, y_board), ImVec2(x + sz + 530, y + sz + 200), board_col32, 10.0f, ImDrawCornerFlags_All, 4.0f);
         draw_list->AddLine(ImVec2(x + th - 2.0f, y + sz - raise + 100), ImVec2(x + sz - th + 2.0f + 100, y + sz - raise + 100), board_col32, 10);
         draw_list->AddRectFilled(ImVec2(x + th - 2.0f, y + sz + 6 - raise + 100), ImVec2(x + sz - th + 3.0f + 100, y + sz + 40 + 153), Air_col32, 0);
         graph.Draw(draw_list, Text_col32);
+        graph.BuildLinesVector(piston, Graph::state::constant_pressure);
         graph.DrawLines(draw_list, piston);
 
 
@@ -156,6 +158,7 @@ static void IdealGasLaw(bool* p_open)
         draw_list->AddLine(ImVec2(x + th - 2.0f, y + sz - raise + 100 ), ImVec2(x + sz - th + 2.0f + 100 + 1, y + sz - raise + 100), board_col32, 10);
         draw_list->AddRectFilled(ImVec2(x + th - 2.0f, y + sz + 6 - raise + 100), ImVec2(x + sz - th + 3.0f + 100, y + sz + 40 + 153), Air_col32, 0);
         graph.Draw(draw_list, Text_col32);
+        graph.BuildLinesVector(piston, Graph::state::constant_volume);
         graph.DrawLines(draw_list, piston);
         draw_list->AddText(ImVec2(x + th + 10, y + sz + 20 + 100), Text_col32, piston.returnVolumeText().c_str());
         draw_list->AddText(ImVec2(x + th + 180, y + sz + 20 + 100), Text_col32, piston.returnPressureText().c_str());

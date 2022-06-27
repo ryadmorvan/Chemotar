@@ -36,6 +36,7 @@ public:
 
 	ImVec2 PressureText_pos;
 	ImVec2 VolumeText_pos;
+	bool Constant_Pressure_Setup = 0;
 
 	class LineGraph
 	{
@@ -89,7 +90,7 @@ public:
 				linegraph.setcord_point((piston.returnVolume() - 22.4) * 3.0 + 30, piston.pressure * 50, start_pos_x, start_pos_y);
 				VectorOfPoints.push_back(linegraph);
 			}
-			for (float pressure = 1.0; pressure <= 4; pressure += 0.01)
+			for (float pressure = 1.0; pressure <= 5; pressure += 0.01)
 			{
 				piston.PressureChange(pressure, Piston::process::constant_temperature);
 				linegraph.setcord((piston.returnVolume() - 22.4) * 3.0 + 30, piston.pressure * 50, start_pos_x, start_pos_y);
@@ -107,7 +108,7 @@ public:
 				linegraph.setcord_point((piston.returnVolume() - 22.4) * 3.0 + 30, piston.pressure * 50, start_pos_x, start_pos_y);
 				VectorOfPoints.push_back(linegraph);
 			}
-			for (float pressure = 1.0; pressure <= 4.0; pressure += 0.01)
+			for (float pressure = 1.0; pressure <= 5.0; pressure += 0.01)
 			{
 				piston.PressureChange(pressure, Piston::process::constant_heat);
 				linegraph.setcord((piston.returnVolume() - 22.4) * 3.0 + 30, piston.pressure * 50, start_pos_x, start_pos_y);
@@ -116,11 +117,43 @@ public:
 		}
 		if (state == Graph::state::constant_pressure)
 		{
+			LineGraph linegraph;
+			VectorOfLines = std::vector<LineGraph>();
 
+			for (float volume = 0; volume <= 84.3; volume += 0.01) //Max Value of Volume 106.7 - 22.4 = 84.3
+			{
+				//piston.AddHeat(heat, Piston::process::constant_pressure);
+				linegraph.setcord((volume + 22.4) * 2, piston.pressure * 50, start_pos_x, start_pos_y);
+				VectorOfLines.push_back(linegraph);
+			}
+
+
+			for (float heat = 0; heat <= 30; heat += 0.01)
+			{
+				/*piston.AddHeat(heat, Piston::process::constant_pressure);*/
+				linegraph.setcord_point((piston.returnVolume()) * 2 , piston.pressure * 50, start_pos_x, start_pos_y);
+				VectorOfPoints.push_back(linegraph);
+			}
 		}
 		if (state == Graph::state::constant_volume)
 		{
+			LineGraph linegraph;
+			VectorOfLines = std::vector<LineGraph>();
 
+			for (float pressure = 0; pressure <= 5.27; pressure += 0.01) //Max value of pressure 6.27 - 1 = 5.27
+			{
+				//piston.AddHeat(heat, Piston::process::constant_pressure);
+				linegraph.setcord((22.4) * 2 + 2, pressure * 50 + 50, start_pos_x, start_pos_y);
+				VectorOfLines.push_back(linegraph);
+			}
+
+
+			for (float heat = 0; heat <= 30; heat += 0.01)
+			{
+				/*piston.AddHeat(heat, Piston::process::constant_pressure);*/
+				linegraph.setcord_point((piston.returnVolume()) * 2, piston.pressure * 50, start_pos_x, start_pos_y);
+				VectorOfPoints.push_back(linegraph);
+			}
 		}
 	}
 	
@@ -149,15 +182,6 @@ public:
 		{
 			draw_list->AddLine(linegraphs.start_cord, linegraphs.end_cord, Text_col32_2, 5);
 		}
-		//for (float z = 1.0, f = 0; z <= piston.pressure; z += 0.01, f++)
-		//{
-		//	for (float i = 22.4, j = 0; i <= piston.volume; i += 0.333, j += 1)
-		//	{
-		//		draw_list->AddLine(ImVec2(start_pos_x.x + 20 + j, start_pos_y.y - 50 -f), ImVec2(start_pos_x.x + 20 + j + 1, start_pos_y.y - 50 -f - 1), Text_col32, 1);
-		//	}
-		//}
-
-
 
 	}
 };
