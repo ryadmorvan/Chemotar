@@ -16,6 +16,8 @@
 
 
 
+
+
 bool _AddTable(std::string &filePath)
 {
 	bool result = FALSE;
@@ -72,8 +74,8 @@ std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::m
 		{
 			std::stringstream str(line);
 			int i = 0;
-			double min = 0;
-			double max = 0;
+			float min = 0;
+			float max = 0;
 			while (std::getline(str, word, ','))
 			{
 				std::string placeholder = word;
@@ -163,7 +165,7 @@ void _LoadTables(std::vector<std::string>& TableNames, std::vector<std::string> 
 
 bool _TabeLoaded = 0;
 int _vectorSize = 0; //Vector Size for different files
-bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, float& tempMin, float& tempMax, std::string& filePath)
+bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, float& tempMin, float& tempMax, std::string& filePath, FileInfo &TableInfo)
 {
 	std::vector<std::string> TableNames;
 	std::vector<std::string> TablePaths;
@@ -205,7 +207,10 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 				_TabeLoaded = 1;
 				current_item = "Choose";
 			}
-				
+			//Set up the fileInfo
+			TableInfo.fileName = TableNames.at(i) + ".csv";
+			TableInfo.filePath = TablePaths.at(i);
+
 			
 
 			if (ImGui::BeginCombo("Chemicals", current_item)) // The second parameter is the label previewed before opening the combo.
@@ -238,92 +243,6 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 	}
 
 	return 0;
-
-
-
-
-
-
-
-
-	/*if (CheckBox[0] && ((CheckBox[1] == 0) && (CheckBox[2] == 0)))
-	{
-		fname = "C:/Users/riyad/source/repos/Chemicals/ChemicalsSfml/Empirical Tables/ElliotLiquid.csv";
-		static int ChemicalSpecie = 0;
-
-		if (TabeLoaded == 0)
-		{
-			ChemicalsVector = loadTable(fname, file, TempRange);
-			TabeLoaded = 1;
-		}
-		static const char* Chemicals[16] = {};
-
-		for (int i = 0; i < 16; ++i)
-		{
-			Chemicals[i] = ChemicalsVector.at(i).c_str();
-		}
-
-		ImGui::Combo("Chemical Species", &ChemicalSpecie, Chemicals, IM_ARRAYSIZE(Chemicals), 8);
-		specie = ChemicalsVector.at(ChemicalSpecie);
-		tempMin = TempRange.at(ChemicalSpecie).min;
-		tempMax = TempRange.at(ChemicalSpecie).max;
-		return 1;
-	}
-	else if (CheckBox[1] && ((CheckBox[0] == 0) && (CheckBox[2] == 0)))
-	{
-		fname = "C:\\Users\\riyad\\source\\repos\\Chemicals\\ChemicalsSfml\\Empirical Tables\\GasEnthalpy.csv";
-		static int ChemicalSpecie = 0;
-		if (TabeLoaded == 0)
-		{
-			ChemicalsVector = loadTable(fname, file, TempRange);
-			TabeLoaded = 1;
-		}
-		static const char* Chemicals[75] = {};
-
-		for (int i = 0; i < 75; ++i)
-		{
-			Chemicals[i] = ChemicalsVector.at(i).c_str();
-		}
-
-		ImGui::Combo("Chemical Species", &ChemicalSpecie, Chemicals, IM_ARRAYSIZE(Chemicals), 8);
-		specie = ChemicalsVector.at(ChemicalSpecie);
-		tempMin = TempRange.at(ChemicalSpecie).min;
-		tempMax = TempRange.at(ChemicalSpecie).max;
-		return 1;
-	}
-	else if (CheckBox[2] && ((CheckBox[1] == 0) && (CheckBox[0] == 0)))
-	{
-		fname = "C:\\Users\\riyad\\source\\repos\\Chemicals\\ChemicalsSfml\\Empirical Tables\\LiquidEnthalpy.csv";
-		static int ChemicalSpecie = 0;
-		if (TabeLoaded == 0)
-		{
-			ChemicalsVector = loadTable(fname, file, TempRange);
-			TabeLoaded = 1;
-		}
-		static const char* Chemicals[76] = {};
-
-		for (int i = 0; i < 76; ++i)
-		{
-			Chemicals[i] = ChemicalsVector.at(i).c_str();
-		}
-
-		ImGui::Combo("Chemical Species", &ChemicalSpecie, Chemicals, IM_ARRAYSIZE(Chemicals), 8);
-		specie = ChemicalsVector.at(ChemicalSpecie);
-		tempMin = TempRange.at(ChemicalSpecie).min;
-		tempMax = TempRange.at(ChemicalSpecie).max;
-		return 1;
-	}
-	else
-	{
-		TabeLoaded = 0;
-		specie = "";
-		tempMin = NULL;
-		tempMax = NULL;
-
-		return 0;
-	}
-	tempMin = NULL;
-	tempMax = NULL;*/
 }
 
 

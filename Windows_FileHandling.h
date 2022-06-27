@@ -3,7 +3,18 @@
 #include <Windows.h>
 #include <ShObjIdl.h>
 #include <iomanip>
+#include <vector>
+#include<stdio.h>
 
+
+
+
+
+struct FileInfo
+{
+	std::string fileName;
+	std::string filePath;
+};
 
 bool _openFile(std::string& sSelectedFile, std::string& sFilePath)
 {
@@ -155,4 +166,61 @@ std::string _Format(double f, int n)
 	std::stringstream ss;
 	ss << std::fixed << std::setprecision(std::max(n - d, 0)) << round(f * order) / order;
 	return ss.str();
+}
+
+
+void _Find_File_Delete(FileInfo fileInfo)
+{
+	std::vector<std::string> lines;
+	//Reading the file to the storage
+	{
+		//opening the file for reading from it
+		std::ifstream file("save.ini");
+		//checking if the file has been opened correctly
+		if (not file.is_open()) {
+			std::cerr << "can't open the file " << ("save.ini") << std::endl;
+			return;
+		}
+		//Reading
+		for (std::string one_line; std::getline(file, one_line); lines.push_back(one_line));
+	}
+	//Get all the lines that are going to be removed from the file
+	std::string line;
+	std::fstream file;
+	file.open("save.ini");
+	auto iterator = 0;
+	auto fileNameLine = 0;
+	auto fileNamePath = 0;
+	//line.replace(line.find(fileInfo.filePath), fileInfo.filePath.length(), "");
+	while (std::getline(file, line))
+	{
+		/*line.replace(line.find(fileInfo.fileName), fileInfo.fileName.length(), "");*/
+		if (line == fileInfo.fileName)
+		{
+			fileNameLine = iterator;
+			std::cout << fileNameLine << std::endl;
+		}
+		if (line == fileInfo.filePath)
+		{
+			fileNamePath = iterator;
+			std::cout << fileNamePath << std::endl;
+		}
+		iterator++;
+	}
+	file.close();
+
+	remove("save.ini");
+
+	std::ofstream fileWrite("save.ini");
+	iterator = 0;
+	for (auto& line : lines)
+	{
+		if ((iterator != fileNameLine) && (iterator != fileNamePath))
+		{
+			fileWrite << line << std::endl;
+		}
+		iterator++;
+	}
+
+	fileWrite.close();
 }

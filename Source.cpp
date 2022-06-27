@@ -13,6 +13,7 @@
 #include "Graphics Simulation.h"
 
 
+
 sf::Texture image;
 
 std::string filePath = " ";
@@ -32,6 +33,7 @@ int main()
 	sf::Clock deltaClock;
 	std::string line, word;
 	std::fstream file;
+	FileInfo TableName;
 	bool tableLoaded = 0;
 	bool CheckBox[150];
 	memset(CheckBox, 0, sizeof(CheckBox));
@@ -117,7 +119,7 @@ int main()
 		{
 			ImGui::PushFont(font);
 			ImGui::Begin("Physical Properties Calculation", &ShowPropertiesCalculator);
-			if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath))
+			if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath, TableName))
 			{
 				ImGui::InputFloat("Input Inital Temperature", &temperature1);
 				ImGui::InputFloat("Input Final Temperature", &temperature2);
@@ -129,6 +131,11 @@ int main()
 					finalResult.clear();
 					results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
 					insertInfo(results, finalResult);
+				}
+				if (ImGui::Button("Remove Table"))
+				{
+					memset(CheckBox, 0, sizeof(CheckBox));
+					_Find_File_Delete(TableName);
 				}
 			}
 			else

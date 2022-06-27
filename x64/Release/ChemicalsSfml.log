@@ -1,7 +1,7 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (ChemicalsSfml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Source.cpp
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(94,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(95,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(88,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(91,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(98,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
@@ -11,28 +11,6 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(53,57): warning C424
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(53,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(54,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(54,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(68,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(68,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(69,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(69,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(70,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(70,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(71,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(71,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(73,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(73,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(74,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(74,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(87,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(93,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(105,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(111,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(123,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(131,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(143,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(151,1): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(163,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(164,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(50,79): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(51,96): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graphics Simulation.h(52,68): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -64,14 +42,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.3110
           [
               _Iter=wchar_t *
           ]
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(51): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(62): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(51): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(62): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
@@ -79,8 +57,8 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(51): 
               _Alloc=std::allocator<char>
           ]
   Generating code
-  1 of 2126 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    22 functions had inline decision re-evaluated but remain unchanged
+  2 of 2141 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    25 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ChemicalsSfml.vcxproj -> C:\Users\riyad\source\repos\Chemicals\x64\Release\Chemical Properties Calculator.exe
