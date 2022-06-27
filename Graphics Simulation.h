@@ -86,11 +86,13 @@ static void IdealGasLaw(bool* p_open)
     }
     if ((current_state == Piston::process::constant_pressure) or (current_state == Piston::process::constant_volume))
     {
-        ImGui::DragFloat("Heat in KJ", &HeatEvolved, 0.05f, 0, 30);
+        //ImGui::DragFloat("Heat in KJ", &HeatEvolved, 0.05f, 0, 30);
+        ImGui::SliderFloat("Heat in KJ", &HeatEvolved, 0, 30);
     }
     else if((current_state == Piston::process::constant_temperature) or (current_state == Piston::process::constant_heat))
     {
-        ImGui::DragFloat("Pressure in atm", &SurroundingPressure, 0.01f, 1, 5);
+        //ImGui::DragFloat("Pressure in atm", &SurroundingPressure, 0.01f, 1, 5);
+        ImGui::SliderFloat("Pressure in atm", &SurroundingPressure, 1, 5);
     }
     HeatColor = 0;
     //Constant Pressure
