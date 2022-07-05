@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
+#include <SFML/imgui-SFML.h>
 #include "ChemicalCalculations.h"
 #include "CheckBoxUI.h"
 #include "Graphics Simulation.h"
@@ -20,10 +21,15 @@ std::string filePath = " ";
 
 bool p_open = 0;
 
+
+
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1280, 768), "Chemical Properties Calculator");
 	ImGui::SFML::Init(window);
+
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	std::string fname = "";
 	std::string species;
 	float temperature1 = 0;
@@ -44,12 +50,24 @@ int main()
 	ImGui::SFML::UpdateFontTexture();
 	std::stringstream results;
 	std::string finalResult = "";
+
+
+	sf::Texture propertiesImage;
+	if (!propertiesImage.loadFromFile("properties.png"))
+	{
+		std::cout << "Error" << std::endl;
+	}
+	sf::Sprite propertiesIcon; propertiesIcon.setTexture(propertiesImage);
+	
+
+
 	if (!image.loadFromFile("Assets\\color.tga"))
 	{
 		std::cout << "Error" << std::endl;
 	}
-	sf::Sprite backgroundtexture;
-	backgroundtexture.setTexture(image);
+	sf::Sprite backgroundtexture; 	backgroundtexture.setTexture(image);
+
+	
 
 
 	//Flags of windows
@@ -71,6 +89,7 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Event event;
+		//window.draw(propertiesIcon);
 		window.draw(backgroundtexture);
 		while (window.pollEvent(event))
 		{
@@ -80,11 +99,10 @@ int main()
 		}
 		ImGui::SFML::Update(window, deltaClock.restart());
 
-
-
 		ImGui::PushFont(font2);
 		if (ImGui::BeginMainMenuBar())
 		{
+			
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("Add Table", NULL))
@@ -164,23 +182,6 @@ int main()
 		}
 
 		ImGui::PopFont();
-
-		//if (FontSettings)
-		//{
-		//	ImGui::PushFont(font2);
-		//	ImGui::Begin("Settings");
-		//	ImGui::InputFloat("Input the size of the font", &fontSize);
-		//	ImGui::SliderFloat("Font Size:", &fontSize, 16, 32);
-		//	font->FontSize = fontSize;
-		//	font2->FontSize = fontSize;
-		//	ImGui::PopFont();
-		//}
-
-		//ImGui::Begin("Chemical Properties Calculation");
-		//ImGui::Checkbox("Elliot Liquid", &CheckBox[0]);
-		//ImGui::Checkbox("Gas Enthalpy", &CheckBox[1]);
-		//ImGui::Checkbox("Liquid Enthalpy", &CheckBox[2]);
-		//ImGui::End();
 
 		//Developer Window
 		if (ShowDeveloperInfo)

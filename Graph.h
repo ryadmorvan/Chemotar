@@ -23,7 +23,7 @@ public:
 
 	enum state
 	{
-		constant_pressure = 5, constant_volume = 6, constant_temperature = 7, constant_heat = 8
+		constant_pressure = 0x01, constant_volume = 0x02, constant_temperature = 0x03, constant_heat = 0x04
 	};
 
 	double x;
