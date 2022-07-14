@@ -1,7 +1,7 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (ChemicalsSfml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Source.cpp
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(88,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(91,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(97,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\CheckBoxUI.h(100,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Piston.h(98,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Graph.h(48,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
@@ -57,8 +57,8 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(62): 
               _Alloc=std::allocator<char>
           ]
   Generating code
-  6 of 2447 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  1 of 2473 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    33 functions had inline decision re-evaluated but remain unchanged
+    30 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ChemicalsSfml.vcxproj -> C:\Users\riyad\source\repos\Chemicals\x64\Release\Chemical Properties Calculator.exe

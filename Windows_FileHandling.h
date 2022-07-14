@@ -84,21 +84,44 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 	return str;
 }
 
-bool _Find_File(std::string &name)
+//FLAGS FOR TABLES
+enum TABLES_SAVE_DATA
+{
+	HEAT_CAPACITY = 0x01, DENSITY = 0x02
+};
+
+bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 {
 	std::string line;
 	std::ifstream file;
-	file.open("save.ini", std::ios::in);
-	while (std::getline(file, line))
+	if (DATA == HEAT_CAPACITY)
 	{
-		if (line == name)
+		file.open("table_data/Heat Capacity Tables.ini", std::ios::in);
+		while (std::getline(file, line))
 		{
-			return 0;
-			file.close();
+			if (line == name)
+			{
+				return 0;
+				file.close();
+			}
 		}
+		file.close();
+		return 1;
 	}
-	file.close();
-	return 1;
+	if (DATA == DENSITY)
+	{
+		file.open("table_data/Density Tables.ini", std::ios::in);
+		while (std::getline(file, line))
+		{
+			if (line == name)
+			{
+				return 0;
+				file.close();
+			}
+		}
+		file.close();
+		return 1;
+	}
 }
 
 int _Tables_Count()
@@ -169,16 +192,25 @@ std::string _Format(double f, int n)
 }
 
 
-void _Find_File_Delete(FileInfo fileInfo)
+void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
 {
 	std::vector<std::string> lines;
+	std::string fileName_Path;
+	if (DATA == TABLES_SAVE_DATA::HEAT_CAPACITY)
+	{
+		fileName_Path = "table_data/Heat Capacity Tables.ini";
+	}
+	if (DATA == TABLES_SAVE_DATA::DENSITY)
+	{
+		fileName_Path = "table_data/Density Tables.ini";
+	}
 	//Reading the file to the storage
 	{
 		//opening the file for reading from it
-		std::ifstream file("save.ini");
+		std::ifstream file(fileName_Path);
 		//checking if the file has been opened correctly
 		if (not file.is_open()) {
-			std::cerr << "can't open the file " << ("save.ini") << std::endl;
+			std::cerr << "can't open the file " << fileName_Path << std::endl;
 			return;
 		}
 		//Reading
@@ -187,7 +219,7 @@ void _Find_File_Delete(FileInfo fileInfo)
 	//Get all the lines that are going to be removed from the file
 	std::string line;
 	std::fstream file;
-	file.open("save.ini");
+	file.open(fileName_Path);
 	auto iterator = 0;
 	auto fileNameLine = 0;
 	auto fileNamePath = 0;
@@ -209,9 +241,9 @@ void _Find_File_Delete(FileInfo fileInfo)
 	}
 	file.close();
 
-	remove("save.ini");
+	remove(fileName_Path.c_str());
 
-	std::ofstream fileWrite("save.ini");
+	std::ofstream fileWrite(fileName_Path);
 	iterator = 0;
 	for (auto& line : lines)
 	{

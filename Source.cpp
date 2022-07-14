@@ -22,35 +22,18 @@ std::string filePath = " ";
 bool p_open = 0;
 
 
-
-
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1280, 768), "Chemical Properties Calculator");
 	ImGui::SFML::Init(window);
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	std::string fname = "";
-	std::string species;
-	float temperature1 = 0;
-	float temperature2 = 0;
-	float MinTemp = 0;
-	float MaxTemp = 0;
 	sf::Clock deltaClock;
-	std::string line, word;
-	std::fstream file;
-	FileInfo TableName;
-	bool tableLoaded = 0;
-	bool CheckBox[150];
-	memset(CheckBox, 0, sizeof(CheckBox));
 	float fontSize = 16;
 	ImGuiIO& io = ImGui::GetIO();
 	ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
 	ImFont* font2 = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
 	ImGui::SFML::UpdateFontTexture();
-	std::stringstream results;
-	std::string finalResult = "";
-
 
 	sf::Texture propertiesImage;
 	if (!propertiesImage.loadFromFile("properties.png"))
@@ -73,6 +56,7 @@ int main()
 	//Flags of windows
 	bool ShowDeveloperInfo = FALSE;
 	bool ShowPropertiesCalculator = FALSE;
+	bool ShowDensityCalculator = FALSE;
 	bool ShowIdealGasLaw = FALSE;
 	bool FontSettings = 0;
 	window.setFramerateLimit(60);
@@ -105,9 +89,13 @@ int main()
 			
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Add Table", NULL))
+				if (ImGui::MenuItem("Add Table Enthalpy", NULL))
 				{
-					_AddTable(filePath);
+					_AddTable(filePath, TABLES_SAVE_DATA::HEAT_CAPACITY);
+				}
+				if (ImGui::MenuItem("Add Table Density", NULL))
+				{
+					_AddTable(filePath, TABLES_SAVE_DATA::DENSITY);
 				}
 				ImGui::EndMenu();
 
@@ -115,6 +103,10 @@ int main()
 			if (ImGui::BeginMenu("View"))
 			{
 				if (ImGui::MenuItem("Chemical Properties Calculator", NULL, &ShowPropertiesCalculator))
+				{
+
+				}
+				if (ImGui::MenuItem("Chemical Density Calculator", NULL, &ShowDensityCalculator))
 				{
 
 				}
@@ -136,39 +128,70 @@ int main()
 		if (ShowPropertiesCalculator == TRUE)
 		{
 			ImGui::PushFont(font);
-			ImGui::Begin("Physical Properties Calculation", &ShowPropertiesCalculator);
-			if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath, TableName))
-			{
-				ImGui::InputFloat("Input Inital Temperature", &temperature1);
-				ImGui::InputFloat("Input Final Temperature", &temperature2);
-				ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
-				ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
-
-				if (ImGui::Button("Calculate"))
-				{
-					finalResult.clear();
-					results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
-					insertInfo(results, finalResult);
-				}
-				if (ImGui::Button("Remove Table"))
-				{
-					memset(CheckBox, 0, sizeof(CheckBox));
-					_Find_File_Delete(TableName);
-				}
-			}
-			else
-			{
-				finalResult.clear(); species = "";
-			}
-
-			ImGui::Text(finalResult.c_str());
+			ImGui::Begin("Enthalpy Calculation", &ShowPropertiesCalculator);
+			EnthalpyCalculator(ShowPropertiesCalculator);
 			ImGui::PopFont();
 			ImGui::End();
 		}
-		else
+
+
+
+		if (ShowDensityCalculator == TRUE)
 		{
-			temperature1 = 0, temperature2 = 0, memset(CheckBox, FALSE, sizeof(CheckBox));
+			ImGui::PushFont(font);
+			ImGui::Begin("Density Calculation", &ShowDensityCalculator);
+			DensityCalculator(ShowDensityCalculator);
+			ImGui::PopFont();
+			ImGui::End();
 		}
+
+
+
+
+
+		//Chemical Density Calculation Window
+		//if (ShowDensityCalculator == TRUE)
+		//{
+		//	ImGui::PushFont(font);
+		//	ImGui::Begin("Density Calculation", &ShowDensityCalculator);
+		//	if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, CritTemp, filePath, TableName))
+		//	{
+		//		ImGui::InputFloat("Input Inital Temperature", &temperature1);
+		//		ImGui::InputFloat("Input Final Temperature", &temperature2);
+		//		ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
+		//		ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
+
+		//		if (ImGui::Button("Calculate"))
+		//		{
+		//			finalResult.clear();
+		//			results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
+		//			insertInfo(results, finalResult);
+		//		}
+		//		if (ImGui::Button("Remove Table"))
+		//		{
+		//			memset(CheckBox, 0, sizeof(CheckBox));
+		//			_Find_File_Delete(TableName);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		finalResult.clear(); species = "";
+		//	}
+
+		//	ImGui::Text(finalResult.c_str());
+		//	ImGui::PopFont();
+		//	ImGui::End();
+		//}
+		//else
+		//{
+		//	temperature1 = 0, temperature2 = 0, memset(CheckBox, FALSE, sizeof(CheckBox));
+		//	finalResult = "";
+		//}
+
+
+
+
+
 		
 
 
