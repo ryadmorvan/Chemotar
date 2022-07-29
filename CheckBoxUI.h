@@ -34,9 +34,9 @@ bool _AddTable(std::string &filePath, TABLES_SAVE_DATA DATA)
 		{
 			outfile.open("table_data/Heat Capacity Tables.ini", std::fstream::in | std::fstream::out | std::fstream::app);
 		}
-		if (DATA == TABLES_SAVE_DATA::DENSITY)
+		if (DATA == TABLES_SAVE_DATA::VISCOSITY)
 		{
-			outfile.open("table_data/Density Tables.ini", std::fstream::in | std::fstream::out | std::fstream::app);
+			outfile.open("table_data/Viscosity Tables.ini", std::fstream::in | std::fstream::out | std::fstream::app);
 		}
 
 		if (_Find_File(sSelectedFile, DATA))
@@ -71,7 +71,7 @@ struct TemperatureRange
 	float max = 0;
 };
 
-std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::map<int, TemperatureRange> &TempRange, int &vectorSize)
+std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::map<int, TemperatureRange> &TempRange, int &vectorSize, TABLES_SAVE_DATA DATA)
 {
 	std::string word, line;
 	std::vector<std::string> Chemicals;
@@ -88,17 +88,35 @@ std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::m
 			while (std::getline(str, word, ','))
 			{
 				std::string placeholder = word;
-				switch (i)
+				if (DATA == TABLES_SAVE_DATA::HEAT_CAPACITY)
 				{
-				case 0:
-					Chemicals.push_back(placeholder);
-					break;
-				case 7:
-					min = std::stod(placeholder);
-					break;
-				case 8:
-					max = std::stod(placeholder);
-					break;
+					switch (i)
+					{
+					case 0:
+						Chemicals.push_back(placeholder);
+						break;
+					case 7:
+						min = std::stod(placeholder);
+						break;
+					case 8:
+						max = std::stod(placeholder);
+						break;
+					}
+				}
+				if (DATA == TABLES_SAVE_DATA::VISCOSITY)
+				{
+					switch (i)
+					{
+					case 0:
+						Chemicals.push_back(placeholder);
+						break;
+					case 4:
+						min = std::stod(placeholder);
+						break;
+					case 5:
+						max = std::stod(placeholder);
+						break;
+					}
 				}
 				++i;
 			}
@@ -210,7 +228,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 			static int ChemicalSpecie = 0;
 			if (_TabeLoaded == 0)
 			{
-				ChemicalsVector = loadTable(fname, file, TempRange, _vectorSize);
+				ChemicalsVector = loadTable(fname, file, TempRange, _vectorSize, TABLES_SAVE_DATA::HEAT_CAPACITY);
 				_TabeLoaded = 1;
 				current_item = "Choose";
 			}
@@ -263,7 +281,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 	std::vector<std::string> TableNames;
 	std::vector<std::string> TablePaths;
 	std::fstream SaveFile;
-	SaveFile.open("table_data/Density Tables.ini", std::ios::in);
+	SaveFile.open("table_data/Viscosity Tables.ini", std::ios::in);
 	_LoadTables(TableNames, TablePaths, SaveFile);
 	_TableNamesCorrection(TableNames);
 
@@ -296,7 +314,7 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 			static int ChemicalSpecie = 0;
 			if (_TabeLoaded == 0)
 			{
-				ChemicalsVector = loadTable(fname, file, TempRange, _vectorSize);
+				ChemicalsVector = loadTable(fname, file, TempRange, _vectorSize, TABLES_SAVE_DATA::VISCOSITY);
 				_TabeLoaded = 1;
 				current_item = "Choose";
 			}
@@ -405,7 +423,7 @@ void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 	}
 }
 
-void DensityCalculator(bool& ShowDensityCalculator)
+void ViscosityCalculator(bool& ShowViscosityCalculator)
 {
 	static std::string fname = "";
 	static std::string species;
@@ -432,14 +450,14 @@ void DensityCalculator(bool& ShowDensityCalculator)
 	static std::string finalResult = "";
 	static std::string filePath = " ";
 
-	if (ShowDensityCalculator == TRUE)
+	if (ShowViscosityCalculator == TRUE)
 	{
 		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, CritTemp,  filePath, TableName))
 		{
 			ImGui::InputFloat("Input Inital Temperature", &temperature1);
-			ImGui::InputFloat("Input Final Temperature", &temperature2);
+			//ImGui::InputFloat("Input Final Temperature", &temperature2);
 			ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
-			ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
+			//ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
 
 			if (ImGui::Button("Calculate"))
 			{
@@ -450,7 +468,7 @@ void DensityCalculator(bool& ShowDensityCalculator)
 			if (ImGui::Button("Remove Table"))
 			{
 				memset(CheckBox, 0, sizeof(CheckBox));
-				_Find_File_Delete(TableName, TABLES_SAVE_DATA::DENSITY);
+				_Find_File_Delete(TableName, TABLES_SAVE_DATA::VISCOSITY);
 			}
 		}
 		else

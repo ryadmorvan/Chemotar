@@ -87,7 +87,7 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 //FLAGS FOR TABLES
 enum TABLES_SAVE_DATA
 {
-	HEAT_CAPACITY = 0x01, DENSITY = 0x02
+	HEAT_CAPACITY = 0x01, VISCOSITY = 0x02
 };
 
 bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
@@ -108,9 +108,9 @@ bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 		file.close();
 		return 1;
 	}
-	if (DATA == DENSITY)
+	if (DATA == VISCOSITY)
 	{
-		file.open("table_data/Density Tables.ini", std::ios::in);
+		file.open("table_data/Viscosity Tables.ini", std::ios::in);
 		while (std::getline(file, line))
 		{
 			if (line == name)
@@ -200,9 +200,9 @@ void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
 	{
 		fileName_Path = "table_data/Heat Capacity Tables.ini";
 	}
-	if (DATA == TABLES_SAVE_DATA::DENSITY)
+	if (DATA == TABLES_SAVE_DATA::VISCOSITY)
 	{
-		fileName_Path = "table_data/Density Tables.ini";
+		fileName_Path = "table_data/Viscosity Tables.ini";
 	}
 	//Reading the file to the storage
 	{

@@ -105,6 +105,92 @@ std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, f
 	return finalResult;
 }
 
+
+
+
+std::stringstream CalculateViscosity(std::string& species, float& temperature, std::fstream& file, std::string& line, std::string& word, std::string fname)
+{
+	file.open(fname, std::ios::in);
+	std::stringstream finalResult;
+	double coeff1 = 0;
+	double coeff2 = 0;
+	double coeff3 = 0;
+	double coeff4 = 0;
+	double coeff5 = 0;
+	if (file.is_open())
+	{
+		while (std::getline(file, line))
+		{
+			std::stringstream str(line);
+			//std::getline(str, word);
+			//std::cout << word << std::endl;
+			while (std::getline(str, word, ','))
+			{
+				//if (word == "CO2")
+				//{
+				//	std::stringstream newstr(line);
+				//	std::string sent;
+				//	std::getline(newstr, sent);
+				//	std::cout << sent << std::endl;
+				//}
+				int i = 0;
+				if (word == species)
+				{
+					std::stringstream newstr(line);
+					//if (i == 2)
+					//{
+					//	double coeff1 = std::stod(word);
+					//	std::cout << coeff1 << "'";
+					//}
+					std::string placeholder;
+					while (std::getline(newstr, placeholder, ',')) {
+						switch (i)
+						{
+						case 2:
+							coeff1 = std::stod(placeholder);
+						case 3:
+							coeff2 = std::stod(placeholder);
+						case 4:
+							coeff3 = std::stod(placeholder);
+						case 5:
+							coeff4 = std::stod(placeholder);  //Min Temperature
+						case 6:
+							coeff5 = std::stod(placeholder); //Max Temperature
+						}
+						++i;
+					}
+				}
+			}
+		}
+		//std::cout << "Coeff1: " << coeff1 << " Coeff2: " << coeff2 << " Coeff3: " << coeff3 << " Coeff4: " << coeff4 << " Coeff5: " << coeff5 << std::endl;
+		//std::cout << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
+		//std::cout << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << std::endl;
+		//finalResult << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
+		//finalResult << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << " J/Mol*K" << std::endl;
+		//finalResult << "Heat Capacity at (" << temperature2 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature2) << " J/Mol*K" << std::endl;
+	}
+	else
+		finalResult << "Could not open file" << std::endl;
+
+
+	file.close();
+	return finalResult;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void ShowInfo(ImFont* font2)
 {
 	ImGui::PushFont(font2);
