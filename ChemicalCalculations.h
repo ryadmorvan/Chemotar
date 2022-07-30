@@ -26,6 +26,15 @@ double EnthalpyEvolved(double coeff1, double coeff2, double coeff3, double coeff
 	return Enthalpy;
 }
 
+double EntropyEvolved(double coeff1, double coeff2, double coeff3, double coeff4, double coeff5, double temperature1, double temperature2)
+{
+	double Enthalpy = 0;
+	Enthalpy = coeff1*log(temperature2/temperature1) + coeff2 * powerup(temperature2, temperature1, 1) / 1 + coeff3 * powerup(temperature2, temperature1, 2) / 2 + coeff4 * powerup(temperature2, temperature1, 3) / 3 + coeff5 * powerup(temperature2, temperature1, 4) / 4;
+	return Enthalpy;
+}
+
+
+
 double HeatCapacity(double coeff1, double coeff2, double coeff3, double coeff4, double coeff5, double temperature1)
 {
 	double HeatCapacity = 0;
@@ -115,7 +124,8 @@ std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, f
 		std::cout << "Coeff1: " << coeff1 << " Coeff2: " << coeff2 << " Coeff3: " << coeff3 << " Coeff4: " << coeff4 << " Coeff5: " << coeff5 << std::endl;
 		std::cout << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
 		std::cout << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << std::endl;
-		finalResult << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
+		finalResult << "Enthalpy change is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
+		finalResult << "Entropy change is: " << EntropyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol*K" << std::endl;
 		finalResult << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << " J/Mol*K" << std::endl;
 		finalResult << "Heat Capacity at (" << temperature2 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature2) << " J/Mol*K" << std::endl;
 	}
