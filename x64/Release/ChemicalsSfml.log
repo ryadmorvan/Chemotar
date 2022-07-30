@@ -59,8 +59,8 @@ C:\Users\riyad\source\repos\Chemicals\ChemicalsSfml\Windows_FileHandling.h(62): 
               _Alloc=std::allocator<char>
           ]
   Generating code
-  1 of 2475 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 2481 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    30 functions had inline decision re-evaluated but remain unchanged
+    27 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ChemicalsSfml.vcxproj -> C:\Users\riyad\source\repos\Chemicals\x64\Release\Chemical Properties Calculator.exe

@@ -83,27 +83,37 @@ int main()
 		}
 		ImGui::SFML::Update(window, deltaClock.restart());
 
+		//ImGui::SetMouseCursor(ImGuiMouseCursor_None); hide Cursor
+
 		ImGui::PushFont(font2);
 		if (ImGui::BeginMainMenuBar())
 		{
 			
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Add Table Enthalpy", NULL))
+				if (ImGui::BeginMenu("Add"))
 				{
-					_AddTable(filePath, TABLES_SAVE_DATA::HEAT_CAPACITY);
-				}
-				if (ImGui::MenuItem("Add Table Viscosity", NULL))
-				{
+					if (ImGui::MenuItem("Add Table Enthalpy", NULL))
+					{
+						_AddTable(filePath, TABLES_SAVE_DATA::HEAT_CAPACITY);
+					}
+					if (ImGui::MenuItem("Add Table Viscosity", NULL))
+					{
 
-					_AddTable(filePath, TABLES_SAVE_DATA::VISCOSITY);
+						_AddTable(filePath, TABLES_SAVE_DATA::VISCOSITY);
+					}
+					ImGui::EndMenu();
+				}
+				if (ImGui::MenuItem("Exit", NULL))
+				{
+					return 0;
 				}
 				ImGui::EndMenu();
 
 			}
 			if (ImGui::BeginMenu("View"))
 			{
-				if (ImGui::MenuItem("Chemical Properties Calculator", NULL, &ShowPropertiesCalculator))
+				if (ImGui::MenuItem("Chemical Enthalpy Calculator", NULL, &ShowPropertiesCalculator))
 				{
 
 				}
@@ -111,6 +121,10 @@ int main()
 				{
 
 				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Simulations"))
+			{
 				if (ImGui::MenuItem("Ideal Gas Law Simulation", NULL, &ShowIdealGasLaw))
 				{
 

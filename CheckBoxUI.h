@@ -110,10 +110,10 @@ std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::m
 					case 0:
 						Chemicals.push_back(placeholder);
 						break;
-					case 4:
+					case 5:
 						min = std::stod(placeholder);
 						break;
-					case 5:
+					case 6:
 						max = std::stod(placeholder);
 						break;
 					}
@@ -378,6 +378,9 @@ void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 	static bool CheckBox[500];
 
 
+
+	static ImVec4 TextColor = ImVec4(0.898f, 0.845f, 0.710f, 0.95f);
+
 	//clean checkBoxes initally
 	static bool clean = []()
 	{
@@ -414,7 +417,7 @@ void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 		{
 			finalResult.clear(); species = "";
 		}
-		ImGui::Text(finalResult.c_str());
+		ImGui::TextColored(TextColor, finalResult.c_str());
 	}
 	else
 	{
@@ -437,7 +440,10 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 	static FileInfo TableName;
 	static bool tableLoaded = 0;
 	static bool CheckBox[500];
+	
 
+	//Text Color
+	static ImVec4 TextColor = ImVec4(0.725f, 0.292f, 0.376f, 0.95f);
 
 	//clean checkBoxes initally
 	static bool clean = []()
@@ -462,7 +468,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 			if (ImGui::Button("Calculate"))
 			{
 				finalResult.clear();
-				results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
+				results = CalculateViscosity(species, temperature1, file, line, word, fname);
 				insertInfo(results, finalResult);
 			}
 			if (ImGui::Button("Remove Table"))
@@ -470,6 +476,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 				memset(CheckBox, 0, sizeof(CheckBox));
 				_Find_File_Delete(TableName, TABLES_SAVE_DATA::VISCOSITY);
 			}
+			ImGui::TextColored(TextColor, "cP: CentiPoise\n");
 		}
 		else
 		{

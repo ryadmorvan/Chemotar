@@ -256,3 +256,27 @@ void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
 
 	fileWrite.close();
 }
+
+
+
+bool _contains(const std::string& str, const std::string substr)
+{
+	if (str.size() < substr.size()) return false;
+
+	for (int i = 0; i < str.size(); i++)
+	{
+		if (str.size() - i < substr.size()) return false;
+
+		bool match = true;
+		for (int j = 0; j < substr.size(); j++)
+		{
+			if (str.at(i + j) != substr.at(j))
+			{
+				match = false;
+				break;
+			}
+		}
+		if (match) return true;
+	}
+	return false;
+}

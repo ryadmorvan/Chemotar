@@ -5,6 +5,13 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include "Windows_FileHandling.h"
+
+
+enum STATE
+{
+	LIQUID = 0X01, GAS = 0X02
+};
 
 double powerup(double temperature2, double temperature1, double power)
 {
@@ -24,6 +31,21 @@ double HeatCapacity(double coeff1, double coeff2, double coeff3, double coeff4, 
 	double HeatCapacity = 0;
 	HeatCapacity = coeff1 + coeff2 * temperature1 + coeff3 * pow(temperature1, 2) + coeff4 * pow(temperature1, 3) + coeff5 * pow(temperature1, 4);
 	return HeatCapacity;
+}
+
+
+double _ViscosityCalculation(double coeff1, double coeff2, double coeff3, double coeff4, double temperature, STATE state)
+{
+	double Viscosity = 0;
+	if (state == STATE::LIQUID)
+	{
+		Viscosity = pow(10, (coeff1 + coeff2 / temperature + coeff3 * temperature + coeff4 * pow(temperature, 2)));
+	}
+	else if (state == STATE::GAS)
+	{
+		Viscosity = coeff1 + coeff2 * temperature + coeff3 * pow(temperature, 2);
+	}
+	return Viscosity;
 }
 
 std::string insertInfo(std::stringstream &results, std::string &finalResult)
@@ -116,7 +138,6 @@ std::stringstream CalculateViscosity(std::string& species, float& temperature, s
 	double coeff2 = 0;
 	double coeff3 = 0;
 	double coeff4 = 0;
-	double coeff5 = 0;
 	if (file.is_open())
 	{
 		while (std::getline(file, line))
@@ -144,30 +165,46 @@ std::stringstream CalculateViscosity(std::string& species, float& temperature, s
 					//}
 					std::string placeholder;
 					while (std::getline(newstr, placeholder, ',')) {
-						switch (i)
+						if (_contains(fname, "Liquids"))
 						{
-						case 2:
-							coeff1 = std::stod(placeholder);
-						case 3:
-							coeff2 = std::stod(placeholder);
-						case 4:
-							coeff3 = std::stod(placeholder);
-						case 5:
-							coeff4 = std::stod(placeholder);  //Min Temperature
-						case 6:
-							coeff5 = std::stod(placeholder); //Max Temperature
+							switch (i)
+							{
+							case 1:
+								coeff1 = std::stod(placeholder);
+							case 2:
+								coeff2 = std::stod(placeholder);
+							case 3:
+								coeff3 = std::stod(placeholder);
+							case 4:
+								coeff4 = std::stod(placeholder);
+							}
+						}
+						else
+						{
+							switch (i)
+							{
+							case 1:
+								coeff1 = std::stod(placeholder);
+							case 2:
+								coeff2 = std::stod(placeholder);
+							case 3:
+								coeff3 = std::stod(placeholder);
+							}
 						}
 						++i;
 					}
 				}
 			}
 		}
-		//std::cout << "Coeff1: " << coeff1 << " Coeff2: " << coeff2 << " Coeff3: " << coeff3 << " Coeff4: " << coeff4 << " Coeff5: " << coeff5 << std::endl;
-		//std::cout << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
-		//std::cout << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << std::endl;
-		//finalResult << "Enthalpy evolved is: " << EnthalpyEvolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
-		//finalResult << "Heat Capacity at (" << temperature1 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << " J/Mol*K" << std::endl;
-		//finalResult << "Heat Capacity at (" << temperature2 << "): Cp = " << HeatCapacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature2) << " J/Mol*K" << std::endl;
+
+		if (!_contains(fname, "Liquids"))
+		{
+			finalResult << "Viscosity of " << species << " at (" << temperature << ") : " << _ViscosityCalculation(coeff1, coeff2, coeff3, coeff4, temperature, STATE::GAS) << "cP" << std::endl;
+		}
+		else
+		{
+			finalResult << "Viscosity of " << species << " at (" << temperature << "): " << _ViscosityCalculation(coeff1, coeff2, coeff3, coeff4, temperature, STATE::LIQUID) << " cP" << std::endl;
+		}
 	}
 	else
 		finalResult << "Could not open file" << std::endl;
