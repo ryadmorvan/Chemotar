@@ -26,9 +26,9 @@ public:
 		constant_pressure = 0x01, constant_volume = 0x02, constant_temperature = 0x03, constant_heat = 0x04
 	};
 
-	double x;
-	double y;
-	double thickness;
+	float x;
+	float y;
+	float thickness;
 	ImVec2 start_pos_x;
 	ImVec2 End_pos_x;
 	ImVec2 start_pos_y;
@@ -43,12 +43,12 @@ public:
 	public:
 		ImVec2 start_cord;
 		ImVec2 end_cord;
-		void setcord(double x, double y, ImVec2 start_pos_x, ImVec2 start_pos_y)
+		void setcord(float x, float y, ImVec2 start_pos_x, ImVec2 start_pos_y)
 		{
 			start_cord = ImVec2(start_pos_x.x + x, start_pos_y.y - y);
 			end_cord = ImVec2(start_pos_x.x + x + 1, start_pos_y.y - y);
 		}
-		void setcord_point(double x, double y, ImVec2 start_pos_x, ImVec2 start_pos_y)
+		void setcord_point(float x, float y, ImVec2 start_pos_x, ImVec2 start_pos_y)
 		{
 			start_cord = ImVec2(start_pos_x.x + x, start_pos_y.y - y);
 			end_cord = ImVec2(start_pos_x.x + x + 5, start_pos_y.y - y);

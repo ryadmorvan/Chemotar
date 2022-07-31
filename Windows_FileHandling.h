@@ -174,12 +174,13 @@ void _TableNamesCorrection(std::vector<std::string>& TableNames)
 
 
 
-int _Round(double number)
+template<typename T>
+int _Round(T number)
 {
 	return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
 }
-
-std::string _Format(double f, int n)
+template<typename T1, typename T2>
+std::string _Format(T1 f, T2 n)
 {
 	if (f == 0) {
 		return "0";

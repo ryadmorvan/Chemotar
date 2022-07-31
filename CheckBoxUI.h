@@ -187,8 +187,8 @@ void _LoadTables(std::vector<std::string>& TableNames, std::vector<std::string> 
 	}
 }
 
-
-bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, float& tempMin, float& tempMax, std::string& filePath, FileInfo &TableInfo)
+template<typename FLOATING>//accepts floats, doubles... etc
+bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, FLOATING& tempMin, FLOATING& tempMax, std::string& filePath, FileInfo &TableInfo)
 {
 	static bool _TabeLoaded = 0;
 	static int _vectorSize = 0; //Vector Size for different files
@@ -273,8 +273,8 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 
 
 
-
-bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, float& tempMin, float& tempMax, float& tempCrit,  std::string& filePath, FileInfo& TableInfo)
+template<typename FLOATING> //accepts floats, doubles... etc
+bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::string& specie, FLOATING& tempMin, FLOATING& tempMax, FLOATING& tempCrit,  std::string& filePath, FileInfo& TableInfo)
 {
 	static bool _TabeLoaded = 0;
 	static int _vectorSize = 0; //Vector Size for different files
@@ -443,8 +443,8 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 	
 
 	//Text Color
-	static ImVec4 TextColor = ImVec4(0.725f, 0.292f, 0.376f, 0.95f);
-
+	static ImVec4 TextColorNotif = ImVec4(0.725f, 0.292f, 0.376f, 0.95f);
+	static ImVec4 TextColorStat = ImVec4(0.898f, 0.845f, 0.710f, 0.95f);
 	//clean checkBoxes initally
 	static bool clean = []()
 	{
@@ -476,13 +476,13 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 				memset(CheckBox, 0, sizeof(CheckBox));
 				_Find_File_Delete(TableName, TABLES_SAVE_DATA::VISCOSITY);
 			}
-			ImGui::TextColored(TextColor, "cP: CentiPoise\n");
+			ImGui::TextColored(TextColorNotif, "cP: CentiPoise\n");
 		}
 		else
 		{
 			finalResult.clear(); species = "";
 		}
-		ImGui::Text(finalResult.c_str());
+		ImGui::TextColored(TextColorStat, finalResult.c_str());
 	}
 	else
 	{
