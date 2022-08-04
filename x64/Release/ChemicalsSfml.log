@@ -1,42 +1,4 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (ChemicalsSfml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Graph.cpp
-C:\Users\riyad\Desktop\Chemical-Properties-main\Piston.h(98,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(6,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(6,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(7,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(7,21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(8,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(8,23): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(9,34): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(9,21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(11,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(11,40): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(12,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(12,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(13,14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(22,75): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(25,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(25,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(28,61): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(31,81): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(31,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(40,75): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(43,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(43,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(46,63): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(49,81): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(49,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(58,56): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(61,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(61,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(66,48): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(69,73): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(69,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(78,62): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(81,82): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(86,48): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(89,73): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\riyad\Desktop\Chemical-Properties-main\Graph.cpp(89,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Source.cpp
 C:\Users\riyad\Desktop\Chemical-Properties-main\CheckBoxUI.h(99,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\riyad\Desktop\Chemical-Properties-main\CheckBoxUI.h(102,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
@@ -89,10 +51,8 @@ C:\Users\riyad\Desktop\Chemical-Properties-main\Windows_FileHandling.h(62): mess
               _Alloc=std::allocator<char>
           ]
   Generating code
-  Previous IPDB and IOBJ mismatch, fall back to full compilation.
-C:\Users\riyad\Desktop\Chemical-Properties-main\ChemicalCalculations.h(68): warning C4715: 'insertInfo': not all control paths return a value
-C:\Users\riyad\Desktop\Chemical-Properties-main\Windows_FileHandling.h(125): warning C4715: '_Find_File': not all control paths return a value
-C:\Users\riyad\Desktop\Chemical-Properties-main\CheckBoxUI.h(55): warning C4715: '_AddTable': not all control paths return a value
-  All 2536 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  2 of 2539 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    27 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ChemicalsSfml.vcxproj -> C:\Users\riyad\Desktop\Chemical-Properties-main\x64\Release\Chemical Properties Calculator.exe

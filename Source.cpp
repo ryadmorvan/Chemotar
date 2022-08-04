@@ -11,8 +11,10 @@
 #include <SFML/imgui-SFML.h>
 #include "ChemicalCalculations.h"
 #include "CheckBoxUI.h"
-#include "Graphics Simulation.h"
 
+//Simulations
+#include "Graphics Simulation.h"
+#include "BoilerSimulation.h"
 
 
 sf::Texture image;
@@ -58,6 +60,7 @@ int main()
 	bool ShowPropertiesCalculator = FALSE;
 	bool ShowViscosityCalculator = FALSE;
 	bool ShowIdealGasLaw = FALSE;
+	bool ShowBoiler = FALSE;
 	bool FontSettings = 0;
 	window.setFramerateLimit(60);
 
@@ -129,6 +132,10 @@ int main()
 				{
 
 				}
+				if (ImGui::MenuItem("Boiler Simulation", NULL, &ShowBoiler))
+				{
+
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Developer"))
@@ -162,7 +169,7 @@ int main()
 		}
 
 
-
+		//Simulations
 		ImGui::PushFont(font);
 		if (ShowIdealGasLaw == TRUE)
 		{
@@ -170,6 +177,15 @@ int main()
 		}
 
 		ImGui::PopFont();
+
+		ImGui::PushFont(font);
+		if (ShowBoiler == TRUE)
+		{
+			BoilerSimulation(&ShowBoiler);
+		}
+		ImGui::PopFont();
+
+
 
 		//Developer Window
 		if (ShowDeveloperInfo)

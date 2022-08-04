@@ -42,6 +42,9 @@
     <ClCompile Include="imgui\imgui_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DrawShapes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChemicalCalculations.h">
@@ -90,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoilerSimulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawShapes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
