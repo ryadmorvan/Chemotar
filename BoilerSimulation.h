@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include "Windows_FileHandling.h"
 #include "DrawShapes.h"
+#include "Boiler.h"
 
 
 static void BoilerSimulation(bool *p_open)
@@ -29,7 +30,7 @@ static void BoilerSimulation(bool *p_open)
 	//ImDrawListSharedData *draw_list_data = ImGui::GetDrawListSharedData();
 
 
-	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	static ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
 	static float sz = 220.0f;
 	static float thickness = 3.0f;
@@ -44,9 +45,24 @@ static void BoilerSimulation(bool *p_open)
 	DrawShapes arrow2 = DrawShapes(50.0f + x, 350.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
 	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 220,  5.0f, DrawShapes::BOILER);
 
+	  
+
+	DrawShapes Turbine = DrawShapes(x + 660, y + 190, 250, 2.0f, DrawShapes::TURBINE);
+
+	DrawShapes Resistor = DrawShapes(x + 325, y + 370, 25, 2.5f, DrawShapes::RESISTOR);
+
+	boiler<FEED::DOUBLE> Boilers;
+
+
+	//Boiler<void> boil;
+
+
+
 
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
 	Boiler.Draw(draw_list);
+	Turbine.Draw(draw_list);
 
+	Resistor.Draw(draw_list);
 }

@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boiler.cpp" />
     <ClCompile Include="DrawShapes.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="imgui\imgui-SFML.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Boiler.h" />
     <ClInclude Include="BoilerSimulation.h" />
     <ClInclude Include="CheckBoxUI.h" />
     <ClInclude Include="ChemicalCalculations.h" />

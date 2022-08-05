@@ -30,19 +30,18 @@ private:
 	float thickness;
 	float x_pos;
 	float y_pos;
-	ImVec4 Arrow_Col;
 	ImU32 col32;
 	ImU32 TextColor;
 public:
 	enum shapes
 	{
-		ARROW = 0x01, BOILER = 0x02, TURBINE = 0x03, 
+		ARROW = 0x01, BOILER = 0x02, TURBINE = 0x03, RESISTOR = 0x04
 	};
 	shapes shape;
 	
 
 	DrawShapes(float x_posistion, float y_posistion, float Length, float Thickness, DrawShapes::shapes import_shape);
-
+	void TurbineResize(float size) { length = size; }
 
 	void Draw(ImDrawList* draw_list);
 
