@@ -25,7 +25,12 @@ static void BoilerSimulation(bool *p_open)
 	// ImGui defines overloaded operators but they are internal to imgui.cpp and not exposed outside (to avoid messing with your types) 
 	// In this example we are not using the maths operators! 
 
+
+	//ImDrawListSharedData *draw_list_data = ImGui::GetDrawListSharedData();
+
+
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
 	static float sz = 220.0f;
 	static float thickness = 3.0f;
 	static ImVec4 col = ImVec4(0.9f, 0.9f, 0.9f, 0.8f);
@@ -35,15 +40,13 @@ static void BoilerSimulation(bool *p_open)
 	float th = thickness;
 
 
-	draw_list->AddRect(ImVec2(x, y), ImVec2(x + sz + 100, y + sz + 100), col32, 10.0f, ImDrawCornerFlags_All, th);
-
-	/*draw_list->AddTriangleFilled(ImVec2(x + 50, y+ 50), ImVec2(x+ 50, y + 60), ImVec2(x+ 60, y + 55), ImColor(255, 0, 0));*/
-
-
 	DrawShapes arrow1 = DrawShapes(50.0f + x, 250.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
 	DrawShapes arrow2 = DrawShapes(50.0f + x, 350.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
+	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 220,  5.0f, DrawShapes::BOILER);
+
 
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
+	Boiler.Draw(draw_list);
 
 }
