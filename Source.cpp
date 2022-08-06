@@ -12,6 +12,8 @@
 #include "ChemicalCalculations.h"
 #include "CheckBoxUI.h"
 
+#include <Windows.h>
+
 //Simulations
 #include "Graphics Simulation.h"
 #include "BoilerSimulation.h"
@@ -23,13 +25,22 @@ std::string filePath = " ";
 
 bool p_open = 0;
 
+//void HideConsole()
+//{
+//	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
+//}
+
+
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 768), "Chemical Properties Calculator");
+	//HideConsole();
+	sf::RenderWindow window(sf::VideoMode(1366, 768), "Chemical Properties Calculator");
 	ImGui::SFML::Init(window);
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+
 	sf::Clock deltaClock;
 	float fontSize = 16;
 	ImGuiIO& io = ImGui::GetIO();
@@ -87,11 +98,10 @@ int main()
 		ImGui::SFML::Update(window, deltaClock.restart());
 
 		//ImGui::SetMouseCursor(ImGuiMouseCursor_None); hide Cursor
-
+		/*ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());*/
 		ImGui::PushFont(font2);
 		if (ImGui::BeginMainMenuBar())
 		{
-			
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::BeginMenu("Add"))
@@ -109,6 +119,7 @@ int main()
 				}
 				if (ImGui::MenuItem("Exit", NULL))
 				{
+					ImGui::SFML::Shutdown();
 					return 0;
 				}
 				ImGui::EndMenu();

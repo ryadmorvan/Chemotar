@@ -41,28 +41,31 @@ static void BoilerSimulation(bool *p_open)
 	float th = thickness;
 
 
-	DrawShapes arrow1 = DrawShapes(50.0f + x, 250.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
-	DrawShapes arrow2 = DrawShapes(50.0f + x, 350.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
 	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 220,  5.0f, DrawShapes::BOILER);
+	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 300.0f + y, 200.0f, 2.0, DrawShapes::ARROW);
+	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 250.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
+	DrawShapes arrow2 = DrawShapes(Boiler.returnX() - 210.0f, 350.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
 
-	  
+	//DrawShapes Turbine = DrawShapes(x + 660, y + 190, 250, 2.0f, DrawShapes::TURBINE);
 
-	DrawShapes Turbine = DrawShapes(x + 660, y + 190, 250, 2.0f, DrawShapes::TURBINE);
-
-	DrawShapes Resistor = DrawShapes(x + 325, y + 370, 25, 2.5f, DrawShapes::RESISTOR);
-
-	boiler<FEED::DOUBLE> Boilers;
+	DrawShapes Resistor = DrawShapes(Boiler.returnX() + Boiler.returnLength()/3 - 5, y + 370, 25, 2.5f, DrawShapes::RESISTOR);
 
 
-	//Boiler<void> boil;
+	static boiler<FEED::DOUBLE> boil(120, 175, 295, 303.15, 338.15, 125.7, 271.9, 2793, 6, 477.15, true);
+	boil.setShape(Boiler);
+	boil.setPressure(17);
+
 
 
 
 
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
-	Boiler.Draw(draw_list);
-	Turbine.Draw(draw_list);
+	arrow3_out.Draw(draw_list);
+	//Boiler.Draw(draw_list);
+	boil.Draw(draw_list);
+	boil.DrawInfo(draw_list, arrow1, arrow2, arrow3_out);
+	//Turbine.Draw(draw_list);
 
 	Resistor.Draw(draw_list);
 }

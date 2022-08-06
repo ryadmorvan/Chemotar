@@ -9,7 +9,6 @@
 
 
 
-
 struct FileInfo
 {
 	std::string fileName;
