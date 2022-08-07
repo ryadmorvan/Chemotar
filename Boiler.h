@@ -49,11 +49,11 @@ private:
 	float feed3;
 	float temperature1;
 	float temperature2;
+	float temperature_outlet;
 	float enthalpy_feed1;
 	float enthalpy_feed2;
 	float enthalpy_outlet;
 	float outlet_diameter;
-	float temperature_outlet;
 
 	bool Saturated = false;
 
@@ -63,7 +63,7 @@ private:
 	float Heating_Element = 0; //Heat
 public:
 	boiler<FEED::DOUBLE>();
-	boiler<FEED::DOUBLE>(float FEED_1, float FEED_2, float FEED_3, float Temperature1, float Temperature2,
+	boiler<FEED::DOUBLE>(float FEED_1, float FEED_2, float Temperature1, float Temperature2,
 		float Enthalpy_Feed1, float Enthalpy_Feed2, float Enthalpy_Outlet, float Outlet_Diameter,
 		float Temperature_Outlet, bool saturation);
 	void setShape(DrawShapes Boiler_Shape) { Boiler = Boiler_Shape; }
@@ -79,10 +79,24 @@ public:
 			<< std::endl << "Temperature1 = " << temperature1 << std::endl << "Temperature2 = "
 			<< temperature2 << std::endl;
 	}
+	float& ReturnFeed1() { return feed1; }
+	float& ReturnFeed2() { return feed2; }
+	float& ReturnFeed3() { return feed3; }
+	float& ReturnTemp1() { return temperature1; }
+	float& ReturnTemp2() { return temperature2; }
+	float& ReturnTemp3() { return temperature_outlet; }
+	float& ReturnEnthalpy1() { return enthalpy_feed1; }
+	float& ReturnEnthalpy2() { return enthalpy_feed2; }
+	float& ReturnEnthalpy3() { return enthalpy_outlet; }
 
-	std::string returnFeed1() { return "Feed Rate: " + _Format(feed1, 4) + " Kg/min"; }
-	std::string returnFeed2() { return "Feed Rate: " + _Format(feed2, 4)+ " Kg/min"; }
-	std::string returnFeed3() { return "Feed Rate: " + _Format(feed3, 4) + " Kg/min"; }
+	void Update() { CalculateHeat(); CalculateFlowRate(); }
+
+	void CalculateHeat();
+	void CalculateFlowRate();
+
+	std::string returnFeed1() { return "Flow Rate: " + _Format(feed1, 4) + " Kg/min"; }
+	std::string returnFeed2() { return "Flow Rate: " + _Format(feed2, 4)+ " Kg/min"; }
+	std::string returnFeed3() { return "Flow Rate: " + _Format(feed3, 4) + " Kg/min"; }
 	std::string returnTemp1() { return "Temperature: " + _Format(temperature1, 4) + "K"; }
 	std::string returnTemp2() { return "Temperature: " + _Format(temperature2, 4) + "K"; }
 	std::string returnTemp3() { return "Temperature: " + _Format(temperature_outlet, 4) + "K"; }
@@ -91,6 +105,7 @@ public:
 	std::string returnEnthalpy3() { return "Enthalpy: " + _Format(enthalpy_outlet, 4) + " kJ/kg"; }
 	std::string returnOutletPressure() { return "Pressure: " + _Format(pressure, 4) + " bars"; }
 	std::string returnOutletDiameter() { return "Diameter: " + _Format(outlet_diameter, 4) + " inch"; }
+	std::string returnHeatEvolved() { return "Heat: " + _Format(Heating_Element, 5) + " TJ"; }
 
 };
 

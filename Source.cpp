@@ -32,6 +32,11 @@ bool p_open = 0;
 
 
 
+
+
+
+
+
 int main()
 {
 	//HideConsole();
@@ -45,7 +50,9 @@ int main()
 	float fontSize = 16;
 	ImGuiIO& io = ImGui::GetIO();
 	ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
-	ImFont* font2 = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
+	io.FontDefault = font;
+
+	ImFont* font2 = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 17);
 	ImGui::SFML::UpdateFontTexture();
 
 	sf::Texture propertiesImage;
@@ -69,20 +76,21 @@ int main()
 	//Flags of windows
 	bool ShowDeveloperInfo = FALSE;
 	bool ShowPropertiesCalculator = FALSE;
+	bool ShowSteamTableCalculator = FALSE;
 	bool ShowViscosityCalculator = FALSE;
 	bool ShowIdealGasLaw = FALSE;
 	bool ShowBoiler = FALSE;
 	bool FontSettings = 0;
 	window.setFramerateLimit(60);
 
+	//Flags for settings
+	bool ShowSettings = FALSE;
 
-
+	SetupImGuiStyle();
 
 
 	//Rectangle Properties
 	////////////////////////////////////////
-
-
 
 	while (window.isOpen())
 	{
@@ -96,6 +104,8 @@ int main()
 				window.close();
 		}
 		ImGui::SFML::Update(window, deltaClock.restart());
+
+		ImGui::ShowDemoWindow();
 
 		//ImGui::SetMouseCursor(ImGuiMouseCursor_None); hide Cursor
 		/*ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());*/
@@ -135,6 +145,10 @@ int main()
 				{
 
 				}
+				if (ImGui::MenuItem("Steam Table Calculator", NULL, &ShowSteamTableCalculator))
+				{
+					
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Simulations"))
@@ -149,6 +163,15 @@ int main()
 				}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Config"))
+			{
+				if (ImGui::MenuItem("Settings", NULL, &ShowSettings))
+				{
+
+				}
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Developer"))
 			{
 				ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
@@ -179,6 +202,14 @@ int main()
 			ImGui::End();
 		}
 
+		if (ShowSteamTableCalculator)
+		{
+			ImGui::PushFont(font);
+			ImGui::Begin("Steam Table Calculator", &ShowSteamTableCalculator);
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
 
 		//Simulations
 		ImGui::PushFont(font);
@@ -204,12 +235,24 @@ int main()
 			ShowInfo(font2);
 		}
 
+		//Show Settings
+		if (ShowSettings)
+		{
+			ImGui::PushFont(font);
+			ImGui::Begin("Settings", &ShowSettings);
+			_Settings();
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
 		//window.clear(sf::Color::Color(176, 216, 30));
 		ImGui::SFML::Render(window);
 		window.display();
 	}
 
+
 	ImGui::SFML::Shutdown();
+
 	
 	return 0;
 }

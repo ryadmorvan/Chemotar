@@ -12,13 +12,13 @@ boiler<FEED::DOUBLE>::boiler()
 {
 }
 
-boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2, float FEED_3,  float Temperature1, float Temperature2,
+boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, float Temperature2,
 	float Enthalpy_Feed1, float Enthalpy_Feed2, float Enthalpy_Outlet, float Outlet_Diameter,
 	float Temperature_Outlet, bool saturation)
 {
 	feed1 = FEED_1;
 	feed2 = FEED_2;
-	feed3 = FEED_3;
+	feed3 = FEED_1 + FEED_2;
 	temperature1 = Temperature1;
 	temperature2 = Temperature2;
 	enthalpy_feed1 = Enthalpy_Feed1;
@@ -48,5 +48,19 @@ void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1,
 	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 40), Arrow_Out1.returnColor(), returnOutletPressure().c_str());
 	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 20), Arrow_Out1.returnColor(), returnOutletDiameter().c_str());
 
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() + 20), ImColor(200, 80, 80, 220), returnHeatEvolved().c_str());
 
+
+}
+
+
+void boiler<FEED::DOUBLE>::CalculateHeat()
+{
+	Heating_Element = feed3 * enthalpy_outlet - feed1 * enthalpy_feed1 - feed2 * enthalpy_feed2;
+	Heating_Element = Heating_Element / 1000.0f;
+}
+
+void boiler<FEED::DOUBLE>::CalculateFlowRate()
+{
+	feed3 = feed1 + feed2;
 }
