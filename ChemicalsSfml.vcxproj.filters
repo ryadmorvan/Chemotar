@@ -107,6 +107,9 @@
     <ClInclude Include="Boiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SteamTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChemicalsSfml.rc">

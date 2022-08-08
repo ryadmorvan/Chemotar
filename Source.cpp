@@ -17,6 +17,7 @@
 //Simulations
 #include "Graphics Simulation.h"
 #include "BoilerSimulation.h"
+#include "SteamTable.h"
 
 
 sf::Texture image;
@@ -30,6 +31,7 @@ bool p_open = 0;
 //	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 //}
 
+#define _CRT_SECURE_NO_WARNINGS
 
 
 
@@ -102,7 +104,7 @@ int main()
 		}
 		ImGui::SFML::Update(window, deltaClock.restart());
 
-		//ImGui::ShowDemoWindow();
+		ImGui::ShowDemoWindow();
 
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
@@ -336,6 +338,7 @@ int main()
 		{
 			ImGui::PushFont(font);
 			ImGui::Begin("Steam Table Calculator", &ShowSteamTableCalculator);
+			SteamTableSimulation();
 			ImGui::PopFont();
 			ImGui::End();
 		}
