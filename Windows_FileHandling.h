@@ -293,7 +293,6 @@ bool _contains(const std::string& str, const std::string substr)
 }
 
 
-
 inline void _Settings()
 {
 	ImGuiIO& io = ImGui::GetIO();
