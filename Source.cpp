@@ -31,7 +31,7 @@ bool p_open = 0;
 //	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 //}
 
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 
 
 
@@ -239,79 +239,6 @@ int main()
 
 		//ImGui::SetMouseCursor(ImGuiMouseCursor_None); hide Cursor
 
-
-		//if (ImGui::BeginMainMenuBar())
-		//{
-
-		//	if (ImGui::BeginMenu("File"))
-		//	{
-		//		if (ImGui::BeginMenu("Add"))
-		//		{
-		//			if (ImGui::MenuItem("Add Table Enthalpy", NULL))
-		//			{
-		//				_AddTable(filePath, TABLES_SAVE_DATA::HEAT_CAPACITY);
-		//			}
-		//			if (ImGui::MenuItem("Add Table Viscosity", NULL))
-		//			{
-
-		//				_AddTable(filePath, TABLES_SAVE_DATA::VISCOSITY);
-		//			}
-		//			ImGui::EndMenu();
-		//		}
-		//		if (ImGui::MenuItem("Exit", NULL))
-		//		{
-		//			ImGui::SFML::Shutdown();
-		//			return 0;
-		//		}
-		//		ImGui::EndMenu();
-
-		//	}
-		//	if (ImGui::BeginMenu("View"))
-		//	{
-		//		if (ImGui::MenuItem("Chemical Enthalpy Calculator", NULL, &ShowPropertiesCalculator))
-		//		{
-
-		//		}
-		//		if (ImGui::MenuItem("Chemical Viscosity Calculator", NULL, &ShowViscosityCalculator))
-		//		{
-
-		//		}
-		//		if (ImGui::MenuItem("Steam Table Calculator", NULL, &ShowSteamTableCalculator))
-		//		{
-		//			
-		//		}
-		//		ImGui::EndMenu();
-		//	}
-		//	if (ImGui::BeginMenu("Simulations"))
-		//	{
-		//		if (ImGui::MenuItem("Ideal Gas Law Simulation", NULL, &ShowIdealGasLaw))
-		//		{
-
-		//		}
-		//		if (ImGui::MenuItem("Boiler Simulation", NULL, &ShowBoiler))
-		//		{
-
-		//		}
-		//		ImGui::EndMenu();
-		//	}
-		//	if (ImGui::BeginMenu("Config"))
-		//	{
-		//		if (ImGui::MenuItem("Settings", NULL, &ShowSettings))
-		//		{
-
-		//		}
-		//		ImGui::EndMenu();
-		//	}
-
-		//	if (ImGui::BeginMenu("Developer"))
-		//	{
-		//		ImGui::MenuItem("Info", NULL, &ShowDeveloperInfo);
-		//		//ImGui::MenuItem("Font Size", NULL, &FontSettings);
-		//		ImGui::EndMenu();
-		//	}
-		//	ImGui::EndMainMenuBar();
-		//}
-		//ImGui::PopFont();
 		//Chemical Enthalpy Calculation Window
 
 		if (ShowPropertiesCalculator == TRUE)

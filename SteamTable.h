@@ -208,7 +208,7 @@ void SteamTableSimulation()
 
 			ImGui::TableHeadersRow();
 
-			static int value = 0;
+			static int value2 = 0;
 			std::vector<bool> placeholder; placeholder.resize(SteamTable->size());
 			for (int row = 0; row < SteamTable->size(); row++)
 			{
@@ -216,7 +216,7 @@ void SteamTableSimulation()
 				for (int column = 0; column < 8; column++)
 				{
 					ImGui::TableSetColumnIndex(column);
-					if ((value == row) && (value != 0))
+					if ((value2 == row) && (value2 != 0))
 					{
 
 						/*ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::GetColorU32(ImVec4(1, 1, 1, 1)), column_color = 0);*/
@@ -225,7 +225,7 @@ void SteamTableSimulation()
 					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row), ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
 					{
 						placeholder.at(row) = true;
-						value = row;
+						value2 = row;
 					}
 
 				}
@@ -234,6 +234,74 @@ void SteamTableSimulation()
 			ImGui::EndTable();
 		}
 	}
+
+
+}
+
+
+enum class SteamTableFlag
+{
+	COMPRESSED_SUPERHEATED_TABLE = 0x01, SATURATED_TABLE = 0x02
+};
+
+enum class SteamTableCalculate
+{
+	PRESSURE = 0X01, TEMPERATURE = 0X02, DENSITY = 0X03, INTERNAL_ENERGY = 0x04, ENTHALPY = 0X05, ENTROPY = 0X06
+};
+
+template<size_t size>
+float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float &pressure, float &temperature, std::string &phase)
+{
+	//float pressure = 0.11; //In MPA
+	//float temperature = 1760; //in Celsius
+	
+	if (table == SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE)
+	{
+		for (int i = 1; i < SteamTable->size(); i++)
+		{
+			for (int j = 0; j < size - 1; j++)
+			{
+				if (pressure == std::stof(SteamTable->at(i).at(j)))
+				{
+					if (calculate == SteamTableCalculate::DENSITY)
+					{
+						if (temperature == std::stof(SteamTable->at(i).at(1)))
+						{
+							return std::stof(SteamTable->at(i).at(3));
+						}
+						else if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(SteamTable->at(i + 1).at(1)))))
+						{
+							float lower_value_temp = std::stof(SteamTable->at(i).at(1)); float upper_value_temp = std::stof(SteamTable->at(i + 1).at(1));
+							float lower_value_den = std::stof(SteamTable->at(i).at(3)); float upper_value_den = std::stof(SteamTable->at(i + 1).at(3));
+
+							float real_den = lower_value_den + ((temperature - lower_value_temp) / (upper_value_temp - lower_value_temp)) * (upper_value_den - lower_value_den);
+							phase = SteamTable->at(i + 1).at(7);
+							return real_den;
+
+						}
+					}
+					if (calculate == SteamTableCalculate::ENTHALPY)
+					{
+						if (temperature == std::stof(SteamTable->at(i).at(1)))
+						{
+							return std::stof(SteamTable->at(i).at(5));
+						}
+						else if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(SteamTable->at(i + 1).at(1)))))
+						{
+							float lower_value_temp = std::stof(SteamTable->at(i).at(1)); float upper_value_temp = std::stof(SteamTable->at(i + 1).at(1));
+							float lower_value_target = std::stof(SteamTable->at(i).at(5)); float upper_value_target = std::stof(SteamTable->at(i + 1).at(5));
+
+							float real_den = lower_value_target + ((temperature - lower_value_temp) / (upper_value_temp - lower_value_temp)) * (upper_value_target - lower_value_target);
+							phase = SteamTable->at(i + 1).at(7);
+							return real_den;
+
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 
 }
