@@ -93,7 +93,10 @@ static void BoilerSimulation(bool* p_open)
 		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
 	}
 	ImGui::TextColored(ImColor(100, 100, 200, 200), "Feeds Enthalpies");
-	ImGui::SliderFloat3(" In kJ/kg", *FeedEnthalpies, 100.0f, 3500.0f);
+	if (ImGui::SliderFloat3(" In kJ/kg", *FeedEnthalpies, 100.0f, 3500.0f))
+	{
+		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::TEMPERATURE);
+	}
 	//ImGui::SliderFloat("Feed1", &boil->ReturnFeed1(), 0, 200); ImGui::SameLine();
 	//ImGui::SliderFloat("Feed2", &boil->ReturnFeed2(), 0, 300); ImGui::SameLine();
 	//ImGui::SliderFloat("Feed3", &boil->ReturnFeed3(), 0, 400);

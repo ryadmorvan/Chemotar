@@ -3,7 +3,7 @@
 
 template<size_t size>
 
-float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float& pressure, float& temperature, std::string& phase);
+float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float& pressure, float& temperature, float &enthalpy, std::string& phase);
 
 
 enum class SteamTableFlag
@@ -41,9 +41,9 @@ boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, fl
 	temperature2 = Temperature2;
 	temperature_outlet = Temperature_Outlet;
 	pressure1 = Pressure1; pressure2 = Pressure2; pressure3 = Pressure3;
-	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, phase1.phase);
-	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, phase2.phase);
-	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, phase3.phase);
+	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1.phase);
+	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2.phase);
+	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3.phase);
 	outlet_diameter = Outlet_Diameter;
 }
 

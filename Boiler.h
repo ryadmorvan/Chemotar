@@ -115,24 +115,32 @@ public:
 
 	enum class UPDATING
 	{
-		ENTHALPY = 0X01, HEAT = 0X02
+		ENTHALPY = 0X01, HEAT = 0X02, TEMPERATURE = 0x03
 	};
 	template<size_t size>
 	void Update(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTables, float &pressure_feed, UPDATING update) {
 		if (update == UPDATING::ENTHALPY)
 		{
-			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, phase1.phase);
-			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, phase2.phase);
-			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, phase3.phase);
+			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1.phase);
+			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2.phase);
+			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3.phase);
 			CalculateHeat(); CalculateFlowRate();
 		}
 		if (update == UPDATING::HEAT)
 		{
-			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, phase1.phase);
-			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, phase2.phase);
-			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, phase3.phase);
+			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1.phase);
+			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2.phase);
+			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3.phase);
 			CalculateHeat(); CalculateFlowRate();
 		}
+		if (update == UPDATING::TEMPERATURE)
+		{
+			temperature1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::TEMPERATURE, pressure1, temperature1, enthalpy_feed1, phase1.phase);
+			temperature2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::TEMPERATURE, pressure2, temperature2, enthalpy_feed2 ,phase2.phase);
+			temperature_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::TEMPERATURE, pressure3, temperature_outlet, enthalpy_outlet,  phase3.phase);
+			CalculateHeat(); CalculateFlowRate();
+		}
+
 	}
 
 	void CalculateHeat();
