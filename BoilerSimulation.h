@@ -43,15 +43,17 @@ static void BoilerSimulation(bool* p_open)
 	float x = p.x + 100.0f, y = p.y + 200.0f, spacing = 15.0f;
 	float th = thickness;
 
+	static bool VelocityProfile = FALSE;
 
-	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 220, 5.0f, DrawShapes::BOILER);
-	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 300.0f + y, 200.0f, 2.0, DrawShapes::ARROW);
-	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 240.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
-	DrawShapes arrow2 = DrawShapes(Boiler.returnX() - 210.0f, 370.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
+
+	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 270, 5.0f, DrawShapes::BOILER);
+	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 325.0f + y, 200.0f, 2.0, DrawShapes::ARROW);
+	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 225.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
+	DrawShapes arrow2 = DrawShapes(Boiler.returnX() - 210.0f, 405.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
 
 	//DrawShapes Turbine = DrawShapes(x + 660, y + 190, 250, 2.0f, DrawShapes::TURBINE);
 
-	DrawShapes Resistor = DrawShapes(Boiler.returnX() + Boiler.returnLength() / 3 - 5, y + 370, 25, 2.5f, DrawShapes::RESISTOR);
+	DrawShapes Resistor = DrawShapes(Boiler.returnX() + Boiler.returnLength() / 3 + 5, y + 420, 25, 2.5f, DrawShapes::RESISTOR);
 
 
 	//Load steam table
@@ -66,8 +68,7 @@ static void BoilerSimulation(bool* p_open)
 
 
 
-	//static boiler<FEED::DOUBLE> boil(120, 175, 295, 303.15, 338.15, 125.7, 271.9, 2793, 6, 477.15, true);
-	static std::shared_ptr<boiler<FEED::DOUBLE>> boil = std::make_shared<boiler<FEED::DOUBLE>>(120, 175, 30, 65, 0.11, 0.11, 1.8, 6, 204, SteamTable_Compressed);
+	static std::shared_ptr<boiler<FEED::DOUBLE>> boil = std::make_shared<boiler<FEED::DOUBLE>>(120, 175, 30, 65, 0.11, 0.11, 1.8, 204, SteamTable_Compressed);
 	boil->setShape(Boiler);
 
 	//float density = CalculateFromSteamTable(SteamTable_Compressed, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::DENSITY, boil->ReturnPhases().at(0));
@@ -84,22 +85,41 @@ static void BoilerSimulation(bool* p_open)
 
 
 
+	static float FeedDiameters[3] = { 10, 10, 10 };
+
 
 	ImGui::TextColored(ImColor(100, 200, 100, 200), "Feeds Flow Rates");
 	ImGui::SliderFloat2(" In Kg/min", *feeds, 0.0f, 400.0f);
 	ImGui::TextColored(ImColor(200, 100, 100, 200), "Feeds Temperatures");
-	if (ImGui::SliderFloat3(" In Celsius", *FeedTemps, 5.0f, 300.0f))
+	if (ImGui::SliderFloat3(" In Celsius", *FeedTemps, 5.0f, 500.0f))
 	{
 		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
 	}
+
 	ImGui::TextColored(ImColor(100, 100, 200, 200), "Feeds Enthalpies");
 	if (ImGui::SliderFloat3(" In kJ/kg", *FeedEnthalpies, 100.0f, 3500.0f))
 	{
 		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::TEMPERATURE);
 	}
-	//ImGui::SliderFloat("Feed1", &boil->ReturnFeed1(), 0, 200); ImGui::SameLine();
-	//ImGui::SliderFloat("Feed2", &boil->ReturnFeed2(), 0, 300); ImGui::SameLine();
-	//ImGui::SliderFloat("Feed3", &boil->ReturnFeed3(), 0, 400);
+	PressureList(boil, SteamTable_Compressed);
+
+	ImGui::Checkbox("Enable Velocity Profile", &VelocityProfile);
+	if (VelocityProfile)
+	{
+		boil->EnableVelocityProfile();
+		boil->CalculateVelocity(SteamTable_Compressed);
+
+		if (ImGui::SliderFloat3(" Diameter in cm", FeedDiameters, 5, 200))
+		{
+			boil->ReturnDiameter1Ref() = FeedDiameters[0];
+			boil->ReturnDiameter2Ref() = FeedDiameters[1];
+			boil->ReturnDiameter3Ref() = FeedDiameters[2];
+		}
+	}
+	if (VelocityProfile == false) boil->DisabeVelocityProfile();
+
+
+
 
 	boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::HEAT);
 

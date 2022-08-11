@@ -39,6 +39,110 @@ void LoadSteamTable(std::vector<std::array<std::string, array_size>>& SteamTable
 }
 
 
+template<size_t size>
+void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>> &boil, std::unique_ptr<std::vector<std::array<std::string, size>>> &Table)
+{
+
+
+
+	static std::vector<std::string> pressure_list;
+	static bool once = [&Table]() {
+		pressure_list.emplace_back("0.01");
+		std::string previous_value = "0.01";
+		for (int row = 1; row < Table->size(); row++)
+		{
+			if (Table->at(row).at(0) != previous_value)
+			{
+				pressure_list.emplace_back(Table->at(row).at(0));
+				previous_value = Table->at(row).at(0);
+			}
+		}
+		return true;
+	}();
+
+	//bool once2 = []()
+	//	{
+	//		for (int i = 0; i < pressure_list.size(); i++)
+	//		{
+	//			std::cout << pressure_list.at(i) << std::endl;
+	//		}
+	//		return true;
+	//	} ();
+	static std::string current_pressure2 = boil->ReturnPressure1Copy() + " MPa";
+	static std::string current_pressure3 = boil->ReturnPressure2Copy() + " MPa";
+
+	static std::string current_pressure1 = boil->ReturnPressure3Copy() + " MPa";
+	//std::cout << "After: " << current_pressure1 << std::endl;
+
+	if (ImGui::BeginCombo("Pressure Feed (1)", current_pressure1.c_str()))
+	{
+
+		for (int i = 0; i < pressure_list.size(); i++)
+		{
+			bool is_selected = (current_pressure1 == pressure_list.at(i));
+			if (ImGui::Selectable(pressure_list.at(i).c_str(), is_selected))
+			{
+				current_pressure1 = pressure_list.at(i) + " MPa";
+				boil->ReturnPressure1() = std::stof(pressure_list.at(i));
+				return;
+			}
+			if (is_selected)
+			{
+
+			}
+		}
+		ImGui::EndCombo();
+		return;
+	}
+	if (ImGui::BeginCombo("Pressure Feed (2)", current_pressure2.c_str()))
+	{
+		for (int i = 0; i < pressure_list.size(); i++)
+		{
+			bool is_selected = (current_pressure2 == pressure_list.at(i));
+			if (ImGui::Selectable(pressure_list.at(i).c_str(), is_selected))
+			{
+				current_pressure2 = pressure_list.at(i) + " MPa";
+				boil->ReturnPressure2() = std::stof(pressure_list.at(i));
+				return;
+			}
+			if (is_selected)
+			{
+
+			}
+		}
+		ImGui::EndCombo();
+		return;
+	}
+	if (ImGui::BeginCombo("Pressure Outlet", current_pressure3.c_str()))
+	{
+		for (int i = 0; i < pressure_list.size(); i++)
+		{
+			bool is_selected = (current_pressure3 == pressure_list.at(i));
+			if (ImGui::Selectable(pressure_list.at(i).c_str(), is_selected))
+			{
+				current_pressure3 = pressure_list.at(i) + " MPa";
+				boil->ReturnPressure3() = std::stof(pressure_list.at(i));
+				return;
+			}
+			if (is_selected)
+			{
+
+			}
+		}
+		ImGui::EndCombo();
+		return;
+	}
+
+	//std::cout << current_pressure1 << std::endl;
+	//system("pause");
+	return;
+
+}
+
+
+
+
+
 void SteamTableSimulation()
 {
 	enum ContentsType { CT_Text, CT_FillButton };
@@ -246,7 +350,7 @@ enum class SteamTableFlag
 
 enum class SteamTableCalculate
 {
-	PRESSURE = 0X01, TEMPERATURE = 0X02, DENSITY = 0X03, INTERNAL_ENERGY = 0x04, ENTHALPY = 0X05, ENTROPY = 0X06
+	PRESSURE = 0X01, TEMPERATURE = 0X02, DENSITY = 0X03, INTERNAL_ENERGY = 0x04, ENTHALPY = 0X05, ENTROPY = 0X06, SPECIFIC_VOLUME = 0x07
 };
 
 template<size_t size>
@@ -331,6 +435,22 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							else
 								phase = SteamTable->at(i).at(7);
 							return real_den;
+
+						}
+					}
+					if (calculate == SteamTableCalculate::SPECIFIC_VOLUME)
+					{
+						if (temperature == std::stof(SteamTable->at(i).at(1)))
+						{
+							return std::stof(SteamTable->at(i).at(2));
+						}
+						else if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(SteamTable->at(i + 1).at(1)))))
+						{
+							float lower_value_temp = std::stof(SteamTable->at(i).at(1)); float upper_value_temp = std::stof(SteamTable->at(i + 1).at(1));
+							float lower_value_den = std::stof(SteamTable->at(i).at(2)); float upper_value_den = std::stof(SteamTable->at(i + 1).at(2));
+
+							float real_vol = lower_value_den + ((temperature - lower_value_temp) / (upper_value_temp - lower_value_temp)) * (upper_value_den - lower_value_den);
+							return real_vol;
 
 						}
 					}
