@@ -68,10 +68,10 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>> &boil, std::unique_ptr<s
 	//		}
 	//		return true;
 	//	} ();
-	static std::string current_pressure2 = boil->ReturnPressure1Copy() + " MPa";
-	static std::string current_pressure3 = boil->ReturnPressure2Copy() + " MPa";
+	static std::string current_pressure1 = boil->ReturnPressure1Copy() + " MPa";
+	static std::string current_pressure2 = boil->ReturnPressure2Copy() + " MPa";
 
-	static std::string current_pressure1 = boil->ReturnPressure3Copy() + " MPa";
+	static std::string current_pressure3 = boil->ReturnPressure3Copy() + " MPa";
 	//std::cout << "After: " << current_pressure1 << std::endl;
 
 	if (ImGui::BeginCombo("Pressure Feed (1)", current_pressure1.c_str()))
@@ -92,7 +92,6 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>> &boil, std::unique_ptr<s
 			}
 		}
 		ImGui::EndCombo();
-		return;
 	}
 	if (ImGui::BeginCombo("Pressure Feed (2)", current_pressure2.c_str()))
 	{
@@ -111,7 +110,6 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>> &boil, std::unique_ptr<s
 			}
 		}
 		ImGui::EndCombo();
-		return;
 	}
 	if (ImGui::BeginCombo("Pressure Outlet", current_pressure3.c_str()))
 	{
