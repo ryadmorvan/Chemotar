@@ -3,7 +3,7 @@
 
 template<size_t size>
 
-float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float& pressure, float& temperature, float &enthalpy, std::string& phase);
+float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float& pressure, float& temperature, float &enthalpy, Phase &phase);
 
 
 enum class SteamTableFlag
@@ -41,21 +41,29 @@ boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, fl
 	temperature2 = Temperature2;
 	temperature_outlet = Temperature_Outlet;
 	pressure1 = Pressure1; pressure2 = Pressure2; pressure3 = Pressure3;
-	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1.phase);
-	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2.phase);
-	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3.phase);
+	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1);
+	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2);
+	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3);
 }
 
 Phase boiler<FEED::DOUBLE>::returnPhase1() {
 	if (phase1.phase == " Liquid") {
+		phase1.quality = 0;
 		phase1.color = ImColor(59, 154, 225); return phase1;
 	}
 	else if ((phase1.phase == " Saturated Liquid") or (phase1.phase == " Saturated Vapor"))
 	{
+		if (phase1.quality > 0.5)
+		{
+			phase1.phase = " Saturated Vapor";
+		}
+		else
+			phase1.phase = " Saturated Liquid";
 		phase1.color = ImColor(159, 254, 225); return phase1;
 	}
 	else if (phase1.phase == " Vapor")
 	{
+		phase1.quality = 1;
 		phase1.color = ImColor(59, 254, 225); return phase1;
 	}
 	phase1.color = ImColor(59, 154, 225);
@@ -64,14 +72,22 @@ Phase boiler<FEED::DOUBLE>::returnPhase1() {
 
 Phase boiler<FEED::DOUBLE>::returnPhase2() {
 	if (phase2.phase == " Liquid") {
+		phase2.quality = 0;
 		phase2.color = ImColor(59, 154, 225); return phase2;
 	}
 	else if ((phase2.phase == " Saturated Liquid") or (phase2.phase == " Saturated Vapor"))
 	{
+		if (phase2.quality > 0.5)
+		{
+			phase2.phase = " Saturated Vapor";
+		}
+		else
+			phase2.phase = " Saturated Liquid";
 		phase2.color = ImColor(159, 254, 225); return phase2;
 	}
 	else if (phase2.phase == " Vapor")
 	{
+		phase2.quality = 1;
 		phase2.color = ImColor(59, 254, 225); return phase2;
 	}
 	phase2.color = ImColor(59, 154, 225);
@@ -80,18 +96,64 @@ Phase boiler<FEED::DOUBLE>::returnPhase2() {
 
 Phase boiler<FEED::DOUBLE>::returnPhase3() {
 	if (phase3.phase == " Liquid") {
+		phase3.quality = 0;
 		phase3.color = ImColor(59, 154, 225); return phase3;
 	}
 	else if ((phase3.phase == " Saturated Liquid") or (phase3.phase == " Saturated Vapor"))
 	{
+		if (phase3.quality > 0.5)
+		{
+			phase3.phase = " Saturated Vapor";
+		}
+		else
+			phase3.phase = " Saturated Liquid";
 		phase3.color = ImColor(159, 254, 225); return phase3;
 	}
 	else if (phase3.phase == " Vapor")
 	{
+		phase3.quality = 1;
 		phase3.color = ImColor(59, 254, 225); return phase3;
 	}
 	phase3.color = ImColor(59, 154, 225);
 	return phase3;
+}
+
+template<typename T>
+T boiler<FEED::DOUBLE>::returnQuality1()
+{
+	if (std::is_same<T, float>())
+	{
+		//return phase1.quality;
+	}
+	if (std::is_same<T, std::string>())
+	{
+		return "Quality: " + _Format(phase1.quality, 2);
+	}
+}
+
+template<typename T>
+T boiler<FEED::DOUBLE>::returnQuality2()
+{
+	if (std::is_same<T, float>())
+	{
+		//return phase2.quality;
+	}
+	if (std::is_same<T, std::string>())
+	{
+		return "Quality: " + _Format(phase2.quality, 2);
+	}
+}
+template<typename T>
+T boiler<FEED::DOUBLE>::returnQuality3()
+{
+	if (std::is_same<T, float>())
+	{
+		//return phase3.quality;
+	}
+	if (std::is_same<T, std::string>())
+	{
+		return "Quality: " + _Format(phase3.quality, 2);
+	}
 }
 
 
@@ -101,26 +163,31 @@ Phase boiler<FEED::DOUBLE>::returnPhase3() {
 void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1, DrawShapes& Arrow_In2, DrawShapes& Arrow_Out1)
 {
 	//Feed and outlet rates Info
-	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 100), Arrow_In1.returnColor(), returnFeed1().c_str());
-	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 100), Arrow_In2.returnColor(), returnFeed2().c_str());
-	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 100), Arrow_Out1.returnColor(), returnFeed3().c_str());
+	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 120), Arrow_In1.returnColor(), returnFeed1().c_str());
+	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 120), Arrow_In2.returnColor(), returnFeed2().c_str());
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 120), Arrow_Out1.returnColor(), returnFeed3().c_str());
 	//Feeds and outlet Temperatures
-	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 80), Arrow_In1.returnColor(), returnTemp1().c_str());
-	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 80), Arrow_In2.returnColor(), returnTemp2().c_str());
-	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 80), Arrow_Out1.returnColor(), returnTemp3().c_str());
+	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 100), Arrow_In1.returnColor(), returnTemp1().c_str());
+	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 100), Arrow_In2.returnColor(), returnTemp2().c_str());
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 100), Arrow_Out1.returnColor(), returnTemp3().c_str());
 	//Feeds and outlet Enthalpy
-	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 60), Arrow_In1.returnColor(), returnEnthalpy1().c_str());
-	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 60), Arrow_In2.returnColor(), returnEnthalpy2().c_str());
-	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 60), Arrow_Out1.returnColor(), returnEnthalpy3().c_str());
+	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 80), Arrow_In1.returnColor(), returnEnthalpy1().c_str());
+	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 80), Arrow_In2.returnColor(), returnEnthalpy2().c_str());
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 80), Arrow_Out1.returnColor(), returnEnthalpy3().c_str());
 	//Feeds Pressure
-	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 40), Arrow_In1.returnColor(), returnPressure1().c_str());
-	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 40), Arrow_In2.returnColor(), returnPressure2().c_str());
+	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 60), Arrow_In1.returnColor(), returnPressure1().c_str());
+	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 60), Arrow_In2.returnColor(), returnPressure2().c_str());
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 60), Arrow_Out1.returnColor(), returnOutletPressure().c_str());
 
 	//Feeds phase
-	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 20), returnPhase1().color, ("Phase:" + returnPhase1().phase).c_str());
-	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 20), returnPhase2().color, ("Phase:" + returnPhase2().phase).c_str());
-	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 20), returnPhase3().color, ("Phase:" + returnPhase3().phase).c_str());
+	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 40), returnPhase1().color, ("Phase:" + returnPhase1().phase).c_str());
+	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 40), returnPhase2().color, ("Phase:" + returnPhase2().phase).c_str());
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 40), returnPhase3().color, ("Phase:" + returnPhase3().phase).c_str());
 
+	//Feeds Quality
+	draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() - 20), returnPhase1().color, (returnQuality1<std::string>().c_str()));
+	draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() - 20), returnPhase2().color, (returnQuality2<std::string>().c_str()));
+	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 20), returnPhase3().color, (returnQuality3<std::string>().c_str()));
 
 	//Feeds Velocity Profile
 	if (VelocityProfile)
@@ -134,7 +201,6 @@ void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1,
 	}
 
 	//Outlet extra conditions
-	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() - 40), Arrow_Out1.returnColor(), returnOutletPressure().c_str());
 	draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() + 50), ImColor(200, 80, 80, 220), returnHeatEvolved().c_str());
 
 
@@ -163,9 +229,9 @@ void boiler<FEED::DOUBLE>::CalculateFlowRate()
 
 void boiler<FEED::DOUBLE>::CalculateVelocity(std::unique_ptr<std::vector<std::array<std::string, 8>>>& SteamTables)
 {
-	float specific_volume1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure1, temperature1, enthalpy_feed1, phase1.phase);
-	float specific_volume2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure2, temperature2, enthalpy_feed2, phase2.phase);
-	float specific_volume3 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure3, temperature_outlet, enthalpy_outlet, phase3.phase);
+	float specific_volume1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure1, temperature1, enthalpy_feed1, phase1);
+	float specific_volume2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure2, temperature2, enthalpy_feed2, phase2);
+	float specific_volume3 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure3, temperature_outlet, enthalpy_outlet, phase3);
 	kinetic1.VolumetricFlowRate = feed1 * specific_volume1 / 60;
 	kinetic2.VolumetricFlowRate = feed2 * specific_volume2 / 60;
 	kinetic3.VolumetricFlowRate = feed3 * specific_volume3 / 60;

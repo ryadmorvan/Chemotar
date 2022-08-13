@@ -58,13 +58,6 @@ int main()
 
 	ImFont* font2 = io1.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 17);
 	ImGui::SFML::UpdateFontTexture();
-
-	sf::Texture propertiesImage;
-	if (!propertiesImage.loadFromFile("properties.png"))
-	{
-		std::cout << "Error" << std::endl;
-	}
-	sf::Sprite propertiesIcon; propertiesIcon.setTexture(propertiesImage);
 	
 	if (!image.loadFromFile("Assets\\color.tga"))
 	{

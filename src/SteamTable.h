@@ -354,7 +354,7 @@ enum class SteamTableCalculate
 };
 
 template<size_t size>
-float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float &pressure, float &temperature, float &enthalpy_target, std::string &phase)
+float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float &pressure, float &temperature, float &enthalpy_target, Phase &phase)
 {
 	//float pressure = 0.11; //In MPA
 	//float temperature = 1760; //in Celsius
@@ -380,19 +380,22 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							float lower_value_den = std::stof(SteamTable->at(i).at(3)); float upper_value_den = std::stof(SteamTable->at(i + 1).at(3));
 
 							float real_den = lower_value_den + ((temperature - lower_value_temp) / (upper_value_temp - lower_value_temp)) * (upper_value_den - lower_value_den);
-							phase = SteamTable->at(i + 1).at(7);
+							phase.phase = SteamTable->at(i + 1).at(7);
 							return real_den;
 
 						}
 					}
 					if (calculate == SteamTableCalculate::ENTHALPY)
 					{
-						if ((temperature == std::stof(SteamTable->at(i).at(1)) && ((phase != " Saturated Liquid") && (phase != " Saturated Vapor"))))
+						if ((temperature == std::stof(SteamTable->at(i).at(1)) && ((phase.phase != " Saturated Liquid") && (phase.phase != " Saturated Vapor"))))
 						{
 							return std::stof(SteamTable->at(i).at(5));
 						}
-						else if ((temperature == std::stof(SteamTable->at(i).at(1)))  && ((phase == " Saturated Liquid") or (phase == " Saturated Vapor")))
+						else if ((temperature == std::stof(SteamTable->at(i).at(1)))  && ((phase.phase == " Saturated Liquid") or (phase.phase == " Saturated Vapor")))
 						{
+							float quality = 0, lower_enthalpy = std::stof(SteamTable->at(i).at(5)), higher_enthalpy = std::stof(SteamTable->at(i + 1).at(5));
+							quality = (enthalpy_target - lower_enthalpy) / (higher_enthalpy - lower_enthalpy);
+							phase.quality = quality;
 							return  enthalpy_target;
 						}
 						else if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(SteamTable->at(i + 1).at(1)))))
@@ -404,11 +407,11 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							float real_den = lower_value_target + ((temperature - lower_value_temp) / (upper_value_temp - lower_value_temp)) * (upper_value_target - lower_value_target);
 
 
-							phase = SteamTable->at(i).at(7);
+							phase.phase = SteamTable->at(i).at(7);
 
-							if (((phase == " Saturated Vapor") or (phase == " Saturated Liquid")) && (temperature > std::stof(SteamTable->at(i).at(1))))
+							if (((phase.phase == " Saturated Vapor") or (phase.phase == " Saturated Liquid")) && (temperature > std::stof(SteamTable->at(i).at(1))))
 							{
-								phase = SteamTable->at(i + 1).at(7);
+								phase.phase = SteamTable->at(i + 1).at(7);
 							}
 
 							return real_den;
@@ -428,21 +431,27 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 
 
 							float real_den = lower_value_target + ((enthalpy_target - lower_value_temp) / (upper_value_temp - lower_value_temp)) * (upper_value_target - lower_value_target);
-							if ((phase == " Saturated Vapor") && (enthalpy_target > std::stof(SteamTable->at(i).at(5))))
+							if ((phase.phase == " Saturated Vapor") && (enthalpy_target > std::stof(SteamTable->at(i).at(5))))
 							{
-								phase = SteamTable->at(i + 1).at(7);
+								phase.phase = SteamTable->at(i + 1).at(7);
 							}
 							else
-								phase = SteamTable->at(i).at(7);
+								phase.phase = SteamTable->at(i).at(7);
 							return real_den;
 
 						}
 					}
 					if (calculate == SteamTableCalculate::SPECIFIC_VOLUME)
 					{
-						if (temperature == std::stof(SteamTable->at(i).at(1)))
+						if ((temperature == std::stof(SteamTable->at(i).at(1)) && ((phase.phase != " Saturated Liquid") && (phase.phase != " Saturated Vapor"))))
 						{
 							return std::stof(SteamTable->at(i).at(2));
+						}
+						else if ((temperature == std::stof(SteamTable->at(i).at(1))) && ((phase.phase == " Saturated Liquid") or (phase.phase == " Saturated Vapor")))
+						{
+							float lower_vol = std::stof(SteamTable->at(i).at(2)), higher_vol = std::stof(SteamTable->at(i + 1).at(2));
+							float real_vol = lower_vol + phase.quality * (higher_vol - lower_vol);
+							return  real_vol;
 						}
 						else if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(SteamTable->at(i + 1).at(1)))))
 						{
