@@ -57,7 +57,7 @@ double _ViscosityCalculation(double coeff1, double coeff2, double coeff3, double
 	return Viscosity;
 }
 
-std::string insertInfo(std::stringstream &results, std::string &finalResult)
+void insertInfo(std::stringstream &results, std::string &finalResult)
 {
 	std::string placeholder;
 	while (std::getline(results, placeholder))
