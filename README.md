@@ -1,4 +1,4 @@
-# Chemical-Engineering Utility Software
+# Chemical Engineering Utility Software
 Chemical Engineering Calculation and Simulation Software
 
 **INCLUDE DIRECTORY**
