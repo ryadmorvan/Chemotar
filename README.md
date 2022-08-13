@@ -1,4 +1,4 @@
-# Chemical-Properties
+# Chemical-Engineering Utility App
 Chemical Engineering Calculation and Simulation Software
 
 **INCLUDE DIRECTORY**
