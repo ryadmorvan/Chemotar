@@ -233,6 +233,22 @@ std::stringstream CalculateViscosity(std::string& species, float& temperature, s
 
 
 
+void OsOpenInShell(const char* path)
+{
+#ifdef _WIN32
+	// Note: executable path must use backslashes!
+	::ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWDEFAULT);
+#else
+#if __APPLE__
+	const char* open_executable = "open";
+#else
+	const char* open_executable = "xdg-open";
+#endif
+	char command[256];
+	snprintf(command, 256, "%s \"%s\"", open_executable, path);
+	system(command);
+#endif
+}
 
 
 
@@ -244,8 +260,9 @@ void ShowInfo(ImFont* font2)
 	ImGui::Begin("Developer");
 	ImGui::Text("Designed and Developed By Riyadh Al-Khamees\n");
 	ImGui::Text("Email: riyadhalkhamees@gmail.com\n");
-	ImGui::Text("Github: https://github.com/ryadmorvan\n\n");
-	ImGui::Text("Credits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike");
+	ImGui::Text("Github: https://github.com/ryadmorvan");
+	if (ImGui::Button("Github Repo")) { OsOpenInShell("https://github.com/ryadmorvan/Chemotar"); }
+	ImGui::Text("\nCredits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike\nNeil Hendren from University of Colorado Boulder");
 	ImGui::End();
 	ImGui::PopFont();
 }

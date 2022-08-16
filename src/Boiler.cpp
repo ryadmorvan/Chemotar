@@ -121,11 +121,11 @@ Phase boiler<FEED::DOUBLE>::returnPhase3() {
 template<typename T>
 T boiler<FEED::DOUBLE>::returnQuality1()
 {
-	if (std::is_same<T, float>())
+	if constexpr (std::is_same<T, float>())
 	{
-		//return phase1.quality;
+		return phase1.quality;
 	}
-	if (std::is_same<T, std::string>())
+	if constexpr(std::is_same<T, std::string>())
 	{
 		return "Quality: " + _Format(phase1.quality, 2);
 	}
@@ -134,11 +134,11 @@ T boiler<FEED::DOUBLE>::returnQuality1()
 template<typename T>
 T boiler<FEED::DOUBLE>::returnQuality2()
 {
-	if (std::is_same<T, float>())
+	if constexpr (std::is_same<T, float>())
 	{
-		//return phase2.quality;
+		return phase2.quality;
 	}
-	if (std::is_same<T, std::string>())
+	if constexpr (std::is_same<T, std::string>())
 	{
 		return "Quality: " + _Format(phase2.quality, 2);
 	}
@@ -146,11 +146,11 @@ T boiler<FEED::DOUBLE>::returnQuality2()
 template<typename T>
 T boiler<FEED::DOUBLE>::returnQuality3()
 {
-	if (std::is_same<T, float>())
+	if constexpr (std::is_same<T, float>())
 	{
-		//return phase3.quality;
+		return phase3.quality;
 	}
-	if (std::is_same<T, std::string>())
+	if constexpr (std::is_same<T, std::string>())
 	{
 		return "Quality: " + _Format(phase3.quality, 2);
 	}
