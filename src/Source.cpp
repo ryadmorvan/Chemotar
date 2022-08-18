@@ -22,11 +22,11 @@
 #include "SteamTable.h"
 
 
-sf::Texture image;
+static sf::Texture image;
 
-std::string filePath = " ";
+static std::string filePath = " ";
 
-bool p_open = 0;
+static bool p_open = 0;
 
 //void HideConsole()
 //{

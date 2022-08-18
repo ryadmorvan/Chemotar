@@ -359,10 +359,127 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 
 
 
+void EnthalpyClaculatorInfo()
+{
+	if (ImGui::BeginPopup("Info Enthalpy"))
+	{
+		ImGui::Text("USER GUIDE: ");
+		ImGui::Text("Addition of Table");
+		ImGui::BulletText("Click on (File) from the main menu and hover on (Add)");
+		ImGui::BulletText("Select the appropriate table to be added.");
+		ImGui::BulletText("Tables file must be converted from .xlsx to .csv ");
+		ImGui::BulletText("If there is no value for a coefficent, the appropriate cell must be set to 0 ");
+		ImGui::BulletText("Heat Capacity tables must follow this format");
 
+		enum ContentsType { CT_Text, CT_FillButton };
+		static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+		static int contents_type = CT_Text;
+		//Table Flags
+		//flags |= ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH
+		//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
+		//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
+
+		flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
+			| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
+			| ImGuiTableFlags_SizingFixedFit;
+
+		if (ImGui::BeginTable("Demonstration", 9, flags))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+			ImGui::TableSetupColumn("Chemical");
+			ImGui::TableSetupColumn("Name");
+			ImGui::TableSetupColumn("A");
+			ImGui::TableSetupColumn("B");
+			ImGui::TableSetupColumn("C");
+			ImGui::TableSetupColumn("D");
+			ImGui::TableSetupColumn("E");
+			ImGui::TableSetupColumn("Minimum Temperature (K)");
+			ImGui::TableSetupColumn("Maximum Temperature (K)");
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0); ImGui::Text("C3H6O (Acetone)");
+			ImGui::TableSetColumnIndex(1); ImGui::Text("Acetone");
+			ImGui::TableSetColumnIndex(2); ImGui::Text("135.600");
+			ImGui::TableSetColumnIndex(3); ImGui::Text("-0.177");
+			ImGui::TableSetColumnIndex(4); ImGui::Text("0.000283");
+			ImGui::TableSetColumnIndex(5); ImGui::Text("0.000000689");
+			ImGui::TableSetColumnIndex(6); ImGui::Text("0");
+			ImGui::TableSetColumnIndex(7); ImGui::Text("273.15");
+			ImGui::TableSetColumnIndex(8); ImGui::Text("373.15");
+
+
+
+			ImGui::EndTable();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void ViscosityClaculatorInfo()
+{
+	if (ImGui::BeginPopup("Info Viscosity"))
+	{
+		ImGui::Text("USER GUIDE: ");
+		ImGui::Text("Addition of Table");
+		ImGui::BulletText("Click on (File) from the main menu and hover on (Add)");
+		ImGui::BulletText("Select the appropriate table to be added.");
+		ImGui::BulletText("Tables file must be converted from .xlsx to .csv ");
+		ImGui::BulletText("If there is no value for a coefficent, the appropriate cell must be set to 0 ");
+		ImGui::BulletText("Viscosity tables must follow this format");
+
+		enum ContentsType { CT_Text, CT_FillButton };
+		static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+		static int contents_type = CT_Text;
+		//Table Flags
+		//flags |= ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH
+		//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
+		//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
+
+		flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
+			| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
+			| ImGuiTableFlags_SizingFixedFit;
+
+		if (ImGui::BeginTable("Demonstration", 7, flags))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+			ImGui::TableSetupColumn("Chemical");
+			ImGui::TableSetupColumn("A");
+			ImGui::TableSetupColumn("B");
+			ImGui::TableSetupColumn("C");
+			ImGui::TableSetupColumn("D");
+			ImGui::TableSetupColumn("Minimum Temperature (K)");
+			ImGui::TableSetupColumn("Maximum Temperature (K)");
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0); ImGui::Text("Acetic acid (C2H4O2)");
+			ImGui::TableSetColumnIndex(1); ImGui::Text("-28.66");
+			ImGui::TableSetColumnIndex(2); ImGui::Text("0.2351");
+			ImGui::TableSetColumnIndex(3); ImGui::Text("0.0002208");
+			ImGui::TableSetColumnIndex(4); ImGui::Text("0");
+			ImGui::TableSetColumnIndex(5); ImGui::Text("366");
+			ImGui::TableSetColumnIndex(6); ImGui::Text("523");
+
+
+
+
+			ImGui::EndTable();
+		}
+
+		ImGui::EndPopup();
+	}
+}
 
 //Code to execute the window
-void EnthalpyCalculator(bool &ShowPropertiesCalculator)
+inline void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 {
 	static std::string fname = "";
 	static std::string species;
@@ -395,12 +512,8 @@ void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 
 
 
-	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info");
-	if (ImGui::BeginPopup("Info"))
-	{
-		ImGui::Text("How to add tables");
-		ImGui::EndPopup();
-	}
+	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info Enthalpy");
+	EnthalpyClaculatorInfo();
 
 
 
@@ -470,6 +583,12 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 	static std::stringstream results;
 	static std::string finalResult = "";
 	static std::string filePath = " ";
+
+
+
+	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info Viscosity");
+	ViscosityClaculatorInfo();
+
 
 	if (ShowViscosityCalculator == TRUE)
 	{

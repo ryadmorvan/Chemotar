@@ -158,11 +158,49 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>> &boil, std::unique_ptr<s
 
 }
 
+template<size_t size>
+inline auto InterpolaSteamValues(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, float temperature, int i)
+{
+	float Den_Liq1 = std::stof(SteamTable->at(i).at(2)), Den_Vap1 = std::stof(SteamTable->at(i).at(3)), Internal_Liquid1 = std::stof(SteamTable->at(i).at(4)),
+		Internal_Vapor1 = std::stof(SteamTable->at(i).at(5)), Enthalpy_Liquid1 = std::stof(SteamTable->at(i).at(7)), Enthalpy_Vap1 = std::stof(SteamTable->at(i).at(8)),
+		Entropy_Liquid1 = std::stof(SteamTable->at(i).at(10)), Entropy_Vapor1 = std::stof(SteamTable->at(i).at(11)), Specific_Liquid1 = std::stof(SteamTable->at(i).at(13)), Specific_Vap1 = std::stof(SteamTable->at(i).at(14));
+
+	float Den_Liq2 = std::stof(SteamTable->at(i+1).at(2)), Den_Vap2 = std::stof(SteamTable->at(i + 1).at(3)), Internal_Liquid2 = std::stof(SteamTable->at(i + 1).at(4)),
+		Internal_Vapor2 = std::stof(SteamTable->at(i + 1).at(5)), Enthalpy_Liquid2 = std::stof(SteamTable->at(i + 1).at(7)), Enthalpy_Vap2 = std::stof(SteamTable->at(i + 1).at(8)),
+		Entropy_Liquid2 = std::stof(SteamTable->at(i + 1).at(10)), Entropy_Vapor2 = std::stof(SteamTable->at(i + 1).at(11)), Specific_Liquid2 = std::stof(SteamTable->at(i + 1).at(13)), Specific_Vap2 = std::stof(SteamTable->at(i + 1).at(14));
+
+	//Percentage change
+	float change = (temperature - std::stof(SteamTable->at(i).at(0)) / (std::stof(SteamTable->at(i + 1).at(0)) - std::stof(SteamTable->at(i).at(0))) );
+	float Den_Liquid_Real = Den_Liq1 + change * (Den_Liq2 - Den_Liq1);
+	float Den_Vapor_Real = Den_Vap1 + change * (Den_Vap2 - Den_Vap1);
+	float Internal_Liquid_Real = Internal_Liquid1 + change * (Internal_Liquid2 - Internal_Liquid1);
+	float Internal_Vapor_Real = Internal_Vapor1 + change * (Internal_Vapor2 - Internal_Vapor1);
+	float Enthalpy_Liquid_Real = Enthalpy_Liquid1 + change * (Enthalpy_Liquid2 - Enthalpy_Liquid1);
+	float Enthalpy_Vapor_Real = Enthalpy_Vap1 + change * (Enthalpy_Vap2 - Enthalpy_Vap1);
+	float Entropy_Liquid_Real = Entropy_Liquid1 + change * (Entropy_Liquid2 - Entropy_Liquid1);
+	float Entropy_Vapor_Real = Entropy_Vapor1 + change * (Entropy_Vapor2 - Entropy_Vapor1);
+	float Specific_Volume_Liquid_Real = Specific_Liquid1 + change * (Specific_Liquid2 - Specific_Liquid1);
+	float Specific_Volume_Vapor_Real = Specific_Vap1 + change * (Specific_Vap2 - Specific_Vap1);
+
+	float Real_Pressure = std::stof(SteamTable->at(i).at(1)) + change * (std::stof(SteamTable->at(i + 1).at(1)) - std::stof(SteamTable->at(i).at(1)));
+
+
+	//std::cout << "Entropy Liquid: " << Entropy_Liquid1 << " Entropy Liquid2: " << Entropy_Liquid2 << std::endl;
+	//std::cout << "Entropy Vap: " << Entropy_Vapor1 << " Entropy Vap2: " << Entropy_Vapor2 << std::endl;
+
+	//std::cout << "Real Entropy Liquid: " << Entropy_Liquid_Real << " Real Entropy Vapor: " << Entropy_Vapor_Real << std::endl;
+	return std::make_tuple(Den_Liquid_Real, Den_Vapor_Real, Internal_Liquid_Real, Internal_Vapor_Real, Enthalpy_Liquid_Real, Enthalpy_Vapor_Real, Entropy_Liquid_Real, Entropy_Vapor_Real,
+		Specific_Volume_Liquid_Real, Specific_Volume_Vapor_Real, Real_Pressure);
+
+}
+
+
+
 
 template<typename CalculateFlag, size_t size>
 
 //std::tuple<quality, pressure, Enthalpy, Internal Energy, Entropy, Density, Specific Volume>
-std::tuple<float, float, float, float, float, float, float> CalculateQuality(std::unique_ptr<std::vector<std::array<std::string, size>>> &SteamTable, int* temperature, float* target)
+std::tuple<float, float, float, float, float, float, float> CalculateQuality(std::unique_ptr<std::vector<std::array<std::string, size>>> &SteamTable, float* temperature, float* target)
 {
 	if constexpr (std::is_same<CalculateFlag, SteamTableCalculateFlags::ENTHALPY>())
 	{
@@ -180,6 +218,29 @@ std::tuple<float, float, float, float, float, float, float> CalculateQuality(std
 				return std::make_tuple(quality, std::stof(SteamTable->at(i).at(1)), enthalpy, InternalEnergy, Entropy, Density, SpecificVolume);
 
 			}
+			else if ((*temperature > std::stof(SteamTable->at(i).at(0)) && (*temperature < std::stof(SteamTable->at(i + 1).at(0)))))
+			{
+				//interpolation before finding the quality
+				float lower_value_temp = std::stof(SteamTable->at(i).at(0)); float upper_value_temp = std::stof(SteamTable->at(i + 1).at(0));
+
+				//std::tupe<Den_liq, Den_vap, Internal_liq, Internal_vap, Enthalpy_liquid, Enthalpy_vapor, Entropy_liq, Entropy_vap, specific_liquid, specific_vap
+				auto tuple_result = InterpolaSteamValues(SteamTable, *temperature, i);
+				float quality = (*target - std::get<4>(tuple_result)) / (std::get<5>(tuple_result) - std::get<4>(tuple_result));
+				float enthalpy = *target;
+				float InternalEnergy = std::get<2>(tuple_result) + quality * (std::get<3>(tuple_result) - std::get<2>(tuple_result));
+				float Entropy = std::get<6>(tuple_result) + quality * (std::get<7>(tuple_result) - std::get<6>(tuple_result));
+				float Density = std::get<0>(tuple_result) + quality * (std::get<1>(tuple_result) - std::get<0>(tuple_result));
+				float SpecificVolume = std::get<8>(tuple_result) + quality * (std::get<9>(tuple_result) - std::get<8>(tuple_result));
+
+
+				//std::cout << "Enthalpy Liquid: " << std::get<4>(tuple_result) << " Enthalpy Vapor: " << std::get<5>(tuple_result) << std::endl;
+				//std::cout << "Quality: " << quality << std::endl;
+
+
+
+				return std::make_tuple(quality, std::get<10>(tuple_result), enthalpy, InternalEnergy, Entropy, Density, SpecificVolume);
+			}
+
 		}
 	}
 	if constexpr (std::is_same<CalculateFlag, SteamTableCalculateFlags::INTERNAL_ENERGY>())
@@ -289,12 +350,12 @@ void SteamTableSimulation()
 
 		if (ImGui::TreeNode("Quality Calculator"))
 		{
-			static int temp_pressure[1] = { 20};
+			static float temp_pressure[1] = { 20};
 			static int selected_item = -1;
 			static float target = 0;
 			static std::tuple<float, float, float, float, float, float, float> result;
 			static std::string selected = "Input Type";
-			ImGui::InputInt("Temperature", &temp_pressure[0]);
+			ImGui::InputFloat("Temperature", &temp_pressure[0], 0.0f, 0.0f, "%.1f");
 
 			if (selected_item != -1)
 			{
@@ -365,19 +426,22 @@ void SteamTableSimulation()
 					if (std::get<0>(result) > 1.0)
 					{
 						ImGui::TextColored(ImColor(59, 254, 225), "Phase: Vapor ");
+						ImGui::TextColored(ImColor(59, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
 						ImGui::Text(("Quality: NOT SATURATED"));
 					}
 					else if (std::get<0>(result) < 0.0)
 					{
 						ImGui::TextColored(ImColor(59, 154, 225), "Phase: Liquid ");
+						ImGui::TextColored(ImColor(59, 154, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
 						ImGui::Text(("Quality: NOT SATURATED"));
 					}
 					else
 					{
 						ImGui::TextColored(ImColor(159, 254, 225), "Phase: Saturated ");
 						ImGui::TextColored(ImColor(159, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
+						ImGui::TextColored(ImColor(159, 254, 225), ("Temperature: " + _Format(temp_pressure[0], 3) + " C").c_str());
+						ImGui::TextColored(ImColor(159, 254, 225), ("Saturated Pressure: " + _Format(std::get<1>(result), 3) + " MPa").c_str());
 						ImGui::Separator();
-						ImGui::Text(("Saturated Pressure: " + _Format(std::get<1>(result), 3) + " MPa").c_str());
 						ImGui::Text(("Enthalpy: " + _Format(std::get<2>(result), 4) + " kj/kg").c_str());
 						ImGui::Text(("Internal Energy: " + _Format(std::get<3>(result), 4) + " kj/kg").c_str());
 						ImGui::Text(("Entropy: " + _Format(std::get<4>(result), 3) + " kj/kg*k").c_str());
