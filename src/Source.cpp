@@ -44,7 +44,7 @@ static bool p_open = 0;
 int main()
 {
 	//HideConsole();
-	sf::RenderWindow window(sf::VideoMode(1366, 768), "Chemical Properties Calculator");
+	sf::RenderWindow window(sf::VideoMode(1366, 768), "Chemotar");
 	ImGui::SFML::Init(window);
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -166,7 +166,7 @@ int main()
 			{
 				if (ImGui::BeginMenu("Add"))
 				{
-					if (ImGui::MenuItem("Add Table Enthalpy", NULL))
+					if (ImGui::MenuItem("Add Table Heat Capacity", NULL))
 					{
 						_AddTable(filePath, TABLES_SAVE_DATA::HEAT_CAPACITY);
 					}
@@ -187,11 +187,11 @@ int main()
 			}
 			if (ImGui::BeginMenu("View"))
 			{
-				if (ImGui::MenuItem("Chemical Enthalpy Calculator", NULL, &ShowPropertiesCalculator))
+				if (ImGui::MenuItem("Heat Capacity Calculator", NULL, &ShowPropertiesCalculator))
 				{
 
 				}
-				if (ImGui::MenuItem("Chemical Viscosity Calculator", NULL, &ShowViscosityCalculator))
+				if (ImGui::MenuItem("Viscosity Calculator", NULL, &ShowViscosityCalculator))
 				{
 
 				}
@@ -239,7 +239,7 @@ int main()
 		if (ShowPropertiesCalculator == TRUE)
 		{
 			ImGui::PushFont(font);
-			ImGui::Begin("Enthalpy Calculation", &ShowPropertiesCalculator);
+			ImGui::Begin("Heat Capacity Calculator", &ShowPropertiesCalculator);
 			EnthalpyCalculator(ShowPropertiesCalculator);
 			ImGui::PopFont();
 			ImGui::End();
@@ -250,7 +250,7 @@ int main()
 		if (ShowViscosityCalculator == TRUE)
 		{
 			ImGui::PushFont(font);
-			ImGui::Begin("Viscosity Calculation", &ShowViscosityCalculator);
+			ImGui::Begin("Viscosity Calculator", &ShowViscosityCalculator);
 			ViscosityCalculator(ShowViscosityCalculator);
 			ImGui::PopFont();
 			ImGui::End();
