@@ -392,6 +392,21 @@ void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 	static std::string finalResult = "";
 	static std::string filePath = " ";
 
+
+
+
+	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info");
+	if (ImGui::BeginPopup("Info"))
+	{
+		ImGui::Text("How to add tables");
+		ImGui::EndPopup();
+	}
+
+
+
+
+
+
 	if (ShowPropertiesCalculator == TRUE)
 	{
 		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath, TableName))
