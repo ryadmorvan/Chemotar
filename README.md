@@ -3,7 +3,7 @@ Chemical Engineering Calculation and Simulation Software
 ![Untitled33](https://user-images.githubusercontent.com/48857076/183526775-3bf374e0-97bf-4506-8b2a-87465d7d64ee.png)
 
 **INCLUDE DIRECTORY**
-- SFML-2.5.1
+- **SFML-2.5.1**
 *You only have to paste *SFML - 2.5.1* into the solution folder.*
 
 ## Compilation
