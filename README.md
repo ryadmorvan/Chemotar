@@ -14,9 +14,10 @@ Chemical Engineering Calculation and Simulation Software
 ## Usage
 Having built the source code in *Release x64* you have to navigate through *dependencies* folder and copy all the .dll files and paste them on your
 compiled source folder, then execture your .exe application.
+**CURRENTLY THE SOFTWARE ONLY WORKS FOR WINDOWS PLATFORM**
 
 
-# Creduts
+# Credits
 - J.Richard Elliot, Carl T. Lira
 - Yaws, C.L, J.R. Hopper, and R.W Pike
 - Neil Handren from University of Colorado Boulder
