@@ -33,34 +33,35 @@ namespace SteamTableCalculateFlags
 	struct SPECIFIC_VOLUME;
 }
 
-template<size_t array_size>
-void LoadSteamTable(std::vector<std::array<std::string, array_size>>& SteamTable, std::string fileName)
+template<size_t ArraySize>
+auto load_steam_table(std::vector<std::array<std::string, ArraySize>>& steam_table, std::string file_name) -> void
 {
-	std::string word, line;
+	std::string word;
 	std::fstream file;
-	file.open(fileName, std::ios::in);
+	file.open(file_name, std::ios::in);
 	if (file.is_open())
 	{
-		int iterateVec = 0;
+		std::string line;
+		int iterate_vec = 0;
 		while (std::getline(file, line))
 		{
 			std::stringstream str(line);
-			int iterateArr = 0;
-			SteamTable.emplace_back();
+			int iterate_arr = 0;
+			steam_table.emplace_back();
 			while (std::getline(str, word, ','))
 			{
-				SteamTable.at(iterateVec).at(iterateArr) = word;
-				iterateArr++;
+				steam_table.at(iterate_vec).at(iterate_arr) = word;
+				iterate_arr++;
 			}
-			iterateVec++;
+			iterate_vec++;
 		}
 	}
 	file.close();
 }
 
 
-template<size_t size>
-void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil, std::unique_ptr<std::vector<std::array<std::string, size>>>& Table)
+template<size_t Size>
+void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil, std::unique_ptr<std::vector<std::array<std::string, Size>>>& Table)
 {
 
 
@@ -97,13 +98,13 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil, std::unique_ptr<s
 	if (ImGui::BeginCombo("Pressure Feed (1)", current_pressure1.c_str()))
 	{
 
-		for (int i = 0; i < pressure_list.size(); i++)
+		for (auto& i : pressure_list)
 		{
-			bool is_selected = (current_pressure1 == pressure_list.at(i));
-			if (ImGui::Selectable(pressure_list.at(i).c_str(), is_selected))
+			const bool is_selected = (current_pressure1 == i);
+			if (ImGui::Selectable(i.c_str(), is_selected))
 			{
-				current_pressure1 = pressure_list.at(i) + " MPa";
-				boil->ReturnPressure1() = std::stof(pressure_list.at(i));
+				current_pressure1 = i + " MPa";
+				boil->ReturnPressure1() = std::stof(i);
 				return;
 			}
 			if (is_selected)
@@ -115,13 +116,13 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil, std::unique_ptr<s
 	}
 	if (ImGui::BeginCombo("Pressure Feed (2)", current_pressure2.c_str()))
 	{
-		for (int i = 0; i < pressure_list.size(); i++)
+		for (auto& i : pressure_list)
 		{
-			bool is_selected = (current_pressure2 == pressure_list.at(i));
-			if (ImGui::Selectable(pressure_list.at(i).c_str(), is_selected))
+			const bool is_selected = (current_pressure2 == i);
+			if (ImGui::Selectable(i.c_str(), is_selected))
 			{
-				current_pressure2 = pressure_list.at(i) + " MPa";
-				boil->ReturnPressure2() = std::stof(pressure_list.at(i));
+				current_pressure2 = i + " MPa";
+				boil->ReturnPressure2() = std::stof(i);
 				return;
 			}
 			if (is_selected)
@@ -133,13 +134,13 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil, std::unique_ptr<s
 	}
 	if (ImGui::BeginCombo("Pressure Outlet", current_pressure3.c_str()))
 	{
-		for (int i = 0; i < pressure_list.size(); i++)
+		for (auto& i : pressure_list)
 		{
-			bool is_selected = (current_pressure3 == pressure_list.at(i));
-			if (ImGui::Selectable(pressure_list.at(i).c_str(), is_selected))
+			const bool is_selected = (current_pressure3 == i);
+			if (ImGui::Selectable(i.c_str(), is_selected))
 			{
-				current_pressure3 = pressure_list.at(i) + " MPa";
-				boil->ReturnPressure3() = std::stof(pressure_list.at(i));
+				current_pressure3 = i + " MPa";
+				boil->ReturnPressure3() = std::stof(i);
 				return;
 			}
 			if (is_selected)
@@ -157,6 +158,11 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil, std::unique_ptr<s
 
 }
 
+namespace SaturatedTable
+{
+	struct TEMPERATURE;
+	struct PRESSURE;
+}
 template<size_t size>
 inline auto InterpolaSteamValues(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, float temperature, int i)
 {
@@ -169,7 +175,8 @@ inline auto InterpolaSteamValues(std::unique_ptr<std::vector<std::array<std::str
 		Entropy_Liquid2 = std::stof(SteamTable->at(i + 1).at(10)), Entropy_Vapor2 = std::stof(SteamTable->at(i + 1).at(11)), Specific_Liquid2 = std::stof(SteamTable->at(i + 1).at(13)), Specific_Vap2 = std::stof(SteamTable->at(i + 1).at(14));
 
 	//Percentage change
-	float change = (temperature - std::stof(SteamTable->at(i).at(0)) / (std::stof(SteamTable->at(i + 1).at(0)) - std::stof(SteamTable->at(i).at(0))));
+	
+	float change = (temperature - std::stof(SteamTable->at(i).at(0))) / (std::stof(SteamTable->at(i + 1).at(0)) - std::stof(SteamTable->at(i).at(0)));
 	float Den_Liquid_Real = Den_Liq1 + change * (Den_Liq2 - Den_Liq1);
 	float Den_Vapor_Real = Den_Vap1 + change * (Den_Vap2 - Den_Vap1);
 	float Internal_Liquid_Real = Internal_Liquid1 + change * (Internal_Liquid2 - Internal_Liquid1);
@@ -182,8 +189,6 @@ inline auto InterpolaSteamValues(std::unique_ptr<std::vector<std::array<std::str
 	float Specific_Volume_Vapor_Real = Specific_Vap1 + change * (Specific_Vap2 - Specific_Vap1);
 
 	float Real_Pressure = std::stof(SteamTable->at(i).at(1)) + change * (std::stof(SteamTable->at(i + 1).at(1)) - std::stof(SteamTable->at(i).at(1)));
-
-
 	//std::cout << "Entropy Liquid: " << Entropy_Liquid1 << " Entropy Liquid2: " << Entropy_Liquid2 << std::endl;
 	//std::cout << "Entropy Vap: " << Entropy_Vapor1 << " Entropy Vap2: " << Entropy_Vapor2 << std::endl;
 
@@ -196,10 +201,10 @@ inline auto InterpolaSteamValues(std::unique_ptr<std::vector<std::array<std::str
 
 
 
-template<typename CalculateFlag, size_t size>
+template<typename CalculateFlag, size_t Size>
 
 //std::tuple<quality, pressure, Enthalpy, Internal Energy, Entropy, Density, Specific Volume>
-std::tuple<float, float, float, float, float, float, float> CalculateQuality(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, float* temperature, float* target)
+std::tuple<float, float, float, float, float, float, float> CalculateQuality(std::unique_ptr<std::vector<std::array<std::string, Size>>>& SteamTable, float* temperature, float* target)
 {
 	if constexpr (std::is_same<CalculateFlag, SteamTableCalculateFlags::ENTHALPY>())
 	{
@@ -382,9 +387,149 @@ std::tuple<float, float, float, float, float, float, float> CalculateQuality(std
 }
 
 
-void SteamTableSimulation()
+template<typename T, size_t Size>
+inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::string, Size>>> &SteamTable)
 {
-	enum ContentsType { CT_Text, CT_FillButton };
+	const char* names[] = { "Enthalpy", "Internal Energy", "Entropy", "Density", "Specific Volume" };
+
+	if (ImGui::TreeNode("Quality Calculator"))
+	{
+		static int selected_item = -1;
+		static float target = 0;
+		static std::tuple<float, float, float, float, float, float, float> result;
+		static std::string selected = "Input Type";
+
+		static float temp_pressure[1] = {20};
+
+
+		if constexpr (std::is_same<T, SaturatedTable::TEMPERATURE>())
+		{
+
+			ImGui::InputFloat("Temperature", &temp_pressure[0], 0.0f, 0.0f, "%.1f");
+		}
+		if constexpr(std::is_same<T, SaturatedTable::PRESSURE>())
+		{
+
+			ImGui::InputFloat("Pressure", &temp_pressure[0], 0.0f, 0.0f, "%.4f");
+		}
+
+
+
+		if (selected_item != -1)
+		{
+			switch (selected_item)
+			{
+			case 0:
+				selected = "Enthalpy";
+				break;
+			case 1:
+				selected = "Internal Energy";
+				break;
+			case 2:
+				selected = "Entropy";
+				break;
+			case 3:
+				selected = "Density";
+				break;
+			case 4:
+				selected = "Specific Volume";
+				break;
+			}
+		}
+
+		if (selected_item != -1)
+		{
+			const std::string format = "%0.1f";
+			std::string placeholder;
+			if ((selected_item == 0) or (selected_item == 1)) placeholder = " kj"; if (selected_item == 2) placeholder = " kj/kg*k"; if (selected_item == 3) placeholder = " kg/m^3"; if (selected_item == 4) placeholder = " m^3/kg";
+
+			ImGui::InputFloat("", &target, 0.0f, 0.0f, (format + placeholder).c_str());
+			ImGui::SameLine();
+
+		}
+
+		if (ImGui::Button(selected.c_str()))
+			ImGui::OpenPopup("Inputs");
+		//ImGui::SameLine();
+
+		//ImGui::TextUnformatted(selected_item == -1 ? "Not Selected" : names[selected_item]);
+		if (ImGui::BeginPopup("Inputs"))
+		{
+			ImGui::Text("Inputs");
+			ImGui::Separator();
+			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+				if (ImGui::Selectable(names[i]))
+					selected_item = i;
+			ImGui::EndPopup();
+		}
+		if (selected_item != -1)
+		{
+			ImGui::SameLine();
+			if (ImGui::Button("Calculate"))
+			{
+				ImGui::OpenPopup("Result");
+				if (selected == "Enthalpy")
+					result = CalculateQuality<SteamTableCalculateFlags::ENTHALPY>(SteamTable, &temp_pressure[0], &target);
+				if (selected == "Internal Energy")
+					result = CalculateQuality<SteamTableCalculateFlags::INTERNAL_ENERGY>(SteamTable, &temp_pressure[0], &target);
+				if (selected == "Entropy")
+					result = CalculateQuality<SteamTableCalculateFlags::ENTROPY>(SteamTable, &temp_pressure[0], &target);
+				if (selected == "Density")
+					result = CalculateQuality<SteamTableCalculateFlags::DENSITY>(SteamTable, &temp_pressure[0], &target);
+				if (selected == "Specific Volume")
+					result = CalculateQuality<SteamTableCalculateFlags::SPECIFIC_VOLUME>(SteamTable, &temp_pressure[0], &target);
+			}
+			if (ImGui::BeginPopup("Result"))
+			{
+				if (std::get<0>(result) > 1.0)
+				{
+					ImGui::TextColored(ImColor(59, 254, 225), "Phase: Vapor ");
+					ImGui::TextColored(ImColor(59, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
+					ImGui::Text(("Quality: NOT SATURATED"));
+				}
+				else if (std::get<0>(result) < 0.0)
+				{
+					ImGui::TextColored(ImColor(59, 154, 225), "Phase: Liquid ");
+					ImGui::TextColored(ImColor(59, 154, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
+					ImGui::Text(("Quality: NOT SATURATED"));
+				}
+				else
+				{
+					ImGui::TextColored(ImColor(159, 254, 225), "Phase: Saturated ");
+					ImGui::TextColored(ImColor(159, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
+					if constexpr(std::is_same<T, SaturatedTable::PRESSURE>())
+					{
+						ImGui::TextColored(ImColor(159, 254, 225), ("Temperature: " + _Format(std::get<1>(result), 4) + " C").c_str());
+						ImGui::TextColored(ImColor(159, 254, 225), ("Saturated Pressure: " + _Format(temp_pressure[0], 4) + " MPa").c_str());
+					}
+					else
+					{
+						ImGui::TextColored(ImColor(159, 254, 225), ("Temperature: " + _Format(temp_pressure[0], 4) + " C").c_str());
+						ImGui::TextColored(ImColor(159, 254, 225), ("Saturated Pressure: " + _Format(std::get<1>(result), 4) + " MPa").c_str());
+					}
+					ImGui::Separator();
+					ImGui::Text(("Enthalpy: " + _Format(std::get<2>(result), 4) + " kj/kg").c_str());
+					ImGui::Text(("Internal Energy: " + _Format(std::get<3>(result), 4) + " kj/kg").c_str());
+					ImGui::Text(("Entropy: " + _Format(std::get<4>(result), 3) + " kj/kg*k").c_str());
+					ImGui::Text(("Density: " + _Format(std::get<5>(result), 4) + " kg/m^3").c_str());
+					ImGui::Text(("Specific Volume: " + _Format(std::get<6>(result), 4) + " m^3/kg").c_str());
+
+				}
+				ImGui::EndPopup();
+			}
+
+		}
+
+		ImGui::TreePop();
+
+	}
+}
+
+
+
+inline void SteamTableSimulation()
+{
+	enum contents_type { CT_Text, CT_FillButton };
 	static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 	static int contents_type = CT_Text;
 	//Table Flags
@@ -398,128 +543,18 @@ void SteamTableSimulation()
 		| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
 		| ImGuiTableFlags_SizingFixedFit;
 
-	const char* names[] = { "Enthalpy", "Internal Energy", "Entropy", "Density", "Specific Volume" };
 
 
 
 	if (ImGui::CollapsingHeader("Saturated Steam Table (Temperature)"))
 	{
 		static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
-		static bool once = []() { LoadSteamTable(*SteamTable, "steam_tables/Saturated Steam Table (Temperature).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Temperature).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
 
 
 
 		//CalculateQuality<SteamTableCalculateFlags::ENTHALPY>(SteamTable);
-
-		if (ImGui::TreeNode("Quality Calculator"))
-		{
-			static float temp_pressure[1] = { 20 };
-			static int selected_item = -1;
-			static float target = 0;
-			static std::tuple<float, float, float, float, float, float, float> result;
-			static std::string selected = "Input Type";
-			ImGui::InputFloat("Temperature", &temp_pressure[0], 0.0f, 0.0f, "%.1f");
-
-			if (selected_item != -1)
-			{
-				switch (selected_item)
-				{
-				case 0:
-					selected = "Enthalpy";
-					break;
-				case 1:
-					selected = "Internal Energy";
-					break;
-				case 2:
-					selected = "Entropy";
-					break;
-				case 3:
-					selected = "Density";
-					break;
-				case 4:
-					selected = "Specific Volume";
-					break;
-				}
-			}
-
-			if (selected_item != -1)
-			{
-				std::string format = "%0.1f";
-				std::string placeholder;
-				if ((selected_item == 0) or (selected_item == 1)) placeholder = " kj"; if (selected_item == 2) placeholder = " kj/kg*k"; if (selected_item == 3) placeholder = " kg/m^3"; if (selected_item == 4) placeholder = " m^3/kg";
-
-				ImGui::InputFloat("", &target, 0.0f, 0.0f, (format + placeholder).c_str());
-				ImGui::SameLine();
-
-			}
-
-			if (ImGui::Button(selected.c_str()))
-				ImGui::OpenPopup("Inputs");
-			//ImGui::SameLine();
-
-			//ImGui::TextUnformatted(selected_item == -1 ? "Not Selected" : names[selected_item]);
-			if (ImGui::BeginPopup("Inputs"))
-			{
-				ImGui::Text("Inputs");
-				ImGui::Separator();
-				for (int i = 0; i < IM_ARRAYSIZE(names); i++)
-					if (ImGui::Selectable(names[i]))
-						selected_item = i;
-				ImGui::EndPopup();
-			}
-			if (selected_item != -1)
-			{
-				ImGui::SameLine();
-				if (ImGui::Button("Calculate"))
-				{
-					ImGui::OpenPopup("Result");
-					if (selected == "Enthalpy")
-						result = CalculateQuality<SteamTableCalculateFlags::ENTHALPY>(SteamTable, &temp_pressure[0], &target);
-					if (selected == "Internal Energy")
-						result = CalculateQuality<SteamTableCalculateFlags::INTERNAL_ENERGY>(SteamTable, &temp_pressure[0], &target);
-					if (selected == "Entropy")
-						result = CalculateQuality<SteamTableCalculateFlags::ENTROPY>(SteamTable, &temp_pressure[0], &target);
-					if (selected == "Density")
-						result = CalculateQuality<SteamTableCalculateFlags::DENSITY>(SteamTable, &temp_pressure[0], &target);
-					if (selected == "Specific Volume")
-						result = CalculateQuality<SteamTableCalculateFlags::SPECIFIC_VOLUME>(SteamTable, &temp_pressure[0], &target);
-				}
-				if (ImGui::BeginPopup("Result"))
-				{
-					if (std::get<0>(result) > 1.0)
-					{
-						ImGui::TextColored(ImColor(59, 254, 225), "Phase: Vapor ");
-						ImGui::TextColored(ImColor(59, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
-						ImGui::Text(("Quality: NOT SATURATED"));
-					}
-					else if (std::get<0>(result) < 0.0)
-					{
-						ImGui::TextColored(ImColor(59, 154, 225), "Phase: Liquid ");
-						ImGui::TextColored(ImColor(59, 154, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
-						ImGui::Text(("Quality: NOT SATURATED"));
-					}
-					else
-					{
-						ImGui::TextColored(ImColor(159, 254, 225), "Phase: Saturated ");
-						ImGui::TextColored(ImColor(159, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
-						ImGui::TextColored(ImColor(159, 254, 225), ("Temperature: " + _Format(temp_pressure[0], 3) + " C").c_str());
-						ImGui::TextColored(ImColor(159, 254, 225), ("Saturated Pressure: " + _Format(std::get<1>(result), 3) + " MPa").c_str());
-						ImGui::Separator();
-						ImGui::Text(("Enthalpy: " + _Format(std::get<2>(result), 4) + " kj/kg").c_str());
-						ImGui::Text(("Internal Energy: " + _Format(std::get<3>(result), 4) + " kj/kg").c_str());
-						ImGui::Text(("Entropy: " + _Format(std::get<4>(result), 3) + " kj/kg*k").c_str());
-						ImGui::Text(("Density: " + _Format(std::get<5>(result), 4) + " kg/m^3").c_str());
-						ImGui::Text(("Specific Volume: " + _Format(std::get<6>(result), 4) + " m^3/kg").c_str());
-
-					}
-					ImGui::EndPopup();
-				}
-
-			}
-
-			ImGui::TreePop();
-
-		}
+		Quality_Calculator<SaturatedTable::TEMPERATURE>(SteamTable);
 
 		if (ImGui::BeginTable("table1", 15, flags))
 		{
@@ -581,9 +616,10 @@ void SteamTableSimulation()
 	if (ImGui::CollapsingHeader("Saturated Steam Table (Pressure)"))
 	{
 		static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
-		static bool once = []() { LoadSteamTable(*SteamTable, "steam_tables/Saturated Steam Table (Pressure).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Pressure).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
 
 
+		Quality_Calculator<SaturatedTable::PRESSURE>(SteamTable);
 
 		if (ImGui::BeginTable("table1", 15, flags))
 		{
@@ -644,7 +680,7 @@ void SteamTableSimulation()
 	if (ImGui::CollapsingHeader("Compressed Liquid and Superheated Steam Table"))
 	{
 		static std::unique_ptr<std::vector<std::array<std::string, 8>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 8>>>();
-		static bool once = []() { LoadSteamTable(*SteamTable, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
 		if (ImGui::BeginTable("table1", 8, flags))
 		{
 			ImGui::TableSetupScrollFreeze(false, true);
@@ -670,7 +706,7 @@ void SteamTableSimulation()
 
 			static int value2 = 0;
 			std::vector<bool> placeholder; placeholder.resize(SteamTable->size());
-			for (int row = 0; row < SteamTable->size(); row++)
+			for (int row = 0; row < 100; row++)
 			{
 				ImGui::TableNextRow();
 				for (int column = 0; column < 8; column++)
@@ -684,6 +720,7 @@ void SteamTableSimulation()
 					}
 					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row), ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
 					{
+						std::cout << "value: " << value2 << std::endl;
 						placeholder.at(row) = true;
 						value2 = row;
 					}

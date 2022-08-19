@@ -499,11 +499,13 @@ inline void EnthalpyCalculator(bool &ShowPropertiesCalculator)
 	static ImVec4 TextColor = ImVec4(0.898f, 0.845f, 0.710f, 0.95f);
 
 	//clean checkBoxes initally
-	static bool clean = []()
-	{
-		memset(CheckBox, 0, sizeof(CheckBox));
-		return true;
-	} ();
+	//static bool clean = []()
+	//{
+	//	memset(CheckBox, 0, sizeof(CheckBox));
+	//	return true;
+	//} ();
+
+
 
 	static std::stringstream results;
 	static std::string finalResult = "";
@@ -574,11 +576,11 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 	static ImVec4 TextColorNotif = ImVec4(0.725f, 0.292f, 0.376f, 0.95f);
 	static ImVec4 TextColorStat = ImVec4(0.898f, 0.845f, 0.710f, 0.95f);
 	//clean checkBoxes initally
-	static bool clean = []()
-	{
-		memset(CheckBox, 0, sizeof(CheckBox));
-		return true;
-	} ();
+	//static bool clean = []()
+	//{
+	//	memset(CheckBox, 0, sizeof(CheckBox));
+	//	return true;
+	//} ();
 
 	static std::stringstream results;
 	static std::string finalResult = "";
@@ -620,7 +622,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 	}
 	else
 	{
-		temperature1 = 0, temperature2 = 0, memset(CheckBox, FALSE, sizeof(CheckBox));
+		temperature1 = 0, temperature2 = 0; memset(CheckBox, FALSE, sizeof(CheckBox));
 		finalResult = "";
 	}
 }

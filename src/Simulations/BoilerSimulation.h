@@ -61,10 +61,10 @@ static void BoilerSimulation(bool* p_open)
 
 	//Load steam table
 	static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable_Saturated = std::make_unique<std::vector<std::array<std::string, 15>>>();
-	static bool once = []() { LoadSteamTable(*SteamTable_Saturated, "steam_tables/Saturated Steam Table (Temperature).csv"); std::cout << "Done Loading Table Steam" << std::endl;  return true; } ();
+	static bool once = []() { load_steam_table(*SteamTable_Saturated, "steam_tables/Saturated Steam Table (Temperature).csv"); std::cout << "Done Loading Table Steam" << std::endl;  return true; } ();
 	//Load compressed liquid and superheated
 	static std::unique_ptr<std::vector<std::array<std::string, 8>>> SteamTable_Compressed = std::make_unique<std::vector<std::array<std::string, 8>>>();
-	static bool once1 = []() { LoadSteamTable(*SteamTable_Compressed, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); std::cout << "Done Loading Table Compressed" << std::endl;  return true; } ();
+	static bool once1 = []() { load_steam_table(*SteamTable_Compressed, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); std::cout << "Done Loading Table Compressed" << std::endl;  return true; } ();
 
 
 
