@@ -24,7 +24,7 @@ compiled source folder, then execture your .exe application.
 - https://learncheme.com/
 
 
-##External Libraries used by Chemotar
+## External Libraries used by Chemotar
 Libraries used in this project:
 - SFML by **Laurent Gomila. et al**
 - ImGui by **Omar Cornut**
