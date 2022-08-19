@@ -12,7 +12,6 @@
 #include "../src/Tools/ChemicalCalculations.h"
 #include "../src/Tools/CheckBoxUI.h"
 
-#include <Windows.h>
 
 
 
@@ -55,10 +54,10 @@ int main()
 	sf::Clock deltaClock;
 	float fontSize = 16;
 	ImGuiIO& io1 = ImGui::GetIO();
-	ImFont* font = io1.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", fontSize);
+	ImFont* font = io1.Fonts->AddFontFromFileTTF("Assets\\Arial.ttf", fontSize);
 	io1.FontDefault = font;
 
-	ImFont* font2 = io1.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 17);
+	ImFont* font2 = io1.Fonts->AddFontFromFileTTF("Assets\\Arial.ttf", 17);
 	ImGui::SFML::UpdateFontTexture();
 	
 	if (!image.loadFromFile("Assets\\color.tga"))
