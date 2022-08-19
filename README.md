@@ -5,6 +5,7 @@ Chemical Engineering Calculation and Simulation Software
 **INCLUDE DIRECTORY**
 - **SFML-2.5.1**
 *You only have to paste *SFML - 2.5.1* into the solution folder.*
+
 [Download SFML-2.5.1](https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip)
 
 ## Compilation
