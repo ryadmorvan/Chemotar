@@ -398,10 +398,19 @@ inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::strin
 		static float target = 0;
 		static std::tuple<float, float, float, float, float, float, float> result;
 		static std::string selected = "Input Type";
+																															//Value for temperature
+		//Lambda function that will return the value for temperature and pressure at compile time
+		auto RetrieveConstExprValue = []() constexpr -> float {if constexpr (std::is_same<T, SaturatedTable::TEMPERATURE>()) return 20;
+		else
+		{
+			//Value for pressure
+			return 1.0;
+		}
+		};
 
-		static float temp_pressure[1] = {20};
+		static float temp_pressure[1] = { RetrieveConstExprValue()};
 
-
+		//Compile time show if we passed either SaturatedTable::TEMPERATURE or SaturatedTable::Pressure template arguments to dictate which input we should put
 		if constexpr (std::is_same<T, SaturatedTable::TEMPERATURE>())
 		{
 
@@ -414,7 +423,7 @@ inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::strin
 		}
 
 
-
+		//select which text should be shown in button label when selecting operation
 		if (selected_item != -1)
 		{
 			switch (selected_item)
@@ -441,6 +450,7 @@ inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::strin
 		{
 			const std::string format = "%0.1f";
 			std::string placeholder;
+			//Depending on which item, it will show the appropriate unit that will be used in the input value box
 			if ((selected_item == 0) or (selected_item == 1)) placeholder = " kj"; if (selected_item == 2) placeholder = " kj/kg*k"; if (selected_item == 3) placeholder = " kg/m^3"; if (selected_item == 4) placeholder = " m^3/kg";
 
 			ImGui::InputFloat("", &target, 0.0f, 0.0f, (format + placeholder).c_str());
@@ -450,9 +460,8 @@ inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::strin
 
 		if (ImGui::Button(selected.c_str()))
 			ImGui::OpenPopup("Inputs");
-		//ImGui::SameLine();
 
-		//ImGui::TextUnformatted(selected_item == -1 ? "Not Selected" : names[selected_item]);
+		//Open the popup menu after pressing "Input Type"
 		if (ImGui::BeginPopup("Inputs"))
 		{
 			ImGui::Text("Inputs");
@@ -467,6 +476,7 @@ inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::strin
 			ImGui::SameLine();
 			if (ImGui::Button("Calculate"))
 			{
+				//Depending on which type is chosen, template argument will be passed to the function to call the appropriate code
 				ImGui::OpenPopup("Result");
 				if (selected == "Enthalpy")
 					result = CalculateQuality<SteamTableCalculateFlags::ENTHALPY>(SteamTable, &temp_pressure[0], &target);
@@ -479,6 +489,7 @@ inline void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::strin
 				if (selected == "Specific Volume")
 					result = CalculateQuality<SteamTableCalculateFlags::SPECIFIC_VOLUME>(SteamTable, &temp_pressure[0], &target);
 			}
+			//Show the result we got from std::tuple
 			if (ImGui::BeginPopup("Result"))
 			{
 				if (std::get<0>(result) > 1.0)
@@ -532,22 +543,21 @@ inline void SteamTableSimulation()
 	enum contents_type { CT_Text, CT_FillButton };
 	static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 	static int contents_type = CT_Text;
-	//Table Flags
-	//flags |= ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH
-	//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
-	//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
 
+	//Tableflags that will be used for the table
 	flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
 		| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
 		| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
 		| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
 		| ImGuiTableFlags_SizingFixedFit;
 
-
-
-
-	if (ImGui::CollapsingHeader("Saturated Steam Table (Temperature)"))
+	static bool show_window1 = false;
+	static bool show_window2 = false;
+	static bool show_window3 = false;
+	ImGui::TextColored(ImColor(100, 100, 100, 250), "Press F1 when using a steam table to seperate it into a standlone window");
+	if (show_window1 == true)
 	{
+		ImGui::Begin("Saturated Steam (Temperature)", &show_window1);
 		static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
 		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Temperature).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
 
@@ -558,6 +568,209 @@ inline void SteamTableSimulation()
 
 		if (ImGui::BeginTable("table1", 15, flags))
 		{
+			//Freeze the first row
+			ImGui::TableSetupScrollFreeze(false, true);
+
+			// Display headers so we can inspect their interaction with borders.
+			// (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
+			static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+
+			enum ContentsType { CT_Text, CT_Button, CT_SmallButton, CT_FillButton, CT_Selectable, CT_SelectableSpanRow };
+
+
+			ImGui::TableSetupColumn("T (C)");
+			ImGui::TableSetupColumn("P (MPa)");
+			ImGui::TableSetupColumn("Density Liquid (kg/m^3)");
+			ImGui::TableSetupColumn("Density Vapor (kg/m^3)");
+			ImGui::TableSetupColumn("Internal Energy Liquid (kJ/kg)");
+			ImGui::TableSetupColumn("Internal Energy Vapor (kJ/kg)");
+			ImGui::TableSetupColumn("Internal Energy of Vaporization (kJ/kg");
+			ImGui::TableSetupColumn("Enthalpy Liquid (kj/kg)");
+			ImGui::TableSetupColumn("Enthalpy Vapor (kJ/kg)");
+			ImGui::TableSetupColumn("Enthalpy of Vaporization (kj/kg)");
+			ImGui::TableSetupColumn("Entropy Liquid [kJ/(kg*K]");
+			ImGui::TableSetupColumn("Entropy Vapor [kJ/(kg*k]");
+			ImGui::TableSetupColumn("Entropy of Vaporization [kJ/(kg*k)]");
+			ImGui::TableSetupColumn("Specific Volume Liquid (m^3/kg)");
+			ImGui::TableSetupColumn("Specific Volume Vapor (m^3/kg)");
+			ImGui::TableHeadersRow();
+
+			static int value = 0;
+			std::vector<bool> placeholder; placeholder.resize(SteamTable->size());
+			for (int row = 0; row < SteamTable->size(); row++)
+			{
+				ImGui::TableNextRow();
+				for (int column = 0; column < 15; column++)
+				{
+					ImGui::TableSetColumnIndex(column);
+					if ((value == row) && (value != 0))
+					{
+
+						/*ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::GetColorU32(ImVec4(1, 1, 1, 1)), column_color = 0);*/
+						ImGui::TextColored(ImVec4(0.3, 0.9, 0.8, 0.9), SteamTable->at(row).at(column).c_str());
+					}
+					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row), ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+					{
+						placeholder.at(row) = true;
+						value = row;
+					}
+
+				}
+
+			}
+			ImGui::EndTable();
+		}
+		ImGui::End();
+	}
+
+	if(show_window2 == true)
+	{
+		ImGui::Begin("Saturated Steam (Pressure)", &show_window2);
+		static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
+		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Pressure).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+		Quality_Calculator<SaturatedTable::PRESSURE>(SteamTable);
+
+		if (ImGui::BeginTable("table2", 15, flags))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+
+			// Display headers so we can inspect their interaction with borders.
+			// (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
+			static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+
+			enum ContentsType { CT_Text, CT_Button, CT_SmallButton, CT_FillButton, CT_Selectable, CT_SelectableSpanRow };
+
+			ImGui::TableSetupColumn("P (MPa)");
+			ImGui::TableSetupColumn("T (C)");
+			ImGui::TableSetupColumn("Density Liquid (kg/m^3)");
+			ImGui::TableSetupColumn("Density Vapor (kg/m^3)");
+			ImGui::TableSetupColumn("Internal Energy Liquid (kJ/kg)");
+			ImGui::TableSetupColumn("Internal Energy Vapor (kJ/kg)");
+			ImGui::TableSetupColumn("Internal Energy of Vaporization (kJ/kg");
+			ImGui::TableSetupColumn("Enthalpy Liquid (kj/kg)");
+			ImGui::TableSetupColumn("Enthalpy Vapor (kJ/kg)");
+			ImGui::TableSetupColumn("Enthalpy of Vaporization (kj/kg)");
+			ImGui::TableSetupColumn("Entropy Liquid [kJ/(kg*K]");
+			ImGui::TableSetupColumn("Entropy Vapor [kJ/(kg*k]");
+			ImGui::TableSetupColumn("Entropy of Vaporization [kJ/(kg*k)]");
+			ImGui::TableSetupColumn("Specific Volume Liquid (m^3/kg)");
+			ImGui::TableSetupColumn("Specific Volume Vapor (m^3/kg)");
+			ImGui::TableHeadersRow();
+
+			static int value = 0;
+			std::vector<bool> placeholder; placeholder.resize(SteamTable->size());
+			for (int row = 0; row < SteamTable->size(); row++)
+			{
+				ImGui::TableNextRow();
+				for (int column = 0; column < 15; column++)
+				{
+					ImGui::TableSetColumnIndex(column);
+					if ((value == row) && (value != 0))
+					{
+
+						/*ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::GetColorU32(ImVec4(1, 1, 1, 1)), column_color = 0);*/
+						ImGui::TextColored(ImVec4(0.3, 0.9, 0.8, 0.9), SteamTable->at(row).at(column).c_str());
+					}
+					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row), ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+					{
+						placeholder.at(row) = true;
+						value = row;
+					}
+
+				}
+
+			}
+			ImGui::EndTable();
+		}
+		ImGui::End();
+	}
+
+	if(show_window3 == true)
+	{
+		ImGui::Begin("Compressed and Superheated Table", &show_window3);
+		static std::unique_ptr<std::vector<std::array<std::string, 8>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 8>>>();
+		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+		struct funcs { static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; } }; // Hide Native<>ImGuiKey duplicates when both exists in the array
+
+		if (ImGui::BeginTable("table3", 8, flags))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+
+			// Display headers so we can inspect their interaction with borders.
+			// (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
+			static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+
+			enum ContentsType { CT_Text, CT_Button, CT_SmallButton, CT_FillButton, CT_Selectable, CT_SelectableSpanRow };
+
+			ImGui::TableSetupColumn("P (MPa)");
+			ImGui::TableSetupColumn("T (C)");
+			ImGui::TableSetupColumn("Specific Volume (m^3/kg)");
+			ImGui::TableSetupColumn("Density (kg/m^3)");
+			ImGui::TableSetupColumn("Specific Internal Energy (kJ/kg");
+			ImGui::TableSetupColumn("Specific Enthalpy (kJ/kg");
+			ImGui::TableSetupColumn("Specific Entropy [kJ/(kg*K]");
+			ImGui::TableSetupColumn("Phase");
+
+			ImGui::TableHeadersRow();
+
+			static int value2 = 0;
+			std::vector<bool> placeholder; placeholder.resize(SteamTable->size());
+			for (int row = 0; row < 100; row++)
+			{
+				ImGui::TableNextRow();
+				for (int column = 0; column < 8; column++)
+				{
+					ImGui::TableSetColumnIndex(column);
+					if ((value2 == row) && (value2 != 0))
+					{
+
+						ImGui::TextColored(ImVec4(0.3, 0.9, 0.8, 0.9), SteamTable->at(row).at(column).c_str());
+					}
+					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row), ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+					{
+						std::cout << "value: " << value2 << std::endl;
+						placeholder.at(row) = true;
+						value2 = row;
+					}
+
+				}
+
+			}
+			ImGui::EndTable();
+		}
+		ImGui::End();
+	}
+
+
+	if ((show_window1 != true) && ImGui::CollapsingHeader("Saturated Steam Table (Temperature)"))
+	{
+		static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
+		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Temperature).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+
+		struct funcs { static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; } }; // Hide Native<>ImGuiKey duplicates when both exists in the array
+		for (ImGuiKey key = 0; key < ImGuiKey_COUNT; key++) {
+			if (funcs::IsLegacyNativeDupe(key)) continue; if (ImGui::IsKeyDown(key))
+			{
+				if (ImGui::GetKeyName((key)) == "F1")
+				{
+					show_window1 = true;
+
+				}
+			}
+		}
+
+		//CalculateQuality<SteamTableCalculateFlags::ENTHALPY>(SteamTable);
+		Quality_Calculator<SaturatedTable::TEMPERATURE>(SteamTable);
+
+		if (ImGui::BeginTable("table1", 15, flags))
+		{
+			//Freeze the first row
 			ImGui::TableSetupScrollFreeze(false, true);
 
 			// Display headers so we can inspect their interaction with borders.
@@ -613,11 +826,24 @@ inline void SteamTableSimulation()
 		}
 	}
 
-	if (ImGui::CollapsingHeader("Saturated Steam Table (Pressure)"))
+
+	if ((show_window2 != true) && ImGui::CollapsingHeader("Saturated Steam Table (Pressure)"))
 	{
 		static std::unique_ptr<std::vector<std::array<std::string, 15>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
 		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Pressure).csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
 
+
+		struct funcs { static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; } }; // Hide Native<>ImGuiKey duplicates when both exists in the array
+		for (ImGuiKey key = 0; key < ImGuiKey_COUNT; key++) {
+			if (funcs::IsLegacyNativeDupe(key)) continue; if (ImGui::IsKeyDown(key))
+			{
+				if (ImGui::GetKeyName((key)) == "F1")
+				{
+					show_window2 = true;
+
+				}
+			}
+		}
 
 		Quality_Calculator<SaturatedTable::PRESSURE>(SteamTable);
 
@@ -677,10 +903,23 @@ inline void SteamTableSimulation()
 		}
 	}
 
-	if (ImGui::CollapsingHeader("Compressed Liquid and Superheated Steam Table"))
+	if ((show_window3 != true) && ImGui::CollapsingHeader("Compressed Liquid and Superheated Steam Table"))
 	{
 		static std::unique_ptr<std::vector<std::array<std::string, 8>>> SteamTable = std::make_unique<std::vector<std::array<std::string, 8>>>();
 		static bool once = []() { load_steam_table(*SteamTable, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); std::cout << "Done Loading Table" << std::endl;  return true; } ();
+
+		struct funcs { static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; } }; // Hide Native<>ImGuiKey duplicates when both exists in the array
+		for (ImGuiKey key = 0; key < ImGuiKey_COUNT; key++) {
+			if (funcs::IsLegacyNativeDupe(key)) continue; if (ImGui::IsKeyDown(key))
+			{
+				if (ImGui::GetKeyName((key)) == "F1")
+				{
+					show_window3 = true;
+
+				}
+			}
+		}
+
 		if (ImGui::BeginTable("table1", 8, flags))
 		{
 			ImGui::TableSetupScrollFreeze(false, true);
