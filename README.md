@@ -1,3 +1,4 @@
+![GitHub Repo stars](https://img.shields.io/badge/Build-Passed-brightgreen)
 # Chemical Engineering Utility Software
 Chemical Engineering Calculation and Simulation Software
 # Overview
