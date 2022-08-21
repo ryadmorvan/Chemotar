@@ -1,5 +1,5 @@
 # Chemical Engineering Utility Software
-![GitHub Repo stars](https://img.shields.io/badge/Build-Passed-brightgreen)![GitHub Repo stars](https://img.shields.io/badge/Dependencies-Updated-yellowgreen)
+![GitHub Repo stars](https://img.shields.io/badge/Build-Passed-brightgreen) ![GitHub Repo stars](https://img.shields.io/badge/Dependencies-Updated-yellowgreen)
 
 Chemical Engineering Calculation and Simulation Software
 # Overview
