@@ -15,6 +15,7 @@ Chemical Engineering Calculation and Simulation Software
 [Download SFML-2.5.1](https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip)
 
 ## Compilation
+- Visual Studio Community 2022
 - Make sure visual studio build type be *Release x64*
 
 ## Usage
