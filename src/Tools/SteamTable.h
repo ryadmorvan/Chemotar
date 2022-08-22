@@ -945,7 +945,7 @@ inline void SteamTableSimulation()
 
 			static int value2 = 0;
 			std::vector<bool> placeholder; placeholder.resize(SteamTable->size());
-			for (int row = 0; row < 100; row++)
+			for (int row = 0; row < SteamTable->size(); row++)
 			{
 				ImGui::TableNextRow();
 				for (int column = 0; column < 8; column++)

@@ -5,7 +5,7 @@ DrawShapes::DrawShapes(float x_posistion, float y_posistion, float Length, float
 {
 	x_pos = x_posistion;
 	y_pos = y_posistion;
-
+	//Construct and draw the units that will be used to render them
 	if (import_shape == DrawShapes::ARROW)
 	{
 		length = Length;
@@ -59,6 +59,7 @@ DrawShapes::DrawShapes(float x_posistion, float y_posistion, float Length, float
 
 void DrawShapes::Draw(ImDrawList* draw_list)
 {
+	//Draw the units depending on the shapes enum
 	if (shape == shapes::ARROW)
 	{
 		draw_list->AddLine(start_position, end_position, col32, thickness);

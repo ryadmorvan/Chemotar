@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
-#include "../src/Utility/Windows_FileHandling.h"
+#include "../src/Utility/UtilitySystemHandler.h"
 
 
 enum STATE
@@ -222,32 +222,6 @@ std::stringstream CalculateViscosity(std::string& species, float& temperature, s
 
 	file.close();
 	return finalResult;
-}
-
-
-
-
-
-
-
-
-
-
-void OsOpenInShell(const char* path)
-{
-#ifdef _WIN32
-	// Note: executable path must use backslashes!
-	::ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWDEFAULT);
-#else
-#if __APPLE__
-	const char* open_executable = "open";
-#else
-	const char* open_executable = "xdg-open";
-#endif
-	char command[256];
-	snprintf(command, 256, "%s \"%s\"", open_executable, path);
-	system(command);
-#endif
 }
 
 

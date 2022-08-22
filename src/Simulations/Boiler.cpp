@@ -1,16 +1,19 @@
 #include "Boiler.h"
 
 
-template<size_t size>
 
+
+//Declare the function name from different file
+template<size_t size>
 float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float& pressure, float& temperature, float &enthalpy, Phase &phase);
 
-
+//Flag that will be used to indicate which table will be used for our calculations
 enum class SteamTableFlag
 {
 	COMPRESSED_SUPERHEATED_TABLE = 0x01, SATURATED_TABLE = 0x02
 };
 
+//Flags that will be used to indicate which variables that will be calculated from the steam tables
 enum class SteamTableCalculate
 {
 	PRESSURE = 0X01, TEMPERATURE = 0X02, DENSITY = 0X03, INTERNAL_ENERGY = 0x04, ENTHALPY = 0X05, ENTROPY = 0X06, SPECIFIC_VOLUME = 0x07
@@ -31,6 +34,7 @@ boiler<FEED::DOUBLE>::boiler()
 
 }
 
+//Initally set all the values for ours feeds
 boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, float Temperature2, float Pressure1, float Pressure2, float Pressure3,
 	float Temperature_Outlet, std::unique_ptr<std::vector<std::array<std::string, 8>>>& SteamTable)  : boiler()
 {
@@ -41,11 +45,14 @@ boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, fl
 	temperature2 = Temperature2;
 	temperature_outlet = Temperature_Outlet;
 	pressure1 = Pressure1; pressure2 = Pressure2; pressure3 = Pressure3;
+	//Calculate the appropriate values for enthalpies using steam table and passing our variables
+	//phase object will be passed on this function aswell in order to determine the phase of the inlets and outlet
 	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1);
 	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2);
 	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3);
 }
 
+//Returns the phase information depending on what CalculateFromSteamTable set the phase for each inlet and outlet
 Phase boiler<FEED::DOUBLE>::returnPhase1() {
 	if (phase1.phase == " Liquid") {
 		phase1.quality = 0;
@@ -118,6 +125,7 @@ Phase boiler<FEED::DOUBLE>::returnPhase3() {
 	return phase3;
 }
 
+//Templated returnQuality function that will be used to either return a float or a string (that will be used to draw on the information section of the inlets/outlets)
 template<typename T>
 T boiler<FEED::DOUBLE>::returnQuality1()
 {
@@ -159,7 +167,7 @@ T boiler<FEED::DOUBLE>::returnQuality3()
 
 
 
-
+//Start drawing the relative variable information for each inlet/outlet
 void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1, DrawShapes& Arrow_In2, DrawShapes& Arrow_Out1)
 {
 	//Feed and outlet rates Info
@@ -209,6 +217,7 @@ void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1,
 
 
 
+//Calculating all the variables
 template<size_t array_size>
 void boiler<FEED::DOUBLE>::CalculateEnthalpy(std::vector<std::array<std::string, array_size>> &steam_table)
 {
@@ -232,12 +241,12 @@ void boiler<FEED::DOUBLE>::CalculateVelocity(std::unique_ptr<std::vector<std::ar
 	float specific_volume1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure1, temperature1, enthalpy_feed1, phase1);
 	float specific_volume2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure2, temperature2, enthalpy_feed2, phase2);
 	float specific_volume3 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure3, temperature_outlet, enthalpy_outlet, phase3);
-	kinetic1.VolumetricFlowRate = feed1 * specific_volume1 / 60;
-	kinetic2.VolumetricFlowRate = feed2 * specific_volume2 / 60;
-	kinetic3.VolumetricFlowRate = feed3 * specific_volume3 / 60;
-	kinetic1.findVelocity();
-	kinetic2.findVelocity();
-	kinetic3.findVelocity();
+	kinetic1.volumetric_flow_rate = feed1 * specific_volume1 / 60;
+	kinetic2.volumetric_flow_rate = feed2 * specific_volume2 / 60;
+	kinetic3.volumetric_flow_rate = feed3 * specific_volume3 / 60;
+	kinetic1.find_velocity();
+	kinetic2.find_velocity();
+	kinetic3.find_velocity();
 
 }
 

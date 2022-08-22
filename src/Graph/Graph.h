@@ -20,7 +20,7 @@ class Graph
 {
 public:
 
-
+	//Enum used to indicate which type of build will be performed
 	enum state
 	{
 		constant_pressure = 0x01, constant_volume = 0x02, constant_temperature = 0x03, constant_heat = 0x04
@@ -30,14 +30,16 @@ public:
 	float y;
 	float thickness;
 	ImVec2 start_pos_x;
-	ImVec2 End_pos_x;
+	ImVec2 end_pos_x;
 	ImVec2 start_pos_y;
-	ImVec2 End_pos_y;
+	ImVec2 end_pos_y;
 
-	ImVec2 PressureText_pos;
-	ImVec2 VolumeText_pos;
-	bool Constant_Pressure_Setup = 0;
+	ImVec2 pressure_text_pos;
+	ImVec2 volume_text_pos;
+	bool constant_pressure_setup = 0;
 
+	//Class within the Graph class
+	//This class will be used to indicate the Infinitesimal small dots that will be combined all together to draw the graph
 	class LineGraph
 	{
 	public:
@@ -58,6 +60,7 @@ public:
 
 
 	ImVec4 Text_col = ImVec4(0.902f, 0.902f, 0.98f , 0.65f);
+	//Vectors that will store the dots and be used to simulate the graph
 	std::vector<LineGraph> VectorOfLines;
 	std::vector<LineGraph> VectorOfPoints;
 
@@ -66,11 +69,11 @@ public:
 
 
 
-
+	//Builds all the lines on the graph
 	void BuildLinesVector(Piston piston, Graph::state state);
-	
+	//Draw the actual graph
 	void Draw(ImDrawList* draw_list, const ImU32& Graph_col32);
-
+	//Draws the actual lines on top of the graph render
 	void DrawLines(ImDrawList* draw_list, Piston& piston);
 };
 

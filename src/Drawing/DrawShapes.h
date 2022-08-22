@@ -33,6 +33,7 @@ private:
 	ImU32 col32;
 	ImU32 TextColor;
 public:
+	//Flags that will be used to dictate which shape to use
 	enum shapes
 	{
 		NON = 0x00, ARROW = 0x01, BOILER = 0x02, TURBINE = 0x03, RESISTOR = 0x04
@@ -41,12 +42,14 @@ public:
 	
 
 	DrawShapes(float x_posistion, float y_posistion, float Length, float Thickness, DrawShapes::shapes import_shape);
+
 	DrawShapes() : x_pos(0), y_pos(0), length(1), thickness(1),
 		col32(ImColor(0, 255, 0, 255)), TextColor(ImColor(ImVec4(0.9f, 0.9f, 0.9f, 0.8f))), text("NULL"), shape(shapes::NON),
 		start_position(ImVec2(x_pos, y_pos)), end_position(ImVec2(x_pos + 10, y_pos + 10))
 	{
 
 	}
+
 	void TurbineResize(float size) { length = size; }
 
 	void Draw(ImDrawList* draw_list);
