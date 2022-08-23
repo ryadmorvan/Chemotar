@@ -13,6 +13,7 @@ std::string Piston::Format(double f, int n)
 	return ss.str();
 }
 
+//Ideal gas equations is used to calculate all the changes
 void Piston::VolumeChange(double volumeChange, Piston::process state)
 {
 	if (state == constant_pressure)
@@ -28,6 +29,7 @@ void Piston::VolumeChange(double volumeChange, Piston::process state)
 
 void Piston::PressureChange(double pressureChange, Piston::process state)
 {
+	
 	if (state == Piston::process::constant_temperature)
 	{
 		heat = moles * 8.314 * temperature * log(1 / pressureChange) / 1000;

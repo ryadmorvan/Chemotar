@@ -6,6 +6,7 @@
 #include <vector>
 #include<stdio.h>
 
+
 static void HelpMarker(const char* desc)
 {
 	ImGui::TextDisabled("(?)");
@@ -205,6 +206,7 @@ int _Round(T number)
 {
 	return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
 }
+
 template<typename T1, typename T2>
 std::string _Format(T1 f, T2 n)
 {

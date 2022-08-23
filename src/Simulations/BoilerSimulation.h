@@ -36,8 +36,10 @@ static void BoilerSimulation(bool* p_open)
 	//ImDrawListSharedData *draw_list_data = ImGui::GetDrawListSharedData();
 
 
+
 	static ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
+	//Variables that we will use to position and correct our units
 	static float sz = 220.0f;
 	static float thickness = 3.0f;
 	static ImVec4 col = ImVec4(0.9f, 0.9f, 0.9f, 0.8f);
@@ -48,7 +50,7 @@ static void BoilerSimulation(bool* p_open)
 
 	static bool VelocityProfile = FALSE;
 
-
+	//Creating our unit and inlet/outlet indicators 
 	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 270, 5.0f, DrawShapes::BOILER);
 	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 325.0f + y, 200.0f, 2.0, DrawShapes::ARROW);
 	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 225.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
@@ -70,9 +72,9 @@ static void BoilerSimulation(bool* p_open)
 
 
 
-
+	//Passing through the inital state of the boiler
 	static std::shared_ptr<boiler<FEED::DOUBLE>> boil = std::make_shared<boiler<FEED::DOUBLE>>(120, 175, 30, 65, 0.11, 0.11, 1.8, 204, SteamTable_Compressed);
-	boil->setShape(Boiler);
+	boil->setShape(Boiler); //Set the shape of the boiler
 
 	//float density = CalculateFromSteamTable(SteamTable_Compressed, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::DENSITY, boil->ReturnPhases().at(0));
 	//std::cout << "Density: " << density << " Phase: " << boil->ReturnPhases().at(0) << std::endl;
@@ -80,7 +82,6 @@ static void BoilerSimulation(bool* p_open)
 
 	//Feeds Flow Rates
 	static float* feeds[3] = { &boil->ReturnFeed1(), &boil->ReturnFeed2(), &boil->ReturnFeed3() };
-
 	static float* FeedTemps[3] = { &boil->ReturnTemp1(), &boil->ReturnTemp2(), &boil->ReturnTemp3() };
 	static float* FeedEnthalpies[3] = { &boil->ReturnEnthalpy1(), &boil->ReturnEnthalpy2(), &boil->ReturnEnthalpy3() };
 
@@ -94,6 +95,8 @@ static void BoilerSimulation(bool* p_open)
 	ImGui::TextColored(ImColor(100, 200, 100, 200), "Feeds Flow Rates");
 	ImGui::SliderFloat2(" In Kg/min", *feeds, 0.0f, 400.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 	ImGui::TextColored(ImColor(200, 100, 100, 200), "Feeds Temperatures");
+
+	//Real time update the variables of the boiler
 	if (ImGui::SliderFloat3(" In Celsius", *FeedTemps, 5.0f, 500.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
 		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
@@ -106,12 +109,13 @@ static void BoilerSimulation(bool* p_open)
 	}
 	PressureList(boil, SteamTable_Compressed);
 
+	//Prompting the user if they want to enable the velocity profile for inlets/outlets
 	ImGui::Checkbox("Enable Velocity Profile", &VelocityProfile);
 	if (VelocityProfile)
 	{
 		boil->EnableVelocityProfile();
 		boil->CalculateVelocity(SteamTable_Compressed);
-
+		//reassignment of the boiler's diameters 
 		if (ImGui::SliderFloat3(" Diameter in Cm", FeedDiameters, 5, 200, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 		{
 			boil->ReturnDiameter1Ref() = FeedDiameters[0];
@@ -122,13 +126,11 @@ static void BoilerSimulation(bool* p_open)
 	if (VelocityProfile == false) boil->DisabeVelocityProfile();
 
 
-
-
 	boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::HEAT);
 
 
 
-
+	//Draw all the units
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
 	arrow3_out.Draw(draw_list);

@@ -25,6 +25,7 @@ public:
 	double HeatCapacityConstPressure = 0;
 	double HeatCapacityConstVolume = 0;
 	double work = 0;
+	//enums that will be used to indicate the process type and which species will be used in it
 	enum process {Non = 0, constant_pressure = 5, constant_volume = 6, constant_temperature = 7, constant_heat = 8};
 	enum species { Air = 0 };
 public:
@@ -33,13 +34,15 @@ public:
 		return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
 	}
 
-	std::string Format(double f, int n);
+	std::string Format(double f, int n); //Formats the float values and converts them to string for other drawing purposes. f is the value input, n is the decimal points
+
+	//setting the piston heat capacity depending on the specie
 	Piston(species specie)
 	{
 		if (specie == Piston::species::Air)
 		{
-			HeatCapacityConstPressure = 29.19; // J/mol*k
-			HeatCapacityConstVolume = 20.85;
+			HeatCapacityConstPressure = 29.19; // J/mol*k heat capacity of the air at const pressure
+			HeatCapacityConstVolume = 20.85; //Heat capacity of air at const volume
 		}
 		volume = 22.4;
 		temperature = 273;
@@ -48,6 +51,7 @@ public:
 		heat = 0;
 		work = 0.0;
 	}
+
 	void VolumeChange(double volumeChange, Piston::process state);
 	void TemperatureChange(double temperatureChange, Piston::process state)
 	{
