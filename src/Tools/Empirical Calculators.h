@@ -15,7 +15,7 @@
 #include "../src/Utility/UtilitySystemHandler.h"
 
 //Function that will be used to save the data of the tables that are added.
-void _AddTable(std::string &filePath, TABLES_SAVE_DATA DATA) //TABLES_SAVE_DATA this enum is used to indicate which type of table we are going to use
+void _AddTable(std::string &filePath, int DATA) //TABLES_SAVE_DATA this enum is used to indicate which type of table we are going to use
 {
 	bool result = FALSE;
 	std::string sSelectedFile; //Storing the file name
@@ -28,16 +28,17 @@ void _AddTable(std::string &filePath, TABLES_SAVE_DATA DATA) //TABLES_SAVE_DATA 
 		std::cout << "File name:" << sSelectedFile << " File Path: " << sFilePath << " " << std::endl;
 		std::fstream outfile;
 		//Opening the file to read and write into it
-		if (DATA == TABLES_SAVE_DATA::HEAT_CAPACITY)
+		if (DATA == 2)
 		{
+			std::cout << "Heat capacity opened" << std::endl;
 			outfile.open("table_data/Heat Capacity Tables.ini", std::fstream::in | std::fstream::out | std::fstream::app);
 		}
-		if (DATA == TABLES_SAVE_DATA::VISCOSITY)
+		if (DATA == 1)
 		{
 			outfile.open("table_data/Viscosity Tables.ini", std::fstream::in | std::fstream::out | std::fstream::app);
 		}
 		//Appending the changes of the number of tables that are registered
-		if (_Find_File(sSelectedFile, DATA))
+		if (_Find_File(sSelectedFile, static_cast<TABLES_SAVE_DATA>(DATA)))
 		{
 			//Append changes to the file after opening it 
 			sSelectedFile.append("\n");
@@ -492,7 +493,7 @@ void ViscosityClaculatorInfo()
 }
 
 //Code to execute the window
-inline void heat_capacity_calculator_calculator(bool &show_heat_capacity_calculator_calculator)
+void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 {
 	static std::string fname = "";
 	static std::string species;
@@ -550,7 +551,7 @@ inline void heat_capacity_calculator_calculator(bool &show_heat_capacity_calcula
 				//Calculates the result
 				finalResult.clear();
 				results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
-				insertInfo(results, finalResult);
+				insert_info(results, finalResult);
 			}
 			//removing the table and memory setting the booleans to zero
 			if (ImGui::Button("Remove Table"))
@@ -623,7 +624,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 			{
 				finalResult.clear();
 				results = CalculateViscosity(species, temperature1, file, line, word, fname);
-				insertInfo(results, finalResult);
+				insert_info(results, finalResult);
 			}
 			//Setings the checkboxes bolean to zero then deleting the file data from the save.ini
 			if (ImGui::Button("Remove Table"))

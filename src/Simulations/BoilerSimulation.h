@@ -88,7 +88,7 @@ static void BoilerSimulation(bool* p_open)
 	static float feed_pressure = 0.11;
 
 
-
+	//Creating array of feeddiameters that will be used to calculate the feeds
 	static float FeedDiameters[3] = { 10, 10, 10 };
 
 	ImGui::TextColored(ImColor(100, 100, 100, 150), "Ctrl + Left Click to input value inside the slider");

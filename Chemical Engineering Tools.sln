@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chemotar", "ChemicalsSfml.vcxproj", "{B52F67C5-283A-411D-923B-FF7D23190BEF}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Chemotor", "..\Chemotor\Chemotor.vdproj", "{6961B18B-664E-4B4C-92F8-61E97BA9A3EF}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chemotar", "Chemotar.vcxproj", "{B940C6AA-9624-48FE-9375-E0545E7EF80B}"
 EndProject
 Global
@@ -17,18 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Debug|x64.ActiveCfg = Debug|x64
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Debug|x64.Build.0 = Debug|x64
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Debug|x86.ActiveCfg = Debug|Win32
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Debug|x86.Build.0 = Debug|Win32
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Release|x64.ActiveCfg = Release|x64
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Release|x64.Build.0 = Release|x64
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Release|x86.ActiveCfg = Release|Win32
-		{B52F67C5-283A-411D-923B-FF7D23190BEF}.Release|x86.Build.0 = Release|Win32
-		{6961B18B-664E-4B4C-92F8-61E97BA9A3EF}.Debug|x64.ActiveCfg = Debug
-		{6961B18B-664E-4B4C-92F8-61E97BA9A3EF}.Debug|x86.ActiveCfg = Debug
-		{6961B18B-664E-4B4C-92F8-61E97BA9A3EF}.Release|x64.ActiveCfg = Release
-		{6961B18B-664E-4B4C-92F8-61E97BA9A3EF}.Release|x86.ActiveCfg = Release
 		{B940C6AA-9624-48FE-9375-E0545E7EF80B}.Debug|x64.ActiveCfg = Debug|x64
 		{B940C6AA-9624-48FE-9375-E0545E7EF80B}.Debug|x64.Build.0 = Debug|x64
 		{B940C6AA-9624-48FE-9375-E0545E7EF80B}.Debug|x86.ActiveCfg = Debug|Win32

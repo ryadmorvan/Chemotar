@@ -1,4 +1,7 @@
 #pragma once
+#ifndef CHEMICALCALCULATIONS
+#define CHEMICALCALCULATIONS
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,7 +10,7 @@
 #include <cmath>
 #include "../src/Utility/UtilitySystemHandler.h"
 
-
+//State of the specie
 enum STATE
 {
 	LIQUID = 0X01, GAS = 0X02
@@ -18,7 +21,7 @@ double powerup(double temperature2, double temperature1, double power)
 	return pow(temperature2, power) - pow(temperature1, power);
 }
 
-
+//Calculates the enthalpy evolved
 double EnthalpyEvolved(double coeff1, double coeff2, double coeff3, double coeff4, double coeff5, double temperature1, double temperature2)
 {
 	double Enthalpy = 0;
@@ -56,8 +59,8 @@ double _ViscosityCalculation(double coeff1, double coeff2, double coeff3, double
 	}
 	return Viscosity;
 }
-
-std::string insertInfo(std::stringstream &results, std::string &finalResult)
+//appends the information passed into
+inline std::string insert_info(std::stringstream &results, std::string &finalResult)
 {
 	std::string placeholder;
 	while (std::getline(results, placeholder))
@@ -240,3 +243,5 @@ void ShowInfo(ImFont* font2)
 	ImGui::End();
 	ImGui::PopFont();
 }
+
+#endif

@@ -121,7 +121,7 @@ bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 {
 	std::string line;
 	std::ifstream file;
-	if (DATA == HEAT_CAPACITY)
+	if (DATA == 2)
 	{
 		file.open("table_data/Heat Capacity Tables.ini", std::ios::in);
 		while (std::getline(file, line))
@@ -135,7 +135,7 @@ bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 		file.close();
 		return 1;
 	}
-	if (DATA == VISCOSITY)
+	if (DATA == 1)
 	{
 		file.open("table_data/Viscosity Tables.ini", std::ios::in);
 		while (std::getline(file, line))
@@ -259,12 +259,10 @@ void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
 		if (line == fileInfo.fileName)
 		{
 			fileNameLine = iterator;
-			std::cout << fileNameLine << std::endl;
 		}
 		if (line == fileInfo.filePath)
 		{
 			fileNamePath = iterator;
-			std::cout << fileNamePath << std::endl;
 		}
 		iterator++;
 	}
@@ -413,3 +411,4 @@ inline void SetupImGuiStyle()
 	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
+
