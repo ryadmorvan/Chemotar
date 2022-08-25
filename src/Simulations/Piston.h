@@ -44,6 +44,7 @@ public:
 			HeatCapacityConstPressure = 29.19; // J/mol*k heat capacity of the air at const pressure
 			HeatCapacityConstVolume = 20.85; //Heat capacity of air at const volume
 		}
+		//Sets the default values for piston variables
 		volume = 22.4;
 		temperature = 273;
 		moles = 1;
@@ -52,6 +53,8 @@ public:
 		work = 0.0;
 	}
 
+	//Calaculates all the variables whenever there is change on one of them
+	//////////////////////////////////////////////////////////////////////////////
 	void VolumeChange(double volumeChange, Piston::process state);
 	void TemperatureChange(double temperatureChange, Piston::process state)
 	{
@@ -63,11 +66,10 @@ public:
 		moles = molesChange;
 
 	}
-
 	void PressureChange(double pressureChange, Piston::process state);
 	void AddHeat(float Heat, Piston::process state);
-
-
+	////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 	std::string returnVolumeText()
 	{
 		return "Volume: " + Format(volume, 4) + " L";

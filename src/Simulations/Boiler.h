@@ -24,7 +24,7 @@ template<typename T1, typename T2>
 std::string _Format(T1 f, T2 n);
 
 enum class SteamTableFlag;
-enum class SteamTableCalculate;
+enum class CompressedSuperheatedTablesFlags;
 
 
 
@@ -93,7 +93,7 @@ template<>
 class boiler<FEED::DOUBLE>  //Double inlet implementation
 {
 private:
-	DrawShapes Boiler;
+	DrawShapes _Boiler;
 	//Temperature in Kelvin
 	//Enthalpy in kJ/kg
 	//Feed in Kg/min
@@ -103,14 +103,14 @@ private:
 	bool VelocityProfile = false;
 
 	//Phases information
-	Phase phase1;
-	Phase phase2;
-	Phase phase3;
+	Phase _phase1;
+	Phase _phase2;
+	Phase _phase3;
 	//Kinetic Information
-	KineticEnergy kinetic1;
-	KineticEnergy kinetic2;
-	KineticEnergy kinetic3;
-
+	KineticEnergy _kinetic1;
+	KineticEnergy _kinetic2;
+	KineticEnergy _kinetic3;
+public:
 	float feed1;
 	float feed2;
 	float feed3;
@@ -128,7 +128,6 @@ private:
 	float enthalpy_outlet;
 
 	float Heating_Element = 0; //Heat evolved
-public:
 	friend struct KineticEnergy;
 
 	boiler<FEED::DOUBLE>();
@@ -137,10 +136,10 @@ public:
 		float Temperature_Outlet, std::unique_ptr<std::vector<std::array<std::string, 8>>>& SteamTable);
 
 	//sets the shape that will be used to draw the boiler's shape
-	void setShape(DrawShapes Boiler_Shape) { Boiler = Boiler_Shape; }
+	void setShape(DrawShapes Boiler_Shape) { _Boiler = Boiler_Shape; }
 	void Draw(ImDrawList *draw_list)
 	{
-		Boiler.Draw(draw_list);
+		_Boiler.Draw(draw_list);
 	}
 
 	//Draws the states of all inlets and outlets using the arrows positions
@@ -152,29 +151,29 @@ public:
 			<< temperature2 << std::endl;
 	}
 
-	float& ReturnFeed1() { return feed1; }
-	float& ReturnFeed2() { return feed2; }
-	float& ReturnFeed3() { return feed3; }
-	float& ReturnTemp1() { return temperature1; }
-	float& ReturnTemp2() { return temperature2; }
-	float& ReturnTemp3() { return temperature_outlet; }
-	float& ReturnEnthalpy1() { return enthalpy_feed1; }
-	float& ReturnEnthalpy2() { return enthalpy_feed2; }
-	float& ReturnEnthalpy3() { return enthalpy_outlet; }
-	float& ReturnPressure1() { return pressure1; }
-	float& ReturnPressure2() { return pressure2; }
-	float& ReturnPressure3() { return pressure3; }
+	float& ReturnFeedRef1() { return feed1; }
+	float& ReturnFeedRef2() { return feed2; }
+	float& ReturnFeedRef3() { return feed3; }
+	float& ReturnTempRef1() { return temperature1; }
+	float& ReturnTempRef2() { return temperature2; }
+	float& ReturnTempRef3() { return temperature_outlet; }
+	float& ReturnEnthalpyRef1() { return enthalpy_feed1; }
+	float& ReturnEnthalpyRef2() { return enthalpy_feed2; }
+	float& ReturnEnthalpyRef3() { return enthalpy_outlet; }
+	float& ReturnPressureRef1() { return pressure1; }
+	float& ReturnPressureRef2() { return pressure2; }
+	float& ReturnPressureRef3() { return pressure3; }
 
-	float ReturnDiameter1() { return kinetic1.diameter; }
-	float ReturnDiameter2() { return kinetic2.diameter; }
-	float ReturnDiameter3() { return kinetic3.diameter; }
-	float& ReturnDiameter1Ref() { return kinetic1.diameter; }
-	float& ReturnDiameter2Ref() { return kinetic2.diameter; }
-	float& ReturnDiameter3Ref() { return kinetic3.diameter; }
+	float ReturnDiameter1() { return _kinetic1.diameter; }
+	float ReturnDiameter2() { return _kinetic2.diameter; }
+	float ReturnDiameter3() { return _kinetic3.diameter; }
+	float& ReturnDiameter1Ref() { return _kinetic1.diameter; }
+	float& ReturnDiameter2Ref() { return _kinetic2.diameter; }
+	float& ReturnDiameter3Ref() { return _kinetic3.diameter; }
 
-	std::string ReturnPressure1Copy() { return _Format(pressure1, 3); }
-	std::string ReturnPressure2Copy() { return _Format(pressure2, 3); }
-	std::string ReturnPressure3Copy() { return _Format(pressure3, 3); }
+	std::string ReturnPressureString1() { return _Format(pressure1, 3); }
+	std::string ReturnPressureString2() { return _Format(pressure2, 3); }
+	std::string ReturnPressureString3() { return _Format(pressure3, 3); }
 	//std::array<std::string, 3>& ReturnPhases() { return feeds_phase; }
 	//enum to indicate which values will be updated real time
 	enum class UPDATING
@@ -187,23 +186,23 @@ public:
 	void Update(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTables, float &pressure_feed, UPDATING update) {
 		if (update == UPDATING::ENTHALPY)
 		{
-			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1);
-			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2);
-			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3);
+			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure1, temperature1, enthalpy_feed1, _phase1);
+			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure2, temperature2, enthalpy_feed2, _phase2);
+			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, _phase3);
 			CalculateHeat(); CalculateFlowRate();
 		}
 		if (update == UPDATING::HEAT)
 		{
-			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1);
-			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2);
-			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3);
+			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure1, temperature1, enthalpy_feed1, _phase1);
+			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure2, temperature2, enthalpy_feed2, _phase2);
+			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, _phase3);
 			CalculateHeat(); CalculateFlowRate();
 		}
 		if (update == UPDATING::TEMPERATURE)
 		{
-			temperature1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::TEMPERATURE, pressure1, temperature1, enthalpy_feed1, phase1);
-			temperature2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::TEMPERATURE, pressure2, temperature2, enthalpy_feed2 ,phase2);
-			temperature_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::TEMPERATURE, pressure3, temperature_outlet, enthalpy_outlet,  phase3);
+			temperature1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::TEMPERATURE, pressure1, temperature1, enthalpy_feed1, _phase1);
+			temperature2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::TEMPERATURE, pressure2, temperature2, enthalpy_feed2 ,_phase2);
+			temperature_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::TEMPERATURE, pressure3, temperature_outlet, enthalpy_outlet,  _phase3);
 			CalculateHeat(); CalculateFlowRate();
 		}
 	}
@@ -231,12 +230,12 @@ public:
 	std::string returnEnthalpy3() { return "Enthalpy: " + _Format(enthalpy_outlet, 5) + " kJ/kg"; }
 	std::string returnOutletPressure() { return "Pressure: " + _Format(pressure3, 4) + " MPA"; }
 	std::string returnHeatEvolved() { return "Heat: " + _Format(Heating_Element, 5) + " TJ"; }
-	std::string returnVelocity1() { return "Velcotiy: " + _Format(kinetic1.velocity, 4) + " m/s"; }
-	std::string returnVelocity2() { return "Velcotiy: " + _Format(kinetic2.velocity, 4) + " m/s"; }
-	std::string returnVelocity3() { return "Velcotiy: " + _Format(kinetic3.velocity, 4) + " m/s"; }
-	std::string returnDiameter1() { return "Diameter: " + _Format(kinetic1.diameter, 3) + " Cm"; }
-	std::string returnDiameter2() { return "Diameter: " + _Format(kinetic2.diameter, 3) + " Cm"; }
-	std::string returnDiameter3() { return "Diameter: " + _Format(kinetic3.diameter, 3) + " Cm"; }
+	std::string returnVelocity1() { return "Velcotiy: " + _Format(_kinetic1.velocity, 4) + " m/s"; }
+	std::string returnVelocity2() { return "Velcotiy: " + _Format(_kinetic2.velocity, 4) + " m/s"; }
+	std::string returnVelocity3() { return "Velcotiy: " + _Format(_kinetic3.velocity, 4) + " m/s"; }
+	std::string returnDiameter1() { return "Diameter: " + _Format(_kinetic1.diameter, 3) + " Cm"; }
+	std::string returnDiameter2() { return "Diameter: " + _Format(_kinetic2.diameter, 3) + " Cm"; }
+	std::string returnDiameter3() { return "Diameter: " + _Format(_kinetic3.diameter, 3) + " Cm"; }
 	Phase returnPhase1();
 	Phase returnPhase2();
 	Phase returnPhase3();

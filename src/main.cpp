@@ -52,7 +52,7 @@ SOFTWARE.
 
 
 
-
+void ShowInfo(ImFont* font2);
 
 
 
@@ -208,4 +208,19 @@ int main()
 
 	
 	return 0;
+}
+
+
+
+void ShowInfo(ImFont* font2)
+{
+	ImGui::PushFont(font2);
+	ImGui::Begin("Developer");
+	ImGui::Text("Designed and Developed By Riyadh Al-Khamees\n");
+	ImGui::Text("Email: riyadhalkhamees@gmail.com\n");
+	ImGui::Text("Github: https://github.com/ryadmorvan");
+	if (ImGui::Button("Github Repo")) { OsOpenInShell("https://github.com/ryadmorvan/Chemotar"); }
+	ImGui::Text("\nCredits to: J. Richard Elliott, Carl T. Lira, \nYaws, C.L., J.R. Hopper, and R.W. Pike\nNeil Hendren from University of Colorado Boulder");
+	ImGui::End();
+	ImGui::PopFont();
 }

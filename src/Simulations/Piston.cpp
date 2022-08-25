@@ -26,7 +26,7 @@ void Piston::VolumeChange(double volumeChange, Piston::process state)
 
 	}
 }
-
+//methods that calculates the other variables when pressure changes on a certain Piston::process
 void Piston::PressureChange(double pressureChange, Piston::process state)
 {
 	
@@ -46,7 +46,7 @@ void Piston::PressureChange(double pressureChange, Piston::process state)
 
 	}
 }
-
+//methods that calculates the other variables when heat is added or rejected on a certain Piston::process
 void Piston::AddHeat(float Heat, Piston::process state)
 {
 	if (state == Piston::constant_pressure)

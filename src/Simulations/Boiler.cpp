@@ -5,7 +5,7 @@
 
 //Declare the function name from different file
 template<size_t size>
-float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, SteamTableCalculate calculate, float& pressure, float& temperature, float &enthalpy, Phase &phase);
+float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable, SteamTableFlag table, CompressedSuperheatedTablesFlags calculate, float& pressure, float& temperature, float &enthalpy, Phase &phase);
 
 //Flag that will be used to indicate which table will be used for our calculations
 enum class SteamTableFlag
@@ -14,7 +14,7 @@ enum class SteamTableFlag
 };
 
 //Flags that will be used to indicate which variables that will be calculated from the steam tables
-enum class SteamTableCalculate
+enum class CompressedSuperheatedTablesFlags
 {
 	PRESSURE = 0X01, TEMPERATURE = 0X02, DENSITY = 0X03, INTERNAL_ENERGY = 0x04, ENTHALPY = 0X05, ENTROPY = 0X06, SPECIFIC_VOLUME = 0x07
 };
@@ -28,8 +28,8 @@ boiler<FEED::SINGLE>::boiler() :
 }
 
 boiler<FEED::DOUBLE>::boiler()
-	:feed1(0), feed2(0), temperature1(273.15), temperature2(273.15), temperature_outlet(298.15), Boiler()
-	, phase1(" Liquid", ImColor(59, 154, 225)), phase2(" Liquid", ImColor(59, 154, 225)), phase3(" Liquid", ImColor(59, 154, 225))
+	:feed1(0), feed2(0), temperature1(273.15), temperature2(273.15), temperature_outlet(298.15), _Boiler()
+	, _phase1(" Liquid", ImColor(59, 154, 225)), _phase2(" Liquid", ImColor(59, 154, 225)), _phase3(" Liquid", ImColor(59, 154, 225))
 {
 
 }
@@ -47,82 +47,82 @@ boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, fl
 	pressure1 = Pressure1; pressure2 = Pressure2; pressure3 = Pressure3;
 	//Calculate the appropriate values for enthalpies using steam table and passing our variables
 	//phase object will be passed on this function aswell in order to determine the phase of the inlets and outlet
-	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure1, temperature1, enthalpy_feed1, phase1);
-	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure2, temperature2, enthalpy_feed2, phase2);
-	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, phase3);
+	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure1, temperature1, enthalpy_feed1, _phase1);
+	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure2, temperature2, enthalpy_feed2, _phase2);
+	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, _phase3);
 }
 
 //Returns the phase information depending on what CalculateFromSteamTable set the phase for each inlet and outlet
 Phase boiler<FEED::DOUBLE>::returnPhase1() {
-	if (phase1.phase == " Liquid") {
-		phase1.quality = 0;
-		phase1.color = ImColor(59, 154, 225); return phase1;
+	if (_phase1.phase == " Liquid") {
+		_phase1.quality = 0;
+		_phase1.color = ImColor(59, 154, 225); return _phase1;
 	}
-	else if ((phase1.phase == " Saturated Liquid") or (phase1.phase == " Saturated Vapor"))
+	else if ((_phase1.phase == " Saturated Liquid") or (_phase1.phase == " Saturated Vapor"))
 	{
-		if (phase1.quality > 0.5)
+		if (_phase1.quality > 0.5)
 		{
-			phase1.phase = " Saturated Vapor";
+			_phase1.phase = " Saturated Vapor";
 		}
 		else
-			phase1.phase = " Saturated Liquid";
-		phase1.color = ImColor(159, 254, 225); return phase1;
+			_phase1.phase = " Saturated Liquid";
+		_phase1.color = ImColor(159, 254, 225); return _phase1;
 	}
-	else if (phase1.phase == " Vapor")
+	else if (_phase1.phase == " Vapor")
 	{
-		phase1.quality = 1;
-		phase1.color = ImColor(59, 254, 225); return phase1;
+		_phase1.quality = 1;
+		_phase1.color = ImColor(59, 254, 225); return _phase1;
 	}
-	phase1.color = ImColor(59, 154, 225);
-	return phase1;
+	_phase1.color = ImColor(59, 154, 225);
+	return _phase1;
 }
 
 Phase boiler<FEED::DOUBLE>::returnPhase2() {
-	if (phase2.phase == " Liquid") {
-		phase2.quality = 0;
-		phase2.color = ImColor(59, 154, 225); return phase2;
+	if (_phase2.phase == " Liquid") {
+		_phase2.quality = 0;
+		_phase2.color = ImColor(59, 154, 225); return _phase2;
 	}
-	else if ((phase2.phase == " Saturated Liquid") or (phase2.phase == " Saturated Vapor"))
+	else if ((_phase2.phase == " Saturated Liquid") or (_phase2.phase == " Saturated Vapor"))
 	{
-		if (phase2.quality > 0.5)
+		if (_phase2.quality > 0.5)
 		{
-			phase2.phase = " Saturated Vapor";
+			_phase2.phase = " Saturated Vapor";
 		}
 		else
-			phase2.phase = " Saturated Liquid";
-		phase2.color = ImColor(159, 254, 225); return phase2;
+			_phase2.phase = " Saturated Liquid";
+		_phase2.color = ImColor(159, 254, 225); return _phase2;
 	}
-	else if (phase2.phase == " Vapor")
+	else if (_phase2.phase == " Vapor")
 	{
-		phase2.quality = 1;
-		phase2.color = ImColor(59, 254, 225); return phase2;
+		_phase2.quality = 1;
+		_phase2.color = ImColor(59, 254, 225); return _phase2;
 	}
-	phase2.color = ImColor(59, 154, 225);
-	return phase2;
+	_phase2.color = ImColor(59, 154, 225);
+	return _phase2;
 }
 
 Phase boiler<FEED::DOUBLE>::returnPhase3() {
-	if (phase3.phase == " Liquid") {
-		phase3.quality = 0;
-		phase3.color = ImColor(59, 154, 225); return phase3;
+	if (_phase3.phase == " Liquid") {
+		_phase3.quality = 0;
+		_phase3.color = ImColor(59, 154, 225); return _phase3;
 	}
-	else if ((phase3.phase == " Saturated Liquid") or (phase3.phase == " Saturated Vapor"))
+	else if ((_phase3.phase == " Saturated Liquid") or (_phase3.phase == " Saturated Vapor"))
 	{
-		if (phase3.quality > 0.5)
+		if (_phase3.quality > 0.5)
 		{
-			phase3.phase = " Saturated Vapor";
+			_phase3.phase = " Saturated Vapor";
 		}
 		else
-			phase3.phase = " Saturated Liquid";
-		phase3.color = ImColor(159, 254, 225); return phase3;
+			_phase3.phase = " Saturated Liquid";
+		_phase3.color = ImColor(159, 254, 225); return _phase3;
 	}
-	else if (phase3.phase == " Vapor")
+	else if (_phase3.phase == " Vapor")
 	{
-		phase3.quality = 1;
-		phase3.color = ImColor(59, 254, 225); return phase3;
+		_phase3.quality = 1;
+		_phase3.color = ImColor(59, 254, 225); return _phase3;
 	}
-	phase3.color = ImColor(59, 154, 225);
-	return phase3;
+	_phase3.color = ImColor(59, 154, 225);
+	return _phase3;
 }
 
 //Templated returnQuality function that will be used to either return a float or a string (that will be used to draw on the information section of the inlets/outlets)
@@ -131,11 +131,11 @@ T boiler<FEED::DOUBLE>::returnQuality1()
 {
 	if constexpr (std::is_same<T, float>())
 	{
-		return phase1.quality;
+		return _phase1.quality;
 	}
 	if constexpr(std::is_same<T, std::string>())
 	{
-		return "Quality: " + _Format(phase1.quality, 2);
+		return "Quality: " + _Format(_phase1.quality, 2);
 	}
 }
 
@@ -144,11 +144,11 @@ T boiler<FEED::DOUBLE>::returnQuality2()
 {
 	if constexpr (std::is_same<T, float>())
 	{
-		return phase2.quality;
+		return _phase2.quality;
 	}
 	if constexpr (std::is_same<T, std::string>())
 	{
-		return "Quality: " + _Format(phase2.quality, 2);
+		return "Quality: " + _Format(_phase2.quality, 2);
 	}
 }
 template<typename T>
@@ -156,11 +156,11 @@ T boiler<FEED::DOUBLE>::returnQuality3()
 {
 	if constexpr (std::is_same<T, float>())
 	{
-		return phase3.quality;
+		return _phase3.quality;
 	}
 	if constexpr (std::is_same<T, std::string>())
 	{
-		return "Quality: " + _Format(phase3.quality, 2);
+		return "Quality: " + _Format(_phase3.quality, 2);
 	}
 }
 
@@ -238,15 +238,15 @@ void boiler<FEED::DOUBLE>::CalculateFlowRate()
 
 void boiler<FEED::DOUBLE>::CalculateVelocity(std::unique_ptr<std::vector<std::array<std::string, 8>>>& SteamTables)
 {
-	float specific_volume1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure1, temperature1, enthalpy_feed1, phase1);
-	float specific_volume2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure2, temperature2, enthalpy_feed2, phase2);
-	float specific_volume3 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::SPECIFIC_VOLUME, pressure3, temperature_outlet, enthalpy_outlet, phase3);
-	kinetic1.volumetric_flow_rate = feed1 * specific_volume1 / 60;
-	kinetic2.volumetric_flow_rate = feed2 * specific_volume2 / 60;
-	kinetic3.volumetric_flow_rate = feed3 * specific_volume3 / 60;
-	kinetic1.find_velocity();
-	kinetic2.find_velocity();
-	kinetic3.find_velocity();
+	float specific_volume1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::SPECIFIC_VOLUME, pressure1, temperature1, enthalpy_feed1, _phase1);
+	float specific_volume2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::SPECIFIC_VOLUME, pressure2, temperature2, enthalpy_feed2, _phase2);
+	float specific_volume3 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::SPECIFIC_VOLUME, pressure3, temperature_outlet, enthalpy_outlet, _phase3);
+	_kinetic1.volumetric_flow_rate = feed1 * specific_volume1 / 60;
+	_kinetic2.volumetric_flow_rate = feed2 * specific_volume2 / 60;
+	_kinetic3.volumetric_flow_rate = feed3 * specific_volume3 / 60;
+	_kinetic1.find_velocity();
+	_kinetic2.find_velocity();
+	_kinetic3.find_velocity();
 
 }
 

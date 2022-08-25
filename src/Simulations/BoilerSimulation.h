@@ -23,7 +23,7 @@
 static void BoilerSimulation(bool* p_open)
 {
 	ImGui::SetNextWindowSize(ImVec2(1200, 728), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("Boiler Simulation", p_open))
+	if (!ImGui::Begin("_Boiler Simulation", p_open))
 	{
 		return;
 	}
@@ -76,14 +76,14 @@ static void BoilerSimulation(bool* p_open)
 	static std::shared_ptr<boiler<FEED::DOUBLE>> boil = std::make_shared<boiler<FEED::DOUBLE>>(120, 175, 30, 65, 0.11, 0.11, 1.8, 204, SteamTable_Compressed);
 	boil->setShape(Boiler); //Set the shape of the boiler
 
-	//float density = CalculateFromSteamTable(SteamTable_Compressed, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, SteamTableCalculate::DENSITY, boil->ReturnPhases().at(0));
+	//float density = CalculateFromSteamTable(SteamTable_Compressed, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::DENSITY, boil->ReturnPhases().at(0));
 	//std::cout << "Density: " << density << " Phase: " << boil->ReturnPhases().at(0) << std::endl;
 	//boil->CalculateEnthalpy(*SteamTable_Saturated);
 
 	//Feeds Flow Rates
-	static float* feeds[3] = { &boil->ReturnFeed1(), &boil->ReturnFeed2(), &boil->ReturnFeed3() };
-	static float* FeedTemps[3] = { &boil->ReturnTemp1(), &boil->ReturnTemp2(), &boil->ReturnTemp3() };
-	static float* FeedEnthalpies[3] = { &boil->ReturnEnthalpy1(), &boil->ReturnEnthalpy2(), &boil->ReturnEnthalpy3() };
+	static float* feeds[3] = { &boil->ReturnFeedRef1(), &boil->ReturnFeedRef2(), &boil->ReturnFeedRef3() };
+	static float* FeedTemps[3] = { &boil->ReturnTempRef1(), &boil->ReturnTempRef2(), &boil->ReturnTempRef3() };
+	static float* FeedEnthalpies[3] = { &boil->ReturnEnthalpyRef1(), &boil->ReturnEnthalpyRef2(), &boil->ReturnEnthalpyRef3() };
 
 	static float feed_pressure = 0.11f;
 
@@ -134,7 +134,7 @@ static void BoilerSimulation(bool* p_open)
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
 	arrow3_out.Draw(draw_list);
-	//Boiler.Draw(draw_list);
+	//_Boiler.Draw(draw_list);
 	boil->Draw(draw_list);
 	boil->DrawInfo(draw_list, arrow1, arrow2, arrow3_out);
 	//Turbine.Draw(draw_list);

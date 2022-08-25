@@ -63,7 +63,7 @@ void _AddTable(std::string &filePath, int DATA) //TABLES_SAVE_DATA this enum is 
 
 
 
-
+//Stores the min and max of temperatures in this struct
 struct TemperatureRange
 {
 	float min = 0;
@@ -89,6 +89,8 @@ std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::m
 			while (std::getline(str, word, ','))
 			{
 				std::string placeholder = word;
+				//Depending on which table data we are using, we compare them using TABLES_SAVA_DATA enum
+				//Then we store all the information to Chemicals vector and TempRange array
 				if (DATA == TABLES_SAVE_DATA::HEAT_CAPACITY)
 				{
 					switch (i)
@@ -121,7 +123,7 @@ std::vector<std::string> loadTable(std::string fname, std::fstream &file, std::m
 				}
 				++i;
 			}
-			//Set the temperature range values
+			//Set the temperature range values on TempRange array
 			TempRange[iterateMap].max = max;
 			TempRange[iterateMap].min = min;
 			++iterateMap;
@@ -155,8 +157,8 @@ std::vector<std::string> loadTableNames(std::string fname, std::fstream& file)
 				std::string placeholder = word;
 				switch (i)
 				{
-				case 0:
-					Chemicals.push_back(placeholder);
+				case 0: // 0 indicates the first string at the start of each line
+					Chemicals.push_back(placeholder); //Stores the name of the specie
 				}
 				++i;
 			}
@@ -290,9 +292,10 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 	std::vector<std::string> TableNames;
 	std::vector<std::string> TablePaths;
 	std::fstream SaveFile;
+	//Opens the saved viscosity table list file
 	SaveFile.open("table_data/Viscosity Tables.ini", std::ios::in);
-	_LoadTables(TableNames, TablePaths, SaveFile);
-	_TableNamesCorrection(TableNames);
+	_LoadTables(TableNames, TablePaths, SaveFile); //Depending on the number of tables, it will load them all
+	_TableNamesCorrection(TableNames); //Corrects the name of the tables that is returned from windows API
 	//count_number_bool will be used to realtime monitor the number of checkboxes there are
 	int count_number_bool = 0;
 	for (int i = 0; i < TableNames.size(); ++i)
@@ -370,10 +373,8 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 	return 0;
 }
 
-
-
-
-void EnthalpyClaculatorInfo()
+//Shows the guide on how to use heatcapacity calculator to the user
+inline void heatcapacity_calculator_info()
 {
 	if (ImGui::BeginPopup("Info Enthalpy"))
 	{
@@ -434,7 +435,8 @@ void EnthalpyClaculatorInfo()
 	}
 }
 
-void ViscosityClaculatorInfo()
+//Shows the guide on how to use viscosity calculator to the user
+inline void viscosity_claculator_info()
 {
 	if (ImGui::BeginPopup("Info Viscosity"))
 	{
@@ -454,6 +456,7 @@ void ViscosityClaculatorInfo()
 		//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
 		//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
 
+		//How the tables will be displayed
 		flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
 			| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
 			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
@@ -529,7 +532,7 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 
 	//prompts the user whether they want to display the information popup
 	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info Enthalpy");
-	EnthalpyClaculatorInfo();
+	heatcapacity_calculator_info();
 
 
 
@@ -607,7 +610,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 
 	//prompts the user whether they want to display the information popup
 	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info Viscosity");
-	ViscosityClaculatorInfo();
+	viscosity_claculator_info();
 
 
 	if (ShowViscosityCalculator == TRUE)

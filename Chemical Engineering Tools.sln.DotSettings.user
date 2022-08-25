@@ -4,4 +4,5 @@
 	
 	
 	
+	
 	<s:Boolean x:Key="/Default/Housekeeping/ProjectModelSynchronizer/ReadProjectModelFromDisk/@EntryValue">False</s:Boolean></wpf:ResourceDictionary>
