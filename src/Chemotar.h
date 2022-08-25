@@ -40,8 +40,11 @@ public:
 	void (*BoilerSimulation)(bool*);
 	void (*ShowInfo)(ImFont*);
 
+	//Main methods that will be used to run our program
 	void run(ImFont* font);
 	int MainMenu(ImFont* font, std::string file_path);
+
+
 	bool& returnShowHeatCapacityCalculator() { return ShowPropertiesCalculator; }
 	bool& returnShowViscosity() { return ShowViscosityCalculator; }
 	bool& returnShowSteamTable() { return ShowSteamTableCalculator; }

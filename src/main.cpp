@@ -71,15 +71,14 @@ SOFTWARE.
 int main()
 {
 
-	//HideConsole();]
+	//HideConsole();
 	//Using 1366 by 768 just to simulate the default laptop's resolution
+	//SETUP////////////////////////////////////////////////////////////////////////////////
 	sf::RenderWindow window(sf::VideoMode(1366, 768), "Chemotar");
 	ImGui::SFML::Init(window);
 	//Enable docking
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	static sf::Texture image;
-	static std::string file_path = " ";
+	static sf::Texture image; static std::string file_path = " ";
 	//Docking system
 	sf::Clock deltaClock;
 	//Loading up the fonts
@@ -89,32 +88,26 @@ int main()
 	io1.FontDefault = font;
 	ImFont* font2 = io1.Fonts->AddFontFromFileTTF("Assets\\Arial.ttf", 17);
 	ImGui::SFML::UpdateFontTexture();
-
 	//Loading our background picture
-	if (!image.loadFromFile("Assets\\color.tga"))
-	{
-		std::cout << "Error" << std::endl;
-	}
+	if (!image.loadFromFile("Assets\\color.tga")) { std::cout << "Error loading background" << std::endl; }
 	sf::Sprite backgroundtexture; 	backgroundtexture.setTexture(image);
+	window.setFramerateLimit(60);
+	SetupImGuiStyle();
+	//////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 
-
-	//Creating our program
-	Chemotar program;
-	program._Settings = &_Settings;
-	program.heat_capacity_calculator = &heat_capacity_calculator;
-	program.ViscosityCalc = &ViscosityCalculator;
-	program.SteamTableSimulation = &SteamTableSimulation;
-	program.IdealGasLaw = &IdealGasLaw;
-	program.BoilerSimulation = &BoilerSimulation;
-	program.ShowInfo = &ShowInfo;
-	program._AddTable = &_AddTable;
+	//Creating our program AND linking our functions
+	Chemotar chemotar;
+	chemotar._Settings = &_Settings;	chemotar.heat_capacity_calculator = &heat_capacity_calculator;
+	chemotar.ViscosityCalc = &ViscosityCalculator;	chemotar.SteamTableSimulation = &SteamTableSimulation;
+	chemotar.IdealGasLaw = &IdealGasLaw;	chemotar.BoilerSimulation = &BoilerSimulation;
+	chemotar.ShowInfo = &ShowInfo;	chemotar._AddTable = &_AddTable;
 	
 
-	window.setFramerateLimit(60);
 
-	SetupImGuiStyle();
+;
 
-	//Rectangle Properties
+	////////////////////////////////////////
 	////////////////////////////////////////
 
 	while (window.isOpen())
@@ -197,8 +190,8 @@ int main()
 
 
 
-		program.MainMenu(font2, file_path); //Displays the main menu
-		program.run(font); //Simulates all the tools and calculators
+		chemotar.MainMenu(font2, file_path); //Displays the main menu
+		chemotar.run(font); //Simulates all the tools and calculators
 		//ImGui::SetMouseCursor(ImGuiMouseCursor_None); hide Cursor
 		//Run the program and push the font into it
 
