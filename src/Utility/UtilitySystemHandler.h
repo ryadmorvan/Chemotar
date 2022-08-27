@@ -7,6 +7,7 @@
 #include<stdio.h>
 
 
+//function that displays ImGui Helper text descr
 static void HelpMarker(const char* desc)
 {
 	ImGui::TextDisabled("(?)");
@@ -19,7 +20,7 @@ static void HelpMarker(const char* desc)
 		ImGui::EndTooltip();
 	}
 }
-
+//will be used to open the our links
 void OsOpenInShell(const char* path)
 {
 #ifdef _WIN32
@@ -37,12 +38,15 @@ void OsOpenInShell(const char* path)
 #endif
 }
 
+
+//data structure that will be used to store our fileinfo
 struct FileInfo
 {
 	std::string fileName;
 	std::string filePath;
 };
 
+//Opens our windows file system
 bool _openFile(std::string& sSelectedFile, std::string& sFilePath)
 {
 	//  CREATE FILE OBJECT INSTANCE
@@ -102,6 +106,7 @@ bool _openFile(std::string& sSelectedFile, std::string& sFilePath)
 }
 
 
+//Function that handles replacing all the strings with our input and then returning it
 std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
@@ -117,6 +122,7 @@ enum TABLES_SAVE_DATA
 	HEAT_CAPACITY = 0x01, VISCOSITY = 0x02
 };
 
+//Depending on the table enum passed, this function will open our ini files and check if our table data is already saved in them
 bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 {
 	std::string line;
@@ -151,18 +157,22 @@ bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 	}
 }
 
-int _Tables_Count()
-{
-	std::ifstream file;
-	std::string placeholder;
-	int count = 0;
-	file.open("save.ini", std::ios::in);
-	while (std::getline(file, placeholder))
-	{
-		++count;
-	}
-	return count / 2;
-}
+//old implementation which will be ignored for now
+////Counts the number of tables
+//int _Tables_Count()
+//{
+//	std::ifstream file;
+//	std::string placeholder;
+//	int count = 0;
+//	file.open("save.ini", std::ios::in);
+//	while (std::getline(file, placeholder))
+//	{
+//		++count;
+//	}
+//	return count / 2;
+//}
+
+
 
 void replace_all(
 	std::string& s,
@@ -189,7 +199,7 @@ void replace_all(
 
 
 
-
+//function that corrects the names of the tables and removes the file format from the name
 void _TableNamesCorrection(std::vector<std::string>& TableNames)
 {
 	for (auto& Table : TableNames)
@@ -200,13 +210,15 @@ void _TableNamesCorrection(std::vector<std::string>& TableNames)
 
 
 
-
+//Function that rounds our values, it can take either float or double
 template<typename T>
 int _Round(T number)
 {
 	return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
 }
 
+//function that helps formats our value depending on the digits before decimal
+//our first arguments handles our value, second arguments determines how many digits before the decimal point
 template<typename T1, typename T2>
 std::string _Format(T1 f, T2 n)
 {
@@ -220,11 +232,13 @@ std::string _Format(T1 f, T2 n)
 	return ss.str();
 }
 
-
-void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
+//When we delete our table we have to call this function in order to erase the data
+//from our save tables ini
+void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA) //We first pass our first argument which is FileInfo
+//which the file name and path is stored in and for our second argument is the enum that determines which type of data we are going to erase
 {
 	std::vector<std::string> lines;
-	std::string fileName_Path;
+	std::string fileName_Path; //We store our table_data path
 	if (DATA == TABLES_SAVE_DATA::HEAT_CAPACITY)
 	{
 		fileName_Path = "table_data/Heat Capacity Tables.ini";
@@ -267,9 +281,10 @@ void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
 		iterator++;
 	}
 	file.close();
-
+	//we permanently remove our fileName path
 	remove(fileName_Path.c_str());
 
+	//we directly write the actual save data as a new file which will have our new data
 	std::ofstream fileWrite(fileName_Path);
 	iterator = 0;
 	for (auto& line : lines)
@@ -285,7 +300,7 @@ void _Find_File_Delete(FileInfo fileInfo, TABLES_SAVE_DATA DATA)
 }
 
 
-
+//Checks if our string contains another literals
 bool _contains(const std::string& str, const std::string substr)
 {
 	if (str.size() < substr.size()) return false;
@@ -308,7 +323,7 @@ bool _contains(const std::string& str, const std::string substr)
 	return false;
 }
 
-
+//function that displays ImGui settings
 inline void _Settings()
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -351,6 +366,7 @@ inline void _Settings()
 	}
 }
 
+//function that stylizes our GUI
 inline void SetupImGuiStyle()
 {
 	ImGui::GetStyle().FrameRounding = 4.0f;

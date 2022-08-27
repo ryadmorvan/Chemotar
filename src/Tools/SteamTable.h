@@ -716,7 +716,7 @@ inline void SteamTableSimulation()
 				CT_SelectableSpanRow
 			};
 
-
+			//Setting up the columns' headers
 			ImGui::TableSetupColumn("T (C)");
 			ImGui::TableSetupColumn("P (MPa)");
 			ImGui::TableSetupColumn("Density Liquid (kg/m^3)");
@@ -785,6 +785,7 @@ inline void SteamTableSimulation()
 			static bool display_headers = false;
 			static int contents_type = CT_Text;
 
+			//Enums used to dictate which type the table is
 			enum ContentsType
 			{
 				CT_Text,
@@ -795,6 +796,7 @@ inline void SteamTableSimulation()
 				CT_SelectableSpanRow
 			};
 
+			//Setting up the columns headers
 			ImGui::TableSetupColumn("P (MPa)");
 			ImGui::TableSetupColumn("T (C)");
 			ImGui::TableSetupColumn("Density Liquid (kg/m^3)");
@@ -850,6 +852,8 @@ inline void SteamTableSimulation()
 			std::cout << "Done Loading Table" << std::endl;
 			return true;
 		}();
+
+		//func that will be used to map out the keyboard hits
 		struct funcs
 		{
 			static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; }
@@ -903,8 +907,9 @@ inline void SteamTableSimulation()
 						//When the row is selected, we highlight it
 						ImGui::TextColored(ImVec4(0.3f, 0.9f, 0.8f, 0.9f), SteamTable->at(row).at(column).c_str());
 					}
+					//There is currently a bug where ImGuiSelectableFlags_SpanAllColumns doesn't span over all columns
 					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row),
-					                           ImGuiSelectableFlags_SpanAllColumns |
+					                          /* ImGuiSelectableFlags_SpanAllColumns |*/
 					                           ImGuiSelectableFlags_AllowItemOverlap))
 					{
 						placeholder.at(row) = true;
@@ -923,11 +928,12 @@ inline void SteamTableSimulation()
 		static auto SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
 		static bool once = []()
 		{
-			load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Temperature).csv");
+			load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Temperature).csv"); //Loads up the saturated table
 			std::cout << "Done Loading Table" << std::endl;
 			return true;
 		}();
 
+		//Checks if we got a legacy keyboard native
 		struct funcs
 		{
 			static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; }
@@ -1019,7 +1025,7 @@ inline void SteamTableSimulation()
 		static auto SteamTable = std::make_unique<std::vector<std::array<std::string, 15>>>();
 		static bool once = []()
 		{
-			load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Pressure).csv");
+			load_steam_table(*SteamTable, "steam_tables/Saturated Steam Table (Pressure).csv"); //Loads up the saturated table
 			std::cout << "Done Loading Table" << std::endl;
 			return true;
 		}();
@@ -1112,7 +1118,7 @@ inline void SteamTableSimulation()
 		static auto SteamTable = std::make_unique<std::vector<std::array<std::string, 8>>>();
 		static bool once = []()
 		{
-			load_steam_table(*SteamTable, "steam_tables/Compressed Liquid and Superheated Steam Table.csv");
+			load_steam_table(*SteamTable, "steam_tables/Compressed Liquid and Superheated Steam Table.csv"); //Loads up the Compressed Liquid and Superheated Steam tables
 			std::cout << "Done Loading Table" << std::endl;
 			return true;
 		}();
@@ -1133,7 +1139,7 @@ inline void SteamTableSimulation()
 			}
 		}
 
-		if (ImGui::BeginTable("table1", 8, flags))
+		if (ImGui::BeginTable("table1", 9, flags))
 		{
 			ImGui::TableSetupScrollFreeze(false, true);
 
@@ -1175,17 +1181,16 @@ inline void SteamTableSimulation()
 					ImGui::TableSetColumnIndex(column);
 					if ((value2 == row) && (value2 != 0))
 					{
-						//std::cout << "value: " << value2 << std::endl;
-						//std::cout << "Row: " << row << std::endl;
+
 						ImGui::TextColored(ImVec4(0.3f, 0.9f, 0.8f, 0.9f), SteamTable->at(row).at(column).c_str());
 					}
+					//Display the tables and make them selectable
 					else if (ImGui::Selectable(SteamTable->at(row).at(column).c_str(), placeholder.at(row),
-					                           ImGuiSelectableFlags_SpanAllColumns |
+					                           /*ImGuiSelectableFlags_SpanAllColumns |*/
 					                           ImGuiSelectableFlags_AllowItemOverlap ))
 					{
 						placeholder.at(row) = true;
 						value2 = row;
-						std::cout << "value: " << value2 << std::endl;
 					}
 				}
 			}
@@ -1195,29 +1200,34 @@ inline void SteamTableSimulation()
 }
 
 
+//First argument we pass our steamtable as a reference, then we specify the SteamTableFlag enum (Choose which type of table we are going to use) then CompressedSuperheatedTableFlags which
+//will handle the enums for which type of stat variable we are going to calculate. Finally, we pass pressure, temperature, enthalpy and Phase object as references
 template <size_t size>
 float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTable,
                               SteamTableFlag table, CompressedSuperheatedTablesFlags calculate, float& pressure, float& temperature,
                               float& enthalpy_target, Phase& phase)
 {
-	//float pressure = 0.11; //In MPA
-	//float temperature = 1760; //in Celsius
-	float SaturatedTemperature = 0;
-
+	//First if statment we check what SteamTableFlag enum says about the type of table we are going to use
 	if (table == SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE)
 	{
+		//We will iterate throughout our SteamTable buffer
 		for (int i = 1; i < SteamTable->size(); i++)
 		{
 			for (int j = 0; j < size - 1; j++)
 			{
+				//We compare if the pressure corresponds to the value we have in our table
 				if (pressure == std::stof(SteamTable->at(i).at(j)))
 				{
+					//If yes, we calculate the stat variable depending on the flag passed
 					if (calculate == CompressedSuperheatedTablesFlags::DENSITY)
 					{
+						//If same temperature we directly return the density
 						if (temperature == std::stof(SteamTable->at(i).at(1)))
 						{
 							return std::stof(SteamTable->at(i).at(3));
 						}
+						//if not we interpolate and calculate the actual values
+
 						if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(
 							SteamTable->at(i + 1).at(1)))))
 						{
@@ -1234,13 +1244,14 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 					}
 					if (calculate == CompressedSuperheatedTablesFlags::ENTHALPY)
 					{
+						//If same temperature we return back our enthalpy and set up our phase
 						if ((temperature == std::stof(SteamTable->at(i).at(1)) && ((phase.phase != " Saturated Liquid")
-							&& (phase.phase != " Saturated Vapor"))))
+							&& (phase.phase != " Saturated Vapor")))) //Checks that they are not saturated
 						{
 							return std::stof(SteamTable->at(i).at(5));
 						}
 						if ((temperature == std::stof(SteamTable->at(i).at(1))) && ((phase.phase == " Saturated Liquid")
-							or (phase.phase == " Saturated Vapor")))
+							or (phase.phase == " Saturated Vapor"))) //If they are saturated we will calculate our quality then we calculate the actual enthalpy
 						{
 							float quality = 0, lower_enthalpy = std::stof(SteamTable->at(i).at(5)), higher_enthalpy =
 								      std::stof(SteamTable->at(i + 1).at(5));
@@ -1248,6 +1259,7 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							phase.quality = quality;
 							return enthalpy_target;
 						}
+						//if not we interpolate between 2 points and then calculate the actual enthalpy
 						if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(
 							SteamTable->at(i + 1).at(1)))))
 						{
@@ -1256,27 +1268,31 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							float lower_value_target = std::stof(SteamTable->at(i).at(5));
 							float upper_value_target = std::stof(SteamTable->at(i + 1).at(5));
 
-							float real_den = lower_value_target + ((temperature - lower_value_temp) / (upper_value_temp
+							float Actual_Enthalpy = lower_value_target + ((temperature - lower_value_temp) / (upper_value_temp
 								- lower_value_temp)) * (upper_value_target - lower_value_target);
 
 
 							phase.phase = SteamTable->at(i).at(7);
-
+							//Checks if the phases are either saturated vapor or liquid then check if the temperature is above the lower temperature
+							//Then it will set the phase to that of the upper temperature
 							if (((phase.phase == " Saturated Vapor") or (phase.phase == " Saturated Liquid")) && (
 								temperature > std::stof(SteamTable->at(i).at(1))))
 							{
 								phase.phase = SteamTable->at(i + 1).at(7);
 							}
 
-							return real_den;
+							return Actual_Enthalpy;
 						}
 					}
 					if (calculate == CompressedSuperheatedTablesFlags::TEMPERATURE)
 					{
+						//If the enthalpy_target is same as ours in the table
+						//we return back our temperature
 						if (enthalpy_target == std::stof(SteamTable->at(i).at(5)))
 						{
 							return std::stof(SteamTable->at(i).at(1));
 						}
+						//if not we interpolate between the two points 
 						if ((enthalpy_target > std::stof(SteamTable->at(i).at(5)) && (enthalpy_target < std::stof(
 							SteamTable->at(i + 1).at(5)))))
 						{
@@ -1286,7 +1302,7 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							float upper_value_target = std::stof(SteamTable->at(i + 1).at(1));
 
 
-							float real_den = lower_value_target + ((enthalpy_target - lower_value_temp) / (
+							float Actual_Temperature = lower_value_target + ((enthalpy_target - lower_value_temp) / (
 								upper_value_temp - lower_value_temp)) * (upper_value_target - lower_value_target);
 							if ((phase.phase == " Saturated Vapor") && (enthalpy_target > std::stof(
 								SteamTable->at(i).at(5))))
@@ -1295,24 +1311,27 @@ float CalculateFromSteamTable(std::unique_ptr<std::vector<std::array<std::string
 							}
 							else
 								phase.phase = SteamTable->at(i).at(7);
-							return real_den;
+							return Actual_Temperature;
 						}
 					}
 					if (calculate == CompressedSuperheatedTablesFlags::SPECIFIC_VOLUME)
 					{
+						//If temperature is same as in our table
+						//we return back our specific volume
 						if ((temperature == std::stof(SteamTable->at(i).at(1)) && ((phase.phase != " Saturated Liquid")
-							&& (phase.phase != " Saturated Vapor"))))
+							&& (phase.phase != " Saturated Vapor")))) //Initally checks that they are not saturated before setting our values
 						{
 							return std::stof(SteamTable->at(i).at(2));
 						}
 						if ((temperature == std::stof(SteamTable->at(i).at(1))) && ((phase.phase == " Saturated Liquid")
-							or (phase.phase == " Saturated Vapor")))
+							or (phase.phase == " Saturated Vapor"))) //If they are saturated we calculate the quality then return back
 						{
 							float lower_vol = std::stof(SteamTable->at(i).at(2)), higher_vol = std::stof(
 								      SteamTable->at(i + 1).at(2));
 							float real_vol = lower_vol + phase.quality * (higher_vol - lower_vol);
 							return real_vol;
 						}
+						//we calculate between 2 points that are in either vapor or liquid phases
 						if ((temperature > std::stof(SteamTable->at(i).at(1)) && (temperature < std::stof(
 							SteamTable->at(i + 1).at(1)))))
 						{
