@@ -5,6 +5,8 @@
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/imgui-SFML.h>
+#include <thread>
+#include <future>
 //
 //enum TABLES_SAVE_DATA
 //{

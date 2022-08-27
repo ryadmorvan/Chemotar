@@ -178,20 +178,13 @@ public:
 	//enum to indicate which values will be updated real time
 	enum class UPDATING
 	{
-		ENTHALPY = 0X01, HEAT = 0X02, TEMPERATURE = 0x03
+		ENTHALPY = 0X01, HEAT = 0X02, TEMPERATURE = 0x03, NORMAL = 0x10
 	};
 
 	//functions that updates the objects real time values depending on multiple variables by calling the CalculateFromSteamTable functions and passing the appropriate flags
 	template<size_t size>
-	void Update(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTables, float &pressure_feed, UPDATING update) {
+	void Update(std::unique_ptr<std::vector<std::array<std::string, size>>>& SteamTables, UPDATING update) {
 		if (update == UPDATING::ENTHALPY)
-		{
-			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure1, temperature1, enthalpy_feed1, _phase1);
-			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure2, temperature2, enthalpy_feed2, _phase2);
-			enthalpy_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, _phase3);
-			CalculateHeat(); CalculateFlowRate();
-		}
-		if (update == UPDATING::HEAT)
 		{
 			enthalpy_feed1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure1, temperature1, enthalpy_feed1, _phase1);
 			enthalpy_feed2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure2, temperature2, enthalpy_feed2, _phase2);
@@ -203,6 +196,10 @@ public:
 			temperature1 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::TEMPERATURE, pressure1, temperature1, enthalpy_feed1, _phase1);
 			temperature2 = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::TEMPERATURE, pressure2, temperature2, enthalpy_feed2 ,_phase2);
 			temperature_outlet = CalculateFromSteamTable(SteamTables, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::TEMPERATURE, pressure3, temperature_outlet, enthalpy_outlet,  _phase3);
+			CalculateHeat(); CalculateFlowRate();
+		}
+		if(update == UPDATING::NORMAL)
+		{
 			CalculateHeat(); CalculateFlowRate();
 		}
 	}

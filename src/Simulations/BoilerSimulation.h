@@ -23,7 +23,7 @@
 static void BoilerSimulation(bool* p_open)
 {
 	ImGui::SetNextWindowSize(ImVec2(1200, 728), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("_Boiler Simulation", p_open))
+	if (!ImGui::Begin("Boiler Simulation", p_open))
 	{
 		return;
 	}
@@ -76,57 +76,57 @@ static void BoilerSimulation(bool* p_open)
 	static std::shared_ptr<boiler<FEED::DOUBLE>> boil = std::make_shared<boiler<FEED::DOUBLE>>(120, 175, 30, 65, 0.11, 0.11, 1.8, 204, SteamTable_Compressed);
 	boil->setShape(Boiler); //Set the shape of the boiler
 
-	//float density = CalculateFromSteamTable(SteamTable_Compressed, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::DENSITY, boil->ReturnPhases().at(0));
-	//std::cout << "Density: " << density << " Phase: " << boil->ReturnPhases().at(0) << std::endl;
-	//boil->CalculateEnthalpy(*SteamTable_Saturated);
-
 	//Feeds Flow Rates
 	static float* feeds[3] = { &boil->ReturnFeedRef1(), &boil->ReturnFeedRef2(), &boil->ReturnFeedRef3() };
 	static float* FeedTemps[3] = { &boil->ReturnTempRef1(), &boil->ReturnTempRef2(), &boil->ReturnTempRef3() };
 	static float* FeedEnthalpies[3] = { &boil->ReturnEnthalpyRef1(), &boil->ReturnEnthalpyRef2(), &boil->ReturnEnthalpyRef3() };
-
-	static float feed_pressure = 0.11f;
-
 
 	//Creating array of feeddiameters that will be used to calculate the feeds
 	static float FeedDiameters[3] = { 10, 10, 10 };
 
 	ImGui::TextColored(ImColor(100, 100, 100, 150), "Ctrl + Left Click to input value inside the slider");
 	ImGui::TextColored(ImColor(100, 200, 100, 200), "Feeds Flow Rates");
-	ImGui::SliderFloat2(" In Kg/min", *feeds, 0.0f, 400.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+	if(ImGui::SliderFloat2(" In Kg/min", *feeds, 0.0f, 400.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		boil->Update(SteamTable_Compressed, boiler<FEED::DOUBLE>::UPDATING::NORMAL); boil->CalculateVelocity(SteamTable_Compressed);
+	}
 	ImGui::TextColored(ImColor(200, 100, 100, 200), "Feeds Temperatures");
 
 	//Real time update the variables of the boiler
 	if (ImGui::SliderFloat3(" In Celsius", *FeedTemps, 5.0f, 500.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
-		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
+		boil->Update(SteamTable_Compressed, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
+		boil->CalculateVelocity(SteamTable_Compressed);
 	}
 
 	ImGui::TextColored(ImColor(100, 100, 200, 200), "Feeds Enthalpies");
 	if (ImGui::SliderFloat3(" In kJ/kg", *FeedEnthalpies, 100.0f, 3500.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
-		boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::TEMPERATURE);
+		boil->Update(SteamTable_Compressed, boiler<FEED::DOUBLE>::UPDATING::TEMPERATURE);
+		boil->Update(SteamTable_Compressed, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
+		boil->CalculateVelocity(SteamTable_Compressed);
 	}
-	PressureList(boil, SteamTable_Compressed);
-
+	if (PressureList(boil, SteamTable_Compressed))
+	{
+		boil->Update(SteamTable_Compressed, boiler<FEED::DOUBLE>::UPDATING::ENTHALPY);
+		boil->Update(SteamTable_Compressed, boiler<FEED::DOUBLE>::UPDATING::TEMPERATURE);
+		boil->CalculateVelocity(SteamTable_Compressed);
+	}
 	//Prompting the user if they want to enable the velocity profile for inlets/outlets
 	ImGui::Checkbox("Enable Velocity Profile", &VelocityProfile);
 	if (VelocityProfile)
 	{
 		boil->EnableVelocityProfile();
-		boil->CalculateVelocity(SteamTable_Compressed);
 		//reassignment of the boiler's diameters 
 		if (ImGui::SliderFloat3(" Diameter in Cm", FeedDiameters, 5, 200, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 		{
 			boil->ReturnDiameter1Ref() = FeedDiameters[0];
 			boil->ReturnDiameter2Ref() = FeedDiameters[1];
 			boil->ReturnDiameter3Ref() = FeedDiameters[2];
+			boil->CalculateVelocity(SteamTable_Compressed);
 		}
 	}
 	if (VelocityProfile == false) boil->DisabeVelocityProfile();
-
-
-	boil->Update(SteamTable_Compressed, feed_pressure, boiler<FEED::DOUBLE>::UPDATING::HEAT);
 
 
 

@@ -74,7 +74,7 @@ inline void load_steam_table(std::vector<std::array<std::string, ArraySize>>& st
 
 
 template <size_t Size>
-void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil,
+bool PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil,
                   std::unique_ptr<std::vector<std::array<std::string, Size>>>& Table)
 {
 	//store the pressure selection into this vector
@@ -113,7 +113,7 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil,
 				current_pressure1 = i + " MPa";
 				//When pressure is selected we set the value of our inlet to that pressure
 				boil->ReturnPressureRef1() = std::stof(i);
-				return;
+				return 1;
 			}
 			if (is_selected)
 			{
@@ -132,7 +132,7 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil,
 				current_pressure2 = i + " MPa";
 				//When pressure is selected we set the value of our inlet to that pressure
 				boil->ReturnPressureRef2() = std::stof(i);
-				return;
+				return 1;
 			}
 			if (is_selected)
 			{
@@ -151,7 +151,7 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil,
 				current_pressure3 = i + " MPa";
 				//When pressure is selected we set the value of our inlet to that pressure
 				boil->ReturnPressureRef3() = std::stof(i);
-				return;
+				return 1;
 			}
 			if (is_selected)
 			{
@@ -159,6 +159,7 @@ void PressureList(std::shared_ptr<boiler<FEED::DOUBLE>>& boil,
 		}
 		ImGui::EndCombo();
 	}
+	return 0;
 }
 
 //Template flags for SaturatedTable
@@ -859,7 +860,62 @@ inline void SteamTableSimulation()
 			static bool IsLegacyNativeDupe(ImGuiKey key) { return key < 512 && ImGui::GetIO().KeyMap[key] != -1; }
 		}; // Hide Native<>ImGuiKey duplicates when both exists in the array
 
+		//store the pressure selection into this vector
+		static std::vector<std::string> pressure_list;
+		//Load the pressure_list once 
+		static bool collect_pressures = []()
+		{
+			pressure_list.emplace_back("0.01"); //Acts as a placeholder
+			std::string previous_value = "0.01"; //will be used in our if statment
+			for (int row = 1; row < SteamTable->size(); row++)
+			{
+				if (SteamTable->at(row).at(0) != previous_value) //As long as our current value not equal to our previous value
+				{//We push back the pressure to our pressure_list vector
+					pressure_list.emplace_back(SteamTable->at(row).at(0));
+					previous_value = SteamTable->at(row).at(0); //Set the previous value to our current value
+				}
+			}
+			pressure_list.pop_back(); 		pressure_list.pop_back(); //we pop back some values to avoid pointing to wrong memory address
+			return true;
+		}();
 
+
+
+		//Shows the current_pressure for each inlet and outlet
+		static std::string current_pressure1 = "Display";
+
+		static auto index_start = 0; //Will be used to point to the index the user's pressure
+
+		if (ImGui::BeginCombo("Pressures", current_pressure1.c_str()))
+		{
+			for (auto& i : pressure_list)
+			{
+				const bool is_selected = (current_pressure1 == i);
+				if (ImGui::Selectable(i.c_str(), is_selected))
+				{
+					//Set the current pressure to the selected one
+					current_pressure1 = i + " MPa";
+					//if pressure is selected we do a lambda function to return back the index where the value starts 
+					index_start = [i]() -> int
+					{
+						for (int count = 0; count < SteamTable->size(); count++)
+						{
+							if (SteamTable->at(count).at(0) == i)
+							{
+								return count;
+							}
+						}
+					}();
+					//iterator_start = std::find(SteamTable->begin(), SteamTable->end(), i);
+					//index_start = std::distance(SteamTable->begin(), iterator_start);
+					//When pressure is selected we set the value of our inlet to that pressure
+				}
+				if (is_selected)
+				{
+				}
+			}
+			ImGui::EndCombo();
+		}
 		//We create our table
 		if (ImGui::BeginTable("table3", 8, flags))
 		{
@@ -896,7 +952,7 @@ inline void SteamTableSimulation()
 			static int value2 = 0;
 			std::vector<bool> placeholder;
 			placeholder.resize(SteamTable->size()); //APPROPRIATE RESIZE OF OUR VECTOR
-			for (int row = 0; row < SteamTable->size(); row++)
+			for (int row = index_start; row < index_start + 106; row++)
 			{
 				ImGui::TableNextRow();
 				for (int column = 0; column < 8; column++)
@@ -1138,6 +1194,64 @@ inline void SteamTableSimulation()
 				}
 			}
 		}
+		//store the pressure selection into this vector
+		static std::vector<std::string> pressure_list;
+		//Load the pressure_list once 
+		static bool collect_pressures = []()
+		{
+			pressure_list.emplace_back("0.01"); //Acts as a placeholder
+			std::string previous_value = "0.01"; //will be used in our if statment
+			for (int row = 1; row < SteamTable->size(); row++)
+			{
+				if (SteamTable->at(row).at(0) != previous_value) //As long as our current value not equal to our previous value
+				{//We push back the pressure to our pressure_list vector
+					pressure_list.emplace_back(SteamTable->at(row).at(0));
+					previous_value = SteamTable->at(row).at(0); //Set the previous value to our current value
+				}
+			}
+			pressure_list.pop_back(); 			pressure_list.pop_back();
+
+			return true;
+		}();
+
+
+
+		//Shows the current_pressure for each inlet and outlet
+		static std::string current_pressure1 = "Display";
+		static auto index_start = 0;
+
+		if (ImGui::BeginCombo("Pressures", current_pressure1.c_str()))
+		{
+			for (auto& i : pressure_list)
+			{
+				const bool is_selected = (current_pressure1 == i);
+				if (ImGui::Selectable(i.c_str(), is_selected))
+				{
+					//Set the current pressure to the selected one
+					current_pressure1 = i + " MPa";
+					index_start  = [i]() -> int
+					{
+						for(int count = 0; count < SteamTable->size(); count++)
+						{
+							if (SteamTable->at(count).at(0) == i)
+							{
+								return count;
+							}
+						}
+					}();
+					//iterator_start = std::find(SteamTable->begin(), SteamTable->end(), i);
+					//index_start = std::distance(SteamTable->begin(), iterator_start);
+					//When pressure is selected we set the value of our inlet to that pressure
+				}
+				if (is_selected)
+				{
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+
+
 
 		if (ImGui::BeginTable("table1", 9, flags))
 		{
@@ -1173,7 +1287,7 @@ inline void SteamTableSimulation()
 			static int value2 = 0;
 			std::vector<bool> placeholder;
 			placeholder.resize(SteamTable->size());
-			for (int row = 0; row < SteamTable->size(); row++)
+			for (int row = index_start; row < index_start + 106; row++)
 			{
 				ImGui::TableNextRow();
 				for (int column = 0; column < 8; column++)

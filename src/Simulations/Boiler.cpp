@@ -50,6 +50,7 @@ boiler<FEED::DOUBLE>::boiler(float FEED_1, float FEED_2,  float Temperature1, fl
 	enthalpy_feed1 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure1, temperature1, enthalpy_feed1, _phase1);
 	enthalpy_feed2 = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure2, temperature2, enthalpy_feed2, _phase2);
 	enthalpy_outlet = CalculateFromSteamTable(SteamTable, SteamTableFlag::COMPRESSED_SUPERHEATED_TABLE, CompressedSuperheatedTablesFlags::ENTHALPY, pressure3, temperature_outlet, enthalpy_outlet, _phase3);
+	CalculateVelocity(SteamTable);
 }
 
 //Returns the phase information depending on what CalculateFromSteamTable set the phase for each inlet and outlet

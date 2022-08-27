@@ -37,7 +37,7 @@ SOFTWARE.
 #include <SFML/imgui-SFML.h>
 #include "../src/Tools/ChemicalCalculations.h"
 #include "../src/Tools/Empirical Calculators.h"
-
+#include <thread>
 
 
 

@@ -192,8 +192,8 @@
   <ItemGroup>
     <Image Include="..\..\..\..\Desktop\Chemical-icon.png" />
     <Image Include="..\..\..\..\Desktop\Chemical.png" />
-    <Image Include="..\..\..\..\Desktop\Iconleak-Cerulean-Science-chemistry.ico" />
-    <Image Include="..\..\..\..\Desktop\Iconsmind-Outline-Chemical.ico" />
+    <Image Include="..\..\icon2.ico" />
+    <Image Include="Assets\Chemotar.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
