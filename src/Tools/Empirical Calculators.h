@@ -38,7 +38,7 @@ void _AddTable(std::string &filePath, int DATA) //TABLES_SAVE_DATA this enum is 
 			outfile.open("table_data/Viscosity Tables.ini", std::fstream::in | std::fstream::out | std::fstream::app);
 		}
 		//Appending the changes of the number of tables that are registered
-		if (_Find_File(sSelectedFile, static_cast<TABLES_SAVE_DATA>(DATA)))
+		if (find_file(sSelectedFile, static_cast<TABLES_SAVE_DATA>(DATA)))
 		{
 			//Append changes to the file after opening it 
 			sSelectedFile.append("\n");

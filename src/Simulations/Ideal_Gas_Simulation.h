@@ -9,7 +9,7 @@
 #include <sstream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
-#include "../src/Simulations/Boiler.h"
+#include "../src/Simulations/Unit.h"
 #include "../src/Utility/UtilitySystemHandler.h"
 #include "../src/Graph/Graph.h"
 
@@ -109,8 +109,8 @@ static void IdealGasLaw(bool* p_open)
     if (current_state == Piston::process::constant_pressure)
     {
 
-        //Update the position of the unit depending on the position of the window
-        //This will insure that the unit will be not clipped out when moving the window
+        //Update the position of the Unit depending on the position of the window
+        //This will insure that the Unit will be not clipped out when moving the window
         const ImVec2 p = ImGui::GetCursorScreenPos();
         //Setting the colors
         const ImU32 col32 = ImColor(col);
@@ -120,7 +120,7 @@ static void IdealGasLaw(bool* p_open)
         ImU32 Heat_col32 = ImColor(Heat_col);
         ImU32 Work_col32 = ImColor(Work_col);
 
-        //Setting the position of the unit
+        //Setting the position of the Unit
         float x = p.x + 100.0f, y = p.y + 200.0f, spacing = 15.0f;
         float x_board = p.x + 5, y_board = p.y + 20, board_spacing = 15.0f;
         //Creating the graph object that will be used to draw the function of the simulation
@@ -159,8 +159,8 @@ static void IdealGasLaw(bool* p_open)
         raise = 0;
         HeatColor = - HeatEvolved / 55.0f;
         piston.AddHeat(HeatEvolved * 1000, Piston::process::constant_volume);
-    //Update the position of the unit depending on the position of the window
-    //This will insure that the unit will be not clipped out when moving the window
+    //Update the position of the Unit depending on the position of the window
+    //This will insure that the Unit will be not clipped out when moving the window
         const ImVec2 p = ImGui::GetCursorScreenPos();
         const ImU32 col32 = ImColor(col);
         const ImU32 board_col32 = ImColor(board_col);
@@ -169,7 +169,7 @@ static void IdealGasLaw(bool* p_open)
         ImU32 Heat_col32 = ImColor(Heat_col);
         const ImU32 Stopper_col32 = ImColor(Stopper_col);
         ImU32 Work_col32 = ImColor(Work_col);
-        //Setting the position of the unit
+        //Setting the position of the Unit
         float x = p.x + 100.0f, y = p.y + 200.0f, spacing = 15.0f;
         float x_board = p.x + 5, y_board = p.y + 20, board_spacing = 15.0f;
         //Creating the graph object that will be used to draw the function of the simulation
@@ -204,8 +204,8 @@ static void IdealGasLaw(bool* p_open)
     }
     else if (current_state == Piston::process::constant_temperature)
     {
-        //Update the position of the unit depending on the position of the window
-		//This will insure that the unit will be not clipped out when moving the window
+        //Update the position of the Unit depending on the position of the window
+		//This will insure that the Unit will be not clipped out when moving the window
         const ImVec2 p = ImGui::GetCursorScreenPos();
         const ImU32 col32 = ImColor(col);
         const ImU32 board_col32 = ImColor(board_col);
@@ -239,7 +239,7 @@ static void IdealGasLaw(bool* p_open)
         draw_list->AddText(ImVec2(x + th + 180, y + sz + 20 + 100), Text_col32, piston.returnPressureText().c_str());
         draw_list->AddText(ImVec2(x + th + 10, y + sz + 40 + 100), Text_col32, piston.returnTemperatureText().c_str());
         draw_list->AddText(ImVec2(x + th + 180, y + sz + 40 + 100), Text_col32, piston.returnMolesText().c_str());
-        std::string PressureSurrounding = "Surrounding Pressure = " + _Format(SurroundingPressure, 3) + " atm";
+        std::string PressureSurrounding = "Surrounding Pressure = " + format(SurroundingPressure, 3) + " atm";
         draw_list->AddText(ImVec2(x + th + 55, y + sz + 70 - raise), Text_col32, PressureSurrounding.c_str());
         draw_list->AddText(ImVec2(x + th + 350, y + sz + 40 + 100), Cold_col32, piston.returnHeatText().c_str());
         draw_list->AddText(ImVec2(x + th + 350, y + sz + 40 + 80), Work_col32, piston.returnWorkText().c_str());
@@ -247,8 +247,8 @@ static void IdealGasLaw(bool* p_open)
     }
     else if (current_state == Piston::process::constant_heat)
     {
-    //Update the position of the unit depending on the position of the window
-	//This will insure that the unit will be not clipped out when moving the window
+    //Update the position of the Unit depending on the position of the window
+	//This will insure that the Unit will be not clipped out when moving the window
         const ImVec2 p = ImGui::GetCursorScreenPos();
         //Setting the colors
         const ImU32 col32 = ImColor(col);
@@ -269,14 +269,14 @@ static void IdealGasLaw(bool* p_open)
         piston.PressureChange(SurroundingPressure, Piston::process::constant_heat);
         raise = piston.returnChangeInPistonHeight(); //update of the piston displacment state
 
-        //Draw the unit
+        //Draw the Unit
         graph.Draw(draw_list, Text_col32);
         //Constructing and drawing the graph's function
         graph.BuildLinesVector(piston, Graph::state::constant_heat);
         graph.DrawLines(draw_list, piston);
         // First line uses a thickness of 1.0, second line uses the configurable thickness 
         float th = thickness;
-        //Drawing the unit
+        //Drawing the Unit
         draw_list->AddRect(ImVec2(x, y - 100), ImVec2(x + sz + 100, y + sz + 190), col32, 10.0f, ImDrawCornerFlags_All, th);
         draw_list->AddRect(ImVec2(x_board, y_board), ImVec2(x + sz + 530, y + sz + 200), board_col32, 10.0f, ImDrawCornerFlags_All, 4.0f);
         draw_list->AddLine(ImVec2(x + th - 2.0f, y + sz - raise + 100), ImVec2(x + sz - th + 2.0f + 100, y + sz - raise + 100), board_col32, 10);
@@ -289,7 +289,7 @@ static void IdealGasLaw(bool* p_open)
         draw_list->AddText(ImVec2(x + th + 180, y + sz + 20 + 100), Text_col32, piston.returnPressureText().c_str());
         draw_list->AddText(ImVec2(x + th + 10, y + sz + 40 + 100), Text_col32, piston.returnTemperatureText().c_str());
         draw_list->AddText(ImVec2(x + th + 180, y + sz + 40 + 100), Text_col32, piston.returnMolesText().c_str());
-        std::string PressureSurrounding = "Surrounding Pressure = " + _Format(SurroundingPressure, 3) + " atm";
+        std::string PressureSurrounding = "Surrounding Pressure = " + format(SurroundingPressure, 3) + " atm";
         draw_list->AddText(ImVec2(x + th + 55, y + sz + 70 - raise), Text_col32, PressureSurrounding.c_str());
         draw_list->AddText(ImVec2(x + th + 350, y + sz + 40 + 100), Heat_col32, piston.returnHeatText().c_str());
         draw_list->AddText(ImVec2(x + th + 350, y + sz + 40 + 60), Insulator_col32, "Heat Insulator Added");

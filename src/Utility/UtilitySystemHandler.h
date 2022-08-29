@@ -123,7 +123,7 @@ enum TABLES_SAVE_DATA
 };
 
 //Depending on the table enum passed, this function will open our ini files and check if our table data is already saved in them
-bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
+bool find_file(std::string &name, TABLES_SAVE_DATA DATA)
 {
 	std::string line;
 	std::ifstream file;
@@ -173,8 +173,7 @@ bool _Find_File(std::string &name, TABLES_SAVE_DATA DATA)
 //}
 
 
-
-void replace_all(
+inline void replace_all(
 	std::string& s,
 	std::string const& toReplace,
 	std::string const& replaceWith
@@ -212,7 +211,7 @@ void _TableNamesCorrection(std::vector<std::string>& TableNames)
 
 //Function that rounds our values, it can take either float or double
 template<typename T>
-int _Round(T number)
+int round(T number)
 {
 	return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
 }
@@ -220,7 +219,7 @@ int _Round(T number)
 //function that helps formats our value depending on the digits before decimal
 //our first arguments handles our value, second arguments determines how many digits before the decimal point
 template<typename T1, typename T2>
-std::string _Format(T1 f, T2 n)
+std::string format(T1 f, T2 n)
 {
 	if (f == 0) {
 		return "0";

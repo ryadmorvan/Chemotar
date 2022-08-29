@@ -11,8 +11,9 @@
 #include <SFML/Graphics.hpp>
 #include "../src/Utility/UtilitySystemHandler.h"
 #include "../src//Drawing/DrawShapes.h"
-#include "Boiler.h"
+#include "Unit.h"
 #include "../src/Tools/SteamTable.h"
+
 
 
 
@@ -50,7 +51,7 @@ static void BoilerSimulation(bool* p_open)
 
 	static bool VelocityProfile = FALSE;
 
-	//Creating our unit and inlet/outlet indicators 
+	//Creating our Unit and inlet/outlet indicators 
 	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 270, 5.0f, DrawShapes::BOILER);
 	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 325.0f + y, 200.0f, 2.0, DrawShapes::ARROW);
 	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 225.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
@@ -72,9 +73,9 @@ static void BoilerSimulation(bool* p_open)
 
 
 
-	//Passing through the inital state of the boiler
+	//Passing through the inital state of the Unit
 	static std::shared_ptr<boiler<FEED::DOUBLE>> boil = std::make_shared<boiler<FEED::DOUBLE>>(120, 175, 30, 65, 0.11, 0.11, 1.8, 204, SteamTable_Compressed);
-	boil->setShape(Boiler); //Set the shape of the boiler
+	boil->setShape(Boiler); //Set the shape of the Unit
 
 	//Feeds Flow Rates
 	static float* feeds[3] = { &boil->ReturnFeedRef1(), &boil->ReturnFeedRef2(), &boil->ReturnFeedRef3() };
@@ -117,7 +118,7 @@ static void BoilerSimulation(bool* p_open)
 	if (VelocityProfile)
 	{
 		boil->EnableVelocityProfile();
-		//reassignment of the boiler's diameters 
+		//reassignment of the Unit's diameters 
 		if (ImGui::SliderFloat3(" Diameter in Cm", FeedDiameters, 5, 200, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 		{
 			boil->ReturnDiameter1Ref() = FeedDiameters[0];
