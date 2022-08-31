@@ -564,7 +564,7 @@ void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::string, Size
 		{
 			const std::string format = "%0.1f";
 			std::string placeholder;
-			//Depending on which item, it will show the appropriate boiler that will be used in the input value box
+			//Depending on which item, it will show the appropriate unit that will be used in the input value box
 			if ((selected_item == 0) or (selected_item == 1)) placeholder = " kj";
 			if (selected_item == 2) placeholder = " kj/kg*k";
 			if (selected_item == 3) placeholder = " kg/m^3";
@@ -618,39 +618,39 @@ void Quality_Calculator(std::unique_ptr<std::vector<std::array<std::string, Size
 				if (std::get<0>(result) > 1.0)
 				{
 					ImGui::TextColored(ImColor(59, 254, 225), "Phase: Vapor ");
-					ImGui::TextColored(ImColor(59, 254, 225), ("Quality: " + format(std::get<0>(result), 3)).c_str());
+					ImGui::TextColored(ImColor(59, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
 					ImGui::Text(("Quality: NOT SATURATED"));
 				}
 				else if (std::get<0>(result) < 0.0)
 				{
 					ImGui::TextColored(ImColor(59, 154, 225), "Phase: Liquid ");
-					ImGui::TextColored(ImColor(59, 154, 225), ("Quality: " + format(std::get<0>(result), 3)).c_str());
+					ImGui::TextColored(ImColor(59, 154, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
 					ImGui::Text(("Quality: NOT SATURATED"));
 				}
 				else
 				{
 					ImGui::TextColored(ImColor(159, 254, 225), "Phase: Saturated ");
-					ImGui::TextColored(ImColor(159, 254, 225), ("Quality: " + format(std::get<0>(result), 3)).c_str());
+					ImGui::TextColored(ImColor(159, 254, 225), ("Quality: " + _Format(std::get<0>(result), 3)).c_str());
 					if constexpr (std::is_same<T, SaturatedTable::PRESSURE>())
 					{
 						ImGui::TextColored(ImColor(159, 254, 225),
-						                   ("Temperature: " + format(std::get<1>(result), 4) + " C").c_str());
+						                   ("Temperature: " + _Format(std::get<1>(result), 4) + " C").c_str());
 						ImGui::TextColored(ImColor(159, 254, 225),
-						                   ("Saturated Pressure: " + format(temp_pressure[0], 4) + " MPa").c_str());
+						                   ("Saturated Pressure: " + _Format(temp_pressure[0], 4) + " MPa").c_str());
 					}
 					else
 					{
 						ImGui::TextColored(ImColor(159, 254, 225),
-						                   ("Temperature: " + format(temp_pressure[0], 4) + " C").c_str());
+						                   ("Temperature: " + _Format(temp_pressure[0], 4) + " C").c_str());
 						ImGui::TextColored(ImColor(159, 254, 225),
-						                   ("Saturated Pressure: " + format(std::get<1>(result), 4) + " MPa").c_str());
+						                   ("Saturated Pressure: " + _Format(std::get<1>(result), 4) + " MPa").c_str());
 					}
 					ImGui::Separator();
-					ImGui::Text(("Enthalpy: " + format(std::get<2>(result), 4) + " kj/kg").c_str());
-					ImGui::Text(("Internal Energy: " + format(std::get<3>(result), 4) + " kj/kg").c_str());
-					ImGui::Text(("Entropy: " + format(std::get<4>(result), 3) + " kj/kg*k").c_str());
-					ImGui::Text(("Density: " + format(std::get<5>(result), 4) + " kg/m^3").c_str());
-					ImGui::Text(("Specific Volume: " + format(std::get<6>(result), 4) + " m^3/kg").c_str());
+					ImGui::Text(("Enthalpy: " + _Format(std::get<2>(result), 4) + " kj/kg").c_str());
+					ImGui::Text(("Internal Energy: " + _Format(std::get<3>(result), 4) + " kj/kg").c_str());
+					ImGui::Text(("Entropy: " + _Format(std::get<4>(result), 3) + " kj/kg*k").c_str());
+					ImGui::Text(("Density: " + _Format(std::get<5>(result), 4) + " kg/m^3").c_str());
+					ImGui::Text(("Specific Volume: " + _Format(std::get<6>(result), 4) + " m^3/kg").c_str());
 				}
 				ImGui::EndPopup();
 			}
