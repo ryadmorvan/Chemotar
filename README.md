@@ -11,7 +11,7 @@ Chemical Engineering Calculation and Simulation Software
 **Contact**:
 **riyadhalkhamees@gmail.com**
 #
-**INCLUDE DIRECTORY**
+**INCLUDED DIRECTORIES**
 - **SFML-2.5.1**
 - **ImGui**
 
