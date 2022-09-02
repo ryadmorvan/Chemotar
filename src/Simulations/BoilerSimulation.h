@@ -49,16 +49,16 @@ static void BoilerSimulation(bool* p_open)
 	float th = thickness;
 
 	static bool VelocityProfile = FALSE;
-
+	
 	//Creating our unit and inlet/outlet indicators 
-	DrawShapes Boiler = DrawShapes(x + 260, y + 190, 270, 5.0f, DrawShapes::BOILER);
-	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 325.0f + y, 200.0f, 2.0, DrawShapes::ARROW);
-	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 225.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
-	DrawShapes arrow2 = DrawShapes(Boiler.returnX() - 210.0f, 405.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
+	DrawShapes Boiler = DrawShapes(x + 260, y + 175, 270, 5.0f, DrawShapes::BOILER);
+	DrawShapes arrow3_out = DrawShapes(Boiler.returnX() + Boiler.returnLength() + 2, 325.0f + y, 185.0f, 2.0, DrawShapes::ARROW);
+	DrawShapes arrow1 = DrawShapes(Boiler.returnX() - 210.0f, 210.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
+	DrawShapes arrow2 = DrawShapes(Boiler.returnX() - 210.0f, 390.0f + y, 200.0f, 2.0f, DrawShapes::ARROW);
 
 	//DrawShapes Turbine = DrawShapes(x + 660, y + 190, 250, 2.0f, DrawShapes::TURBINE);
 
-	DrawShapes Resistor = DrawShapes(Boiler.returnX() + Boiler.returnLength() / 3 + 5, y + 420, 25, 2.5f, DrawShapes::RESISTOR);
+	DrawShapes Resistor = DrawShapes(Boiler.returnX() + Boiler.returnLength() / 3 + 5, y + 400, 25, 2.5f, DrawShapes::RESISTOR);
 
 
 	//Load steam table
@@ -117,6 +117,7 @@ static void BoilerSimulation(bool* p_open)
 	if (VelocityProfile)
 	{
 		boil->EnableVelocityProfile();
+
 		//reassignment of the boiler's diameters 
 		if (ImGui::SliderFloat3(" Diameter in Cm", FeedDiameters, 5, 200, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 		{

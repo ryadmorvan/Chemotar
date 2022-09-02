@@ -22,7 +22,7 @@
 
 class DrawShapes
 {
-private:
+protected:
 	std::string text;
 	ImVec2 start_position;
 	ImVec2 end_position;
@@ -54,11 +54,43 @@ public:
 
 	void Draw(ImDrawList* draw_list);
 
-	float returnX() { return x_pos; }
-	float returnY() { return y_pos; }
-	float returnLength() { return length; }
+	virtual float returnX() { return x_pos; }
+	virtual float returnY() { return y_pos; }
+	virtual float returnLength() { return length; }
 	ImU32 returnColor() { return col32; }
 	ImU32 returnColorText() { return TextColor; }
 
 };
+
+namespace Shapes
+{
+	class Pipes : public DrawShapes
+	{
+	private:
+		float Inlet_Diameter;
+		float Outlet_Diameter;
+		float height;
+		float Shape_Length;
+		ImU32 PipeColor;
+		ImVec2 Position;
+		float length;
+		float diameter;
+	public:
+		Pipes() : DrawShapes()
+		{
+			diameter = 10;
+			Position.x = 300; Position.y = 550; length = 150;
+			height = 50;
+			PipeColor = ImColor(76, 91, 92, 200);
+		}
+
+		void Draw(ImDrawList* draw_list);
+		ImU32 returnColor() { return col32; }
+		ImU32 returnColorText() { return TextColor; }
+		float& ReturnInlet() {return Inlet_Diameter;}
+		float& ReturnOutlet() {return Outlet_Diameter;}
+		float& ReturnHeight() {return height;}
+
+	};
+}
 

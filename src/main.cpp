@@ -45,6 +45,7 @@ SOFTWARE.
 
 
 //Simulations
+#include "../src/Simulations/Bernoulli.h"
 #include "../src/Simulations/Ideal_Gas_Simulation.h"
 #include "../src/Simulations/BoilerSimulation.h"
 #include "../src/Tools/SteamTable.h"
@@ -53,7 +54,6 @@ SOFTWARE.
 
 
 void ShowInfo(ImFont* font2);
-
 
 
 
@@ -103,11 +103,10 @@ int main()
 	chemotar._Settings = &_Settings;	chemotar.heat_capacity_calculator = &heat_capacity_calculator;
 	chemotar.ViscosityCalc = &ViscosityCalculator;	chemotar.SteamTableSimulation = &SteamTableSimulation;
 	chemotar.IdealGasLaw = &IdealGasLaw;	chemotar.BoilerSimulation = &BoilerSimulation;
+	//chemotar.BernoulliSim = &Bernoulli_Simulation;
 	chemotar.ShowInfo = &ShowInfo;	chemotar._AddTable = &_AddTable;
-	
+	chemotar.BernoulliSim = &Bernoulli::Bernoulli_Simulation;
 
-
-;
 
 	////////////////////////////////////////
 	////////////////////////////////////////
@@ -186,7 +185,6 @@ int main()
 		{
 			std::cout << "Error Implementing Dockspace Changed" << std::endl;
 		}
-
 
 
 

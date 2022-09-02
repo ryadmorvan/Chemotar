@@ -56,6 +56,10 @@ int Chemotar::MainMenu(ImFont* font, std::string file_path)
 			{
 
 			}
+			if(ImGui::MenuItem("Bernoulli Simulation", NULL, &ShowBernoulli))
+			{
+				
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Config"))
@@ -118,6 +122,12 @@ void Chemotar::run(ImFont* font)
 	{
 		ImGui::PushFont(font);
 		BoilerSimulation(&ShowBoiler);
+		ImGui::PopFont();
+	}
+	if(ShowBernoulli)
+	{
+		ImGui::PushFont(font);
+		BernoulliSim(&ShowBernoulli);
 		ImGui::PopFont();
 	}
 	if(ShowDeveloperInfo)

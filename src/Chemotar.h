@@ -30,6 +30,7 @@ private:
 	bool ShowSteamTableCalculator = false;
 	bool ShowIdealGasLaw = false;
 	bool ShowBoiler = false;
+	bool ShowBernoulli = false;
 	bool ShowSettings = false;
 	bool ShowDeveloperInfo = false;
 
@@ -48,6 +49,7 @@ public:
 	void (*SteamTableSimulation)(void);
 	void (*IdealGasLaw)(bool*);
 	void (*BoilerSimulation)(bool*);
+	void (*BernoulliSim)(bool*);
 	void (*ShowInfo)(ImFont*);
 
 	//Main methods that will be used to run our program
