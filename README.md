@@ -3,7 +3,8 @@
 
 Chemical Engineering Calculation and Simulation Software
 # Overview
-![Chemotar2](https://user-images.githubusercontent.com/48857076/185905856-5010bdf9-3405-4dc6-8c21-e6ead1010ac1.png)
+![Chemotar 1 03](https://user-images.githubusercontent.com/48857076/188266373-dd0a3e2c-b5d1-4c87-8795-d2788557b31e.png)
+
 
 ## Author 
 ***Ryad K***
