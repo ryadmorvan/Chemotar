@@ -207,6 +207,11 @@ void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1,
 		draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() + 30), returnPhase1().color, returnVelocity1().c_str());
 		draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() + 30), returnPhase2().color, returnVelocity2().c_str());
 		draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() + 30), returnPhase3().color, returnVelocity3().c_str());
+		draw_list->AddText(ImVec2(15, 350), ImColor(100, 160, 100, 240), "Kinetic Information");
+		draw_list->AddText(ImVec2(15, 370), returnPhase1().color, returnKinetic1().c_str() );
+		draw_list->AddText(ImVec2(15, 390), returnPhase2().color, returnKinetic2().c_str() );
+		draw_list->AddText(ImVec2(15, 410), returnPhase3().color, returnKinetic3().c_str() );
+
 	}
 
 	//Outlet extra conditions
@@ -228,7 +233,8 @@ void boiler<FEED::DOUBLE>::CalculateEnthalpy(std::vector<std::array<std::string,
 
 void boiler<FEED::DOUBLE>::CalculateHeat()
 {
-	Heating_Element = feed3 * enthalpy_outlet - feed1 * enthalpy_feed1 - feed2 * enthalpy_feed2;
+	Heating_Element = feed3 * enthalpy_outlet - feed1 * enthalpy_feed1 - feed2 * enthalpy_feed2
+	+ (feed3*_kinetic3.kinetic - feed2*_kinetic2.kinetic - feed1*_kinetic1.kinetic)/1000;
 	Heating_Element = Heating_Element / 1000.0f;
 }
 
@@ -248,7 +254,7 @@ void boiler<FEED::DOUBLE>::CalculateVelocity(std::unique_ptr<std::vector<std::ar
 	_kinetic1.find_velocity();
 	_kinetic2.find_velocity();
 	_kinetic3.find_velocity();
-
+	CalculateHeat();
 }
 
 

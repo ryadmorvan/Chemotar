@@ -80,8 +80,8 @@ namespace Shapes
 		{
 			diameter = 10;
 			Position.x = 300; Position.y = 550; length = 150;
-			height = 50;
-			PipeColor = ImColor(76, 91, 92, 200);
+			height = 150;
+			PipeColor = ImColor(106, 121, 92, 220);
 		}
 
 		void Draw(ImDrawList* draw_list);

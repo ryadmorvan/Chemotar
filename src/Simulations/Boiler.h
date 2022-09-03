@@ -64,6 +64,7 @@ struct KineticEnergy
 	{
 		find_area();
 		velocity = volumetric_flow_rate / area;
+		kinetic = 0.5*(pow(velocity, 2));
 	}
 };
 
@@ -233,6 +234,10 @@ public:
 	std::string returnDiameter1() { return "Diameter: " + _Format(_kinetic1.diameter, 3) + " Cm"; }
 	std::string returnDiameter2() { return "Diameter: " + _Format(_kinetic2.diameter, 3) + " Cm"; }
 	std::string returnDiameter3() { return "Diameter: " + _Format(_kinetic3.diameter, 3) + " Cm"; }
+	std::string returnKinetic1() {return "Kinetic Inlet1: " + _Format((_kinetic1.kinetic > 1000) ? _kinetic1.kinetic/1000 : _kinetic1.kinetic, 3) + ((_kinetic1.kinetic > 1000) ? " kj/kg" : " j/kg");}
+	std::string returnKinetic2() {return "Kinetic Inlet2: " + _Format((_kinetic2.kinetic > 1000) ? _kinetic2.kinetic/1000 : _kinetic2.kinetic, 3) + ((_kinetic2.kinetic > 1000) ? " kj/kg" : " j/kg");}
+	std::string returnKinetic3() {return "Kinetic Outlet: " + _Format((_kinetic3.kinetic > 1000) ? _kinetic3.kinetic/1000 : _kinetic3.kinetic, 3) + ((_kinetic3.kinetic > 1000) ? " kj/kg" : " j/kg");}
+
 	Phase returnPhase1();
 	Phase returnPhase2();
 	Phase returnPhase3();
