@@ -1,7 +1,7 @@
 /* Project: Chemotar
  * Author: Ryad M
  * Contact: riyadhalkhamees@gmail.com
- *
+ * https://github.com/ryadmorvan/Chemotar
  * MIT License
 
 Copyright (c) 2022 Ryad M
