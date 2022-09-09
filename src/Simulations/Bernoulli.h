@@ -10,6 +10,7 @@ std::string _Format(T1 f, T2 n);
 
 namespace Shapes
 {
+	//We inherit our DrawShipes class into our specialized class for our bernoulli simulation
 	class Pipes : public DrawShapes
 	{
 	private:
@@ -22,6 +23,7 @@ namespace Shapes
 		float length;
 		float diameter;
 	public:
+		//We first initalize the DrawShapes class then we pass the parameters of our shapes
 		Pipes() : DrawShapes()
 		{
 			diameter = 10;
@@ -36,7 +38,9 @@ namespace Shapes
 			height = Height;
 			PipeColor = ImColor(106, 121, 92, 200);
 		}
-		
+		//We pass our ImDrawList so it can be used to draw the shapes
+		//outlet_multiplier is variable that scales our outlet diameter in terms of diameter multiplier
+		//bern is our object which will be used to retrieve the data of our current conditions and draw it to the user
 		void Draw(ImDrawList* draw_list, float &outlet_multiplier, Bernoulli bern);
 		ImU32 returnColor() { return col32; }
 		ImU32 returnColorText() { return TextColor; }
@@ -48,11 +52,11 @@ namespace Shapes
 }
 
 
-
+//our Bernoulli class which will store our process conditions and also the Bernoulli_Simulation function
 class Bernoulli
 {
 private:
-	Shapes::Pipes _pipes;
+	Shapes::Pipes _pipes; //Shapes object
 	float inlet_diameter = 20;
 	float outlet_diameter = 40;
 	float height = 25;
@@ -63,9 +67,9 @@ public:
 		
 	}
 
-	void Draw(ImDrawList* draw_list);
-	void setPipeDraw(float height, float diameter);
-	static void Bernoulli_Simulation(bool* p_open);
+	void Draw(ImDrawList* draw_list); //will be used to draw our shapes
+	void setPipeDraw(float height, float diameter); //function that sets our _pipes paramters
+	static void Bernoulli_Simulation(bool* p_open); //Static function that will bind to our Chemotar program as a function pointer
 
 	float* returnOutlet() {return &outlet_diameter;}
 	float* returnHeight() {return &height;}
