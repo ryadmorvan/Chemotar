@@ -103,12 +103,3 @@ void DrawShapes::Draw(ImDrawList* draw_list)
 	}
 }
 
-void Shapes::Pipes::Draw(ImDrawList* draw_list)
-{
-	const ImVec2 p = ImGui::GetCursorScreenPos();
-	draw_list->AddRectFilled(ImVec2(p.x + Position.x, p.y + Position.y), ImVec2(p.x + Position.x + length,p.y + Position.y + diameter), PipeColor, 0);
-	draw_list->AddRectFilled(ImVec2(p.x + Position.x + length - diameter, p.y + Position.y), ImVec2(p.x + Position.x + length, p.y + Position.y - height), PipeColor, 0);
-	draw_list->AddRectFilled(ImVec2(p.x + Position.x + length - diameter, p.y + Position.y - height), ImVec2(p.x + Position.x + length*2,p.y + Position.y - height + diameter), PipeColor, 0);
-
-
-}

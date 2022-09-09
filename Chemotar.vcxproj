@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Chemotar.cpp" />
+    <ClCompile Include="src\Simulations\Bernoulli.cpp" />
     <ClCompile Include="src\Simulations\Boiler.cpp" />
     <ClCompile Include="src\Drawing\DrawShapes.cpp" />
     <ClCompile Include="src\Graph\Graph.cpp" />
@@ -165,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Chemotar.h" />
+    <ClInclude Include="src\Simulations\Bernoulli.h" />
     <ClInclude Include="src\Simulations\Boiler.h" />
     <ClInclude Include="src\Simulations\BoilerSimulation.h" />
     <ClInclude Include="src\Drawing\DrawShapes.h" />

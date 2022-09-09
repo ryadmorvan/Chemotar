@@ -17,9 +17,6 @@
 
 
 
-
-
-
 class DrawShapes
 {
 protected:
@@ -62,35 +59,4 @@ public:
 
 };
 
-namespace Shapes
-{
-	class Pipes : public DrawShapes
-	{
-	private:
-		float Inlet_Diameter;
-		float Outlet_Diameter;
-		float height;
-		float Shape_Length;
-		ImU32 PipeColor;
-		ImVec2 Position;
-		float length;
-		float diameter;
-	public:
-		Pipes() : DrawShapes()
-		{
-			diameter = 10;
-			Position.x = 300; Position.y = 550; length = 150;
-			height = 150;
-			PipeColor = ImColor(106, 121, 92, 220);
-		}
-
-		void Draw(ImDrawList* draw_list);
-		ImU32 returnColor() { return col32; }
-		ImU32 returnColorText() { return TextColor; }
-		float& ReturnInlet() {return Inlet_Diameter;}
-		float& ReturnOutlet() {return Outlet_Diameter;}
-		float& ReturnHeight() {return height;}
-
-	};
-}
 
