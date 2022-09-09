@@ -2,7 +2,11 @@
 #include "../src/Drawing/DrawShapes.h"
 
 
+
 class Bernoulli;
+
+template<typename T1, typename T2>
+std::string _Format(T1 f, T2 n);
 
 namespace Shapes
 {
@@ -51,6 +55,7 @@ private:
 	Shapes::Pipes _pipes;
 	float inlet_diameter = 20;
 	float outlet_diameter = 40;
+	float height = 25;
 
 public:
 	Bernoulli() : _pipes()
@@ -63,5 +68,8 @@ public:
 	static void Bernoulli_Simulation(bool* p_open);
 
 	float* returnOutlet() {return &outlet_diameter;}
+	float* returnHeight() {return &height;}
+	std::string returnHeightString() {return _Format(height, 3) + " m";}
+	std::string returnOutletDiameterString() {return "Diameter: " + _Format(outlet_diameter, 4) + " cm";}
 };
 
