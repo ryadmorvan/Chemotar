@@ -26,10 +26,11 @@ void Shapes::Pipes::Draw(ImDrawList* draw_list, float &outlet_multiplier, Bernou
 	draw_list->AddTriangleFilled(ImVec2(p.x + Position.x + length + 6, p.y + Position.y + diameter - 5), ImVec2(p.x + Position.x + length + 14, p.y + Position.y + diameter - 5), ImVec2(p.x + Position.x + length + 10, p.y + Position.y + diameter), ImColor(ImVec4(0.6f, 0.9f, 0.3f, 0.85f)) );
 
 	//we draw the inlet/outlet arrows
-	DrawShapes arrow1 = DrawShapes(p.x + Position.x - 120.0f, p.y + Position.y + diameter/2.0f, 100.0f,  2.0f, DrawShapes::ARROW);
+	DrawShapes arrow1 = DrawShapes(p.x + Position.x - 170.0f, p.y + Position.y + diameter/2.0f, 150.0f,  2.0f, DrawShapes::ARROW);
 	DrawShapes arrow2 = DrawShapes(p.x + Position.x + length*2 + out_let_diameter + 90, p.y + Position.y - height + diameter/2.0f, 150.0f, 2.0f, DrawShapes::ARROW);
-	//it will display to our user the current outlet diameter
+	//it will display to our user the current inlet and outlet diameters and other information
 	draw_list->AddText(ImVec2(p.x + Position.x + length*2 + out_let_diameter + 95, p.y + Position.y - height + diameter/2.0f - 20), ImColor(0, 255, 0, 255), bern.returnOutletDiameterString().c_str());
+	draw_list->AddText(ImVec2(p.x + Position.x - 170.0f, p.y + Position.y + diameter/2.0f - 20), ImColor(0, 255, 0, 255), bern.returnInletDiameterString().c_str());
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
 

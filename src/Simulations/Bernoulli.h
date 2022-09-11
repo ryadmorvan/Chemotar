@@ -73,7 +73,8 @@ public:
 
 	float* returnOutlet() {return &outlet_diameter;}
 	float* returnHeight() {return &height;}
-	std::string returnHeightString() {return _Format(height, 3) + " m";}
-	std::string returnOutletDiameterString() {return "Diameter: " + _Format(outlet_diameter, 4) + " cm";}
+	std::string returnHeightString() const {return _Format(height, 3) + " m";}
+	std::string returnInletDiameterString() const {return "Diameter: " + _Format(inlet_diameter, 4) + " cm";}
+	std::string returnOutletDiameterString() const {return "Diameter: " + _Format(outlet_diameter, 4) + " cm";}
 };
 
