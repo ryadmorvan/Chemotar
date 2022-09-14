@@ -33,6 +33,7 @@ private:
 	bool ShowBernoulli = false;
 	bool ShowSettings = false;
 	bool ShowDeveloperInfo = false;
+	bool ShowPengRobin = false;
 
 
 	//AddTable pointer
@@ -51,7 +52,7 @@ public:
 	void (*BoilerSimulation)(bool*);
 	void (*BernoulliSim)(bool*);
 	void (*ShowInfo)(ImFont*);
-
+	void (*Peng_Robin_Calculator)(bool* p_open);
 	//Main methods that will be used to run our program
 	void run(ImFont* font);
 	int MainMenu(ImFont* font, std::string file_path);

@@ -44,6 +44,10 @@ int Chemotar::MainMenu(ImFont* font, std::string file_path)
 			{
 
 			}
+			if (ImGui::MenuItem("Peng-Robinson Equation of State", NULL, &ShowPengRobin))
+			{
+
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Simulations"))
@@ -141,5 +145,11 @@ void Chemotar::run(ImFont* font)
 		_Settings();
 		ImGui::PopFont();
 		ImGui::End();
+	}
+	if (ShowPengRobin)
+	{
+		ImGui::PushFont(font);
+		Peng_Robin_Calculator(&ShowPengRobin);
+		ImGui::PopFont();
 	}
 }

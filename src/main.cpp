@@ -49,7 +49,9 @@ SOFTWARE.
 #include "../src/Simulations/Ideal_Gas_Simulation.h"
 #include "../src/Simulations/BoilerSimulation.h"
 #include "../src/Tools/SteamTable.h"
+#include "../src/Tools/PengRobinson.h"
 #include "../src/Chemotar.h"
+
 
 
 
@@ -105,7 +107,7 @@ int main()
 	chemotar.IdealGasLaw = &IdealGasLaw;	chemotar.BoilerSimulation = &BoilerSimulation;
 	//chemotar.BernoulliSim = &Bernoulli_Simulation;
 	chemotar.ShowInfo = &ShowInfo;	chemotar._AddTable = &_AddTable;
-	chemotar.BernoulliSim = &Bernoulli::Bernoulli_Simulation;
+	chemotar.BernoulliSim = &Bernoulli::Bernoulli_Simulation; chemotar.Peng_Robin_Calculator = &PengRobinson::PengRobinsonCalculator;
 
 
 	////////////////////////////////////////
