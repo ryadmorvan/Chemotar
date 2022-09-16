@@ -59,23 +59,38 @@ private:
 	Shapes::Pipes _pipes; //Shapes object
 	float inlet_diameter_ = 20.0f; //diameter in cm
 	float outlet_diameter_ = 40.0f; //diameter in cm
-	float height_ = 50.0f; //height in cm
+	float height_ = 80.0f; //height in cm
 	float pressure1_ = 110.0f; //pressure in kpa
 	float pressure2_ = 200.0f; //pressure in kpa
 	float velocity1_ = 5.0f; //Velocity in m/s
 	float velocity2_ = 0.0f; //Velocity in m/s
-	float fluid_density_ = 1000.0f; //in kg/m^3
+	float fluid_density_ = 997.77f; //in density of water at room temperature 22c
 	float Gravity = 9.81f;
 
 	float PressureChange = 0;
-	float VolumeFlowRate = 0;
-	float MassFlowRate = 0;
+	float VolumeFlowRateIn = 0;
+	float MassFlowRateIn = 0;
+	float VolumeFlowRateOut = 0;
+	float MassFlowRateOut = 0;
 
+
+	bool KineticProfile = false;
+
+	float KineticEnergy1 = 0;
+	float KineticEnergy2 = 0;
+	float PotentialEnergy = 0;
 public:
 	Bernoulli() : _pipes()
 	{
 		CalculateVelocity();
 		CalculatePressure();
+		CalculateFlowRateIn();
+		CalculateMassFlowRateIn();
+		CalculateFlowRateOut();
+		CalculateMassFlowRateOut();
+		CalculateKineticEnergy1();
+		CalculateKineticEnergy2();
+		CalculatePotentialEnergy();
 	}
 
 	void Draw(ImDrawList* draw_list); //will be used to draw our shapes
@@ -88,8 +103,31 @@ public:
 	float* return_pressure2() {return &pressure2_;}
 	float* return_velocity1() { return &velocity1_;}
 
+
+	//return kinetic profile
+	bool* returnKineticProfile() {return &KineticProfile;}
+
 	void CalculateVelocity() { velocity2_ = (pow(inlet_diameter_*0.5, 2)*velocity1_)/(pow(outlet_diameter_*0.5, 2)); }
 	void CalculatePressure();
+	void CalculateFlowRateIn() {VolumeFlowRateIn = pow(inlet_diameter_ * 0.5/100, 2)*3.14159*velocity1_;}
+	void CalculateMassFlowRateIn() {MassFlowRateIn = VolumeFlowRateIn*fluid_density_;}
+
+	//Calculates the Kinetic Energies
+	void CalculateKineticEnergy1() {KineticEnergy1 = 0.5*MassFlowRateIn*pow(velocity1_, 2)/(VolumeFlowRateIn*1000);}
+	void CalculateKineticEnergy2() {KineticEnergy2 = 0.5*MassFlowRateOut*pow(velocity2_, 2)/(VolumeFlowRateOut*1000);}
+
+	//Calculates the Potential Energies
+	void CalculatePotentialEnergy() {PotentialEnergy = MassFlowRateIn*Gravity*height_/(VolumeFlowRateIn * 1000 * 100);}
+
+	//Kinetic Information
+	std::string returnPressureEnergy1String() {return "Pressure Energy: " + _Format(pressure1_, 4) + " kj/m^3";}
+	std::string returnPressureEnergy2String() {return "Pressure Energy: " + _Format(pressure2_, 4) + " kj/m^3";}
+	std::string returnKineticEnergy1String() {return "Kinetic Energy: " + _Format(KineticEnergy1, 4) + " kj/m^3";}
+	std::string returnKineticEnergy2String() {return "Kinetic Energy: " + _Format(KineticEnergy2, 4) + " kj/m^3";}
+	std::string returnPotentialEnergy() {return "Potential Energy Change: " + _Format(PotentialEnergy, 4) + " kj/m^3";}
+
+	void CalculateFlowRateOut() {VolumeFlowRateOut = pow(outlet_diameter_ * 0.5/100, 2)*3.14159*velocity2_; }
+	void CalculateMassFlowRateOut() {MassFlowRateOut = VolumeFlowRateOut* fluid_density_;}
 	std::string returnHeightString() const {return _Format(height_/100.0f, 3) + " m";}
 	std::string returnInletDiameterString() const {return "Diameter: " + _Format(inlet_diameter_, 4) + " cm";}
 	std::string returnOutletDiameterString() const {return "Diameter: " + _Format(outlet_diameter_, 4) + " cm";}
@@ -97,5 +135,9 @@ public:
 	std::string returnPressure2String() const {return "Pressure: " + _Format(pressure2_, 4) + " kpa";}
 	std::string returnVelocity1String() const {return "Velocity: " + _Format(velocity1_, 4) + " m/s";}
 	std::string returnVelocity2String() const {return "Velocity: " + _Format(velocity2_, 4) + " m/s";}
+	std::string returnFlowRate1String() const {return "Flow Rate: " + _Format(VolumeFlowRateIn, 4) + " m^3/s";}
+	std::string returnMassFlowRate1String() const {return "Mass Flow Rate: " + _Format(MassFlowRateIn, 4) + " kg/s";}
+	std::string returnFlowRate2String() const {return "Flow Rate: " + _Format(VolumeFlowRateOut, 4) + " m^3/s";}
+	std::string returnMassFlowRate2String() const {return "Mass Flow Rate: " + _Format(MassFlowRateOut, 4) + " kg/s";}
 };
 
