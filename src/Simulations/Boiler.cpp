@@ -201,16 +201,17 @@ void boiler<FEED::DOUBLE>::DrawInfo(ImDrawList* draw_list,DrawShapes& Arrow_In1,
 	//Feeds Velocity Profile
 	if (VelocityProfile)
 	{
+		ImVec2 p = ImGui::GetCursorScreenPos();
 		draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() + 10), Arrow_In1.returnColor(), returnDiameter1().c_str());
 		draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() + 10), Arrow_In2.returnColor(), returnDiameter2().c_str());
 		draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() + 10), Arrow_Out1.returnColor(), returnDiameter3().c_str());
 		draw_list->AddText(ImVec2(Arrow_In1.returnX(), Arrow_In1.returnY() + 30), returnPhase1().color, returnVelocity1().c_str());
 		draw_list->AddText(ImVec2(Arrow_In2.returnX(), Arrow_In2.returnY() + 30), returnPhase2().color, returnVelocity2().c_str());
 		draw_list->AddText(ImVec2(Arrow_Out1.returnX() + 10, Arrow_Out1.returnY() + 30), returnPhase3().color, returnVelocity3().c_str());
-		draw_list->AddText(ImVec2(15, 350), ImColor(100, 160, 100, 240), "Kinetic Information");
-		draw_list->AddText(ImVec2(15, 370), returnPhase1().color, returnKinetic1().c_str() );
-		draw_list->AddText(ImVec2(15, 390), returnPhase2().color, returnKinetic2().c_str() );
-		draw_list->AddText(ImVec2(15, 410), returnPhase3().color, returnKinetic3().c_str() );
+		draw_list->AddText(ImVec2(p.x +15, p.y + 20), ImColor(100, 160, 100, 240), "Kinetic Information");
+		draw_list->AddText(ImVec2(p.x +15, p.y + 40), returnPhase1().color, returnKinetic1().c_str() );
+		draw_list->AddText(ImVec2(p.x +15, p.y + 60), returnPhase2().color, returnKinetic2().c_str() );
+		draw_list->AddText(ImVec2(p.x+ 15, p.y + 80), returnPhase3().color, returnKinetic3().c_str() );
 
 	}
 

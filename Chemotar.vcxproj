@@ -163,6 +163,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Simulations\Piston.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Tools\PengRobinson.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Chemotar.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\Tools\ChemicalCalculations.h" />
     <ClInclude Include="src\Tools\Empirical Calculators.h" />
+    <ClInclude Include="src\Tools\PengRobinson.h" />
     <ClInclude Include="src\Tools\SteamTable.h" />
     <ClInclude Include="src\Utility\UtilitySystemHandler.h" />
   </ItemGroup>

@@ -30,7 +30,16 @@ void Shapes::Pipes::Draw(ImDrawList* draw_list, float &outlet_multiplier, Bernou
 	DrawShapes arrow2 = DrawShapes(p.x + Position.x + length*2 + out_let_diameter + 90, p.y + Position.y - height + diameter/2.0f, 150.0f, 2.0f, DrawShapes::ARROW);
 	//it will display to our user the current inlet and outlet diameters and other information
 	draw_list->AddText(ImVec2(p.x + Position.x + length*2 + out_let_diameter + 95, p.y + Position.y - height + diameter/2.0f - 20), ImColor(0, 255, 0, 255), bern.returnOutletDiameterString().c_str());
+	draw_list->AddText(ImVec2(p.x + Position.x + length*2 + out_let_diameter + 95, p.y + Position.y - height + diameter/2.0f - 40), ImColor(0, 255, 0, 255), bern.returnPressure2String().c_str());
+	draw_list->AddText(ImVec2(p.x + Position.x - 170.0f, p.y + Position.y + diameter/2.0f - 40), ImColor(0, 255, 0, 255), bern.returnPressure1String().c_str());
 	draw_list->AddText(ImVec2(p.x + Position.x - 170.0f, p.y + Position.y + diameter/2.0f - 20), ImColor(0, 255, 0, 255), bern.returnInletDiameterString().c_str());
+
+	//Draw the velocities
+	draw_list->AddText(ImVec2(p.x + Position.x - 170.0f, p.y + Position.y + diameter/2.0f - 60), ImColor(0, 255, 0, 255), bern.returnVelocity1String().c_str());
+	draw_list->AddText(ImVec2(p.x + Position.x + length*2 + out_let_diameter + 95, p.y + Position.y - height + diameter/2.0f - 60), ImColor(0, 255, 0, 255), bern.returnVelocity2String().c_str());
+
+
+
 	arrow1.Draw(draw_list);
 	arrow2.Draw(draw_list);
 
@@ -43,7 +52,7 @@ void Shapes::Pipes::Draw(ImDrawList* draw_list, float &outlet_multiplier, Bernou
 
 void Bernoulli::Draw(ImDrawList* draw_list)
 {
-	float outlet_size = outlet_diameter/(inlet_diameter * 3.0f); //Scales with respect to our outlet and inlet ratio
+	float outlet_size = outlet_diameter_/(inlet_diameter_ * 3.0f); //Scales with respect to our outlet and inlet ratio
 	_pipes.Draw(draw_list, outlet_size, *this);
 
 }
@@ -62,18 +71,34 @@ void Bernoulli::Bernoulli_Simulation(bool* p_open)
 		return;
 	}
 	static Bernoulli bern;
-	bern.setPipeDraw(bern.height*10.0f, 20); //Height in meters
+	bern.setPipeDraw(bern.height_, 20); //Height in meters
 	static ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65);
 	ImGui::TextColored(ImColor(170, 80, 90, 200), "Outlet Diameter");
-	if(ImGui::SliderFloat("Outlet Diameter", bern.returnOutlet(), 35.0f, 110.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+	if(ImGui::SliderFloat(" ", bern.returnOutlet(), 20.0f, 110.0f, "%.2f cm", ImGuiSliderFlags_AlwaysClamp))
 	{
-		
+		bern.CalculateVelocity();
+	}
+	ImGui::TextColored(ImColor(130, 80, 80), "Inlet Pressure");
+	if(ImGui::SliderFloat("   ", bern.return_pressure1(), 100.0f, 500.0f, "%.2f kpa", ImGuiSliderFlags_AlwaysClamp))
+	{
+		bern.CalculatePressure();
+	}
+	ImGui::TextColored(ImColor(110, 190, 100, 220), "Inlet Velocity");
+	if(ImGui::SliderFloat("    ", bern.return_velocity1(), 2.0f, 15.0f, "%.2f m/s", ImGuiSliderFlags_AlwaysClamp))
+	{
+		bern.CalculateVelocity();
 	}
 	ImGui::TextColored(ImColor(80, 170, 90, 200), "Height");
-	if(ImGui::SliderFloat("Height", bern.returnHeight(), 5.0f, 35.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+	if(ImGui::SliderFloat("  ", bern.returnHeight(), 30.0f, 300.0f, "%.2f cm", ImGuiSliderFlags_AlwaysClamp))
 	{
+		bern.CalculatePressure();
 	}
-
 	bern.Draw(draw_list);
 
+}
+
+void Bernoulli::CalculatePressure()
+{
+	pressure2_ = ((fluid_density_*pow(velocity1_, 2)/2.0f) - fluid_density_*Gravity*(height_/100.0f) + pressure1_*pow(10, 3) - (fluid_density_*pow(velocity2_, 2)/2.0f))/1000.0f;
 }
