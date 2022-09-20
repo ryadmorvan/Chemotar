@@ -97,6 +97,8 @@ void Bernoulli::Bernoulli_Simulation(bool* p_open)
 		bern.CalculateMassFlowRateOut();
 		bern.CalculateKineticEnergy1();
 		bern.CalculateKineticEnergy2();
+		bern.CalculatePressure();
+
 	}
 	ImGui::TextColored(ImColor(130, 80, 80), "Inlet Pressure");
 	if(ImGui::SliderFloat("   ", bern.return_pressure1(), 100.0f, 500.0f, "%.2f kpa", ImGuiSliderFlags_AlwaysClamp))
@@ -113,6 +115,8 @@ void Bernoulli::Bernoulli_Simulation(bool* p_open)
 		bern.CalculateMassFlowRateOut();
 		bern.CalculateKineticEnergy1();
 		bern.CalculateKineticEnergy2();
+		bern.CalculatePressure();
+
 	}
 	ImGui::TextColored(ImColor(80, 170, 90, 200), "Height");
 	if(ImGui::SliderFloat("  ", bern.returnHeight(), 50.0f, 300.0f, "%.2f cm", ImGuiSliderFlags_AlwaysClamp))
