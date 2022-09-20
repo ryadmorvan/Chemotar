@@ -31,7 +31,7 @@ compiled source folder, then execture your .exe application.
 ## Download
   Demo client
   
-  [Chemotar 1.02](https://www.mediafire.com/file/iakurn5u1ewb2pf/Chemotar.rar/file)
+  [Chemotar 1.02](https://www.mediafire.com/file/ag2khr1450ebd1u/Chemotar_DEMO.rar/file)
 # Credits
 - J.Richard Elliot, Carl T. Lira
 - Yaws, C.L, J.R. Hopper, and R.W Pike
