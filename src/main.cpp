@@ -45,6 +45,7 @@ SOFTWARE.
 
 
 //Simulations
+#include "../src/Tools/PhysicalProperties.h"
 #include "../src/Simulations/Bernoulli.h"
 #include "../src/Simulations/Ideal_Gas_Simulation.h"
 #include "../src/Simulations/BoilerSimulation.h"

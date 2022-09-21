@@ -150,6 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Tools\PhysicalProperties.cpp" />
     <ClCompile Include="src\Chemotar.cpp" />
     <ClCompile Include="src\Simulations\Bernoulli.cpp" />
     <ClCompile Include="src\Simulations\Boiler.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="src\Tools\PengRobinson.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Tools\PhysicalProperties.h" />
     <ClInclude Include="src\Chemotar.h" />
     <ClInclude Include="src\Simulations\Bernoulli.h" />
     <ClInclude Include="src\Simulations\Boiler.h" />
