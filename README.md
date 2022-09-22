@@ -11,7 +11,7 @@ Chemical Engineering Calculation and Simulation Software
 Developing free and easy-to-use educational Chemical Engineering tools and simulation software. Software currently includes the following: 
 * Material and Energy Simulation of Boiler
 * Advanced Steam Table Calculator
-* Heat Capacity and Viscosity Giving Empirical Table
+* Heat Capacity and Viscosity Calculator Giving Empirical Table
 * Bernoulli's Simulation
 * Peng-Robinson Equation of State Calculator
 * Departure Function Calculator (To be worked on)
