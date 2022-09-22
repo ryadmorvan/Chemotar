@@ -48,6 +48,13 @@ int Chemotar::MainMenu(ImFont* font, std::string file_path)
 			{
 
 			}
+
+			if(ImGui::MenuItem("Physical Properties of Chemicals", NULL, &ShowPhysicalProperties))
+			{
+			}
+			if(ImGui::MenuItem("Vapor Pressure Calculator", NULL, &ShowVaporPressureCalculator))
+			{
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Simulations"))
@@ -150,6 +157,18 @@ void Chemotar::run(ImFont* font)
 	{
 		ImGui::PushFont(font);
 		Peng_Robin_Calculator(&ShowPengRobin);
+		ImGui::PopFont();
+	}
+	if(ShowPhysicalProperties)
+	{
+		ImGui::PushFont(font);
+		PhysicalProperties(&ShowPhysicalProperties);
+		ImGui::PopFont();
+	}
+	if(ShowVaporPressureCalculator)
+	{
+		ImGui::PushFont(font);
+		VaporPressureCalculator(&ShowVaporPressureCalculator);
 		ImGui::PopFont();
 	}
 }

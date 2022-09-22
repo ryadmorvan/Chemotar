@@ -246,8 +246,8 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 			TableInfo.filePath = TablePaths.at(i);
 
 			
-
-			if (ImGui::BeginCombo("Chemicals", current_item)) // The second parameter is the label previewed before opening the combo.
+			ImGui::TextColored(ImColor(120, 240, 80, 220), "Compounds");
+			if (ImGui::BeginCombo("Specie", current_item, ImGuiComboFlags_HeightLarge)) // The second parameter is the label previewed before opening the combo.
 			{
 				for (int n = 0; n < _vectorSize; n++)
 				{
@@ -338,8 +338,8 @@ bool CheckBoxUI(bool* CheckBox, std::string& fname, std::fstream& file, std::str
 			TableInfo.filePath = TablePaths.at(i);
 
 
-
-			if (ImGui::BeginCombo("Chemicals", current_item)) // The second parameter is the label previewed before opening the combo.
+			ImGui::TextColored(ImColor(120, 240, 80, 220), "Compounds");
+			if (ImGui::BeginCombo("Specie", current_item, ImGuiComboFlags_HeightLarge)) // The second parameter is the label previewed before opening the combo.
 			{
 				for (int n = 0; n < _vectorSize; n++)
 				{
@@ -548,7 +548,7 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 			ImGui::InputFloat("Input Final Temperature", &temperature2);
 			ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
 			ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
-
+			ImGui::TextColored(ImColor(220, 110, 90, 230), ("Temperature Range: " + _Format(MinTemp, 4) + " K to " + _Format(MaxTemp, 4) + " K").c_str());
 			if (ImGui::Button("Calculate"))
 			{
 				//Calculates the result
@@ -622,7 +622,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 			//ImGui::InputFloat("Input Final Temperature", &temperature2);
 			ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
 			//ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
-
+			ImGui::TextColored(ImColor(220, 110, 90, 230), ("Temperature Range: " + _Format(MinTemp, 4) + " K to " + _Format(MaxTemp, 4) + " K").c_str());
 			if (ImGui::Button("Calculate"))
 			{
 				finalResult.clear();

@@ -45,6 +45,7 @@ SOFTWARE.
 
 
 //Simulations
+#include "../src/Tools/VaporPressureCalculator.h"
 #include "../src/Tools/PhysicalProperties.h"
 #include "../src/Simulations/Bernoulli.h"
 #include "../src/Simulations/Ideal_Gas_Simulation.h"
@@ -109,6 +110,7 @@ int main()
 	//chemotar.BernoulliSim = &Bernoulli_Simulation;
 	chemotar.ShowInfo = &ShowInfo;	chemotar._AddTable = &_AddTable;
 	chemotar.BernoulliSim = &Bernoulli::Bernoulli_Simulation; chemotar.Peng_Robin_Calculator = &PengRobinson::PengRobinsonCalculator;
+	chemotar.PhysicalProperties = &PhysicalProperties::ShowPhysicalProperties; chemotar.VaporPressureCalculator = &VaporPressureCalculator::ShowVaporCalculator;
 
 
 	////////////////////////////////////////

@@ -34,6 +34,8 @@ private:
 	bool ShowSettings = false;
 	bool ShowDeveloperInfo = false;
 	bool ShowPengRobin = false;
+	bool ShowPhysicalProperties = false;
+	bool ShowVaporPressureCalculator = false;
 
 
 	//AddTable pointer
@@ -53,6 +55,8 @@ public:
 	void (*BernoulliSim)(bool*);
 	void (*ShowInfo)(ImFont*);
 	void (*Peng_Robin_Calculator)(bool* p_open);
+	void (*PhysicalProperties)(bool*);
+	void (*VaporPressureCalculator)(bool*);
 	//Main methods that will be used to run our program
 	void run(ImFont* font);
 	int MainMenu(ImFont* font, std::string file_path);
