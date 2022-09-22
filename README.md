@@ -6,6 +6,17 @@ Chemical Engineering Calculation and Simulation Software
 ![Chemotar 1 04](https://user-images.githubusercontent.com/48857076/190827288-3e04a483-d85e-4f80-bd1b-10dd66a1fa58.png)
 
 
+## About
+
+Developing free and easy-to-use educational Chemical Engineering tools and simulation software. Software currently includes the following: 
+* Material and Energy Simulation of Boiler
+* Advanced Steam Table Calculator
+* Heat Capacity and Viscosity Giving Empirical Table
+* Bernoulli's Simulation
+* Peng-Robinson Equation of State Calculator
+* Departure Function Calculator (To be worked on)
+* Fluid Velocity in Rigid Body Simulation (To be worked on)
+
 
 ## Author 
 ***Ryad K***
