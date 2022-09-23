@@ -120,7 +120,6 @@ float VaporPressureCalculator::CalculateVaporPressure(float value, unsigned spec
 {
 	if constexpr (std::is_same<T, VaporPressureCalculate>())
 	{
-		std::cout << Antoine_A << std::endl << Antoine_B << std::endl << Antoine_C << std::endl;
 		return (pow(10, Antoine_A - Antoine_B/( (value - 273.15) + Antoine_C)));
 	}
 	if constexpr (std::is_same<T, VaporTemperatureCalculate>())

@@ -165,6 +165,7 @@
     <ClCompile Include="src\Simulations\Piston.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tools\PengRobinson.cpp" />
+    <ClCompile Include="src\Tools\VaporPressureCalculator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Tools\PhysicalProperties.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\Tools\Empirical Calculators.h" />
     <ClInclude Include="src\Tools\PengRobinson.h" />
     <ClInclude Include="src\Tools\SteamTable.h" />
+    <ClInclude Include="src\Tools\VaporPressureCalculator.h" />
     <ClInclude Include="src\Utility\UtilitySystemHandler.h" />
   </ItemGroup>
   <ItemGroup>
