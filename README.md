@@ -40,7 +40,7 @@ compiled source folder, then execture your .exe application.
 **CURRENTLY THE SOFTWARE ONLY WORKS FOR WINDOWS PLATFORM**
 
 ## Download
-  [Chemotar 0.84](https://www.mediafire.com/file/iakurn5u1ewb2pf/Chemotar.rar/file)
+  [Chemotar 0.84](https://www.mediafire.com/file/qy6cqvl7bbnxp4h/Chemotar_Installer.rar/file)
 # Credits
 - J.Richard Elliot, Carl T. Lira
 - Yaws, C.L, J.R. Hopper, and R.W Pike
