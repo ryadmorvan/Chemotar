@@ -36,7 +36,7 @@ void PhysicalProperties::ShowPhysicalProperties(bool* p_open)
 		ImGui::TableSetupColumn("Molecular Weight (g/mol)");
 		ImGui::TableSetupColumn("Melting Temperature (C)");
 		ImGui::TableSetupColumn("Boiling Temperature (C)");
-		ImGui::TableSetupColumn("Critical Temperature (C)");
+		ImGui::TableSetupColumn("Critical Temperature (K)");
 		ImGui::TableSetupColumn("Critical Pressure (atm)");
 		ImGui::TableHeadersRow();
 
