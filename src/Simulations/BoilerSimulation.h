@@ -119,7 +119,7 @@ static void BoilerSimulation(bool* p_open)
 		boil->EnableVelocityProfile();
 
 		//reassignment of the boiler's diameters 
-		if (ImGui::SliderFloat3(" Diameter in Cm", FeedDiameters, 5, 200, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+		if (ImGui::SliderFloat3(" Diameter in Cm", FeedDiameters, 5, 50, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 		{
 			boil->ReturnDiameter1Ref() = FeedDiameters[0];
 			boil->ReturnDiameter2Ref() = FeedDiameters[1];
