@@ -502,6 +502,8 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 	static std::string species;
 	static float temperature1 = 0;
 	static float temperature2 = 0;
+	static float pressure1 = 0;
+	static float pressure2 = 0;
 	static float MinTemp = 0;
 	static float MaxTemp = 0;
 	static float CritTemp = 0;
@@ -527,7 +529,7 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 	static std::stringstream results;
 	static std::string finalResult = "";
 	static std::string filePath = " ";
-
+	static bool ShowPressureCalculation = false;
 
 
 	//prompts the user whether they want to display the information popup
@@ -544,16 +546,23 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 		//Loads the table that will be used in this simulation
 		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, filePath, TableName))
 		{
+			ImGui::TextColored(ImColor(100, 100, 100, 150), "Ctrl + Left Click to input value inside the slider");
 			ImGui::InputFloat("Input Inital Temperature", &temperature1);
 			ImGui::InputFloat("Input Final Temperature", &temperature2);
 			ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);
 			ImGui::SliderFloat("Final Temperature", &temperature2, MinTemp, MaxTemp);
 			ImGui::TextColored(ImColor(220, 110, 90, 230), ("Temperature Range: " + _Format(MinTemp, 4) + " K to " + _Format(MaxTemp, 4) + " K").c_str());
+			ImGui::Checkbox("Enable Pressure Inclusion", &ShowPressureCalculation);
+			if(ShowPressureCalculation)
+			{
+				ImGui::SliderFloat("Inital Pressure", &pressure1, 0.001, 500, "%.2f bar");
+				ImGui::SliderFloat("Final Pressure", &pressure2, 0.001, 500, "%.2f bar");
+			}
 			if (ImGui::Button("Calculate"))
 			{
 				//Calculates the result
 				finalResult.clear();
-				results = CalculateEnthalpy(species, temperature1, temperature2, file, line, word, fname);
+				results = CalculateEnthalpy(species, temperature1, temperature2, pressure1, pressure2, ShowPressureCalculation, file, line, word, fname);
 				insert_info(results, finalResult);
 			}
 			//removing the table and memory setting the booleans to zero
@@ -572,6 +581,8 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 	else
 	{
 		temperature1 = 0, temperature2 = 0, memset(CheckBox, FALSE, sizeof(CheckBox));
+		ShowPressureCalculation = false;
+		pressure1 = 0; pressure2 = 0;
 		finalResult = "";
 	}
 }
@@ -606,7 +617,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 	static std::stringstream results;
 	static std::string finalResult = "";
 	static std::string filePath = " ";
-
+	static bool ShowPressureCalculation = false;
 
 	//prompts the user whether they want to display the information popup
 	if (ImGui::Button("INFO")) ImGui::OpenPopup("Info Viscosity");
@@ -618,6 +629,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 		//Loads the table that will be used in this simulation
 		if (CheckBoxUI(CheckBox, fname, file, species, MinTemp, MaxTemp, CritTemp,  filePath, TableName))
 		{
+			ImGui::TextColored(ImColor(100, 100, 100, 150), "Ctrl + Left Click to input value inside the slider");
 			ImGui::InputFloat("Input Inital Temperature", &temperature1);
 			//ImGui::InputFloat("Input Final Temperature", &temperature2);
 			ImGui::SliderFloat("Inital Temperature", &temperature1, MinTemp, MaxTemp);

@@ -71,7 +71,7 @@ inline std::string insert_info(std::stringstream &results, std::string &finalRes
 	}
 }
 
-std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, float& temperature2, std::fstream& file, std::string& line, std::string& word, std::string fname)
+std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, float& temperature2, float& pressure1, float& pressure2, bool& ShowPressureInclusion, std::fstream& file, std::string& line, std::string& word, std::string fname)
 {
 	//Opens the file for the table we choose to calculate from
 	file.open(fname, std::ios::in);
@@ -126,7 +126,7 @@ std::stringstream CalculateEnthalpy(std::string& species, float& temperature1, f
 		std::cout << "Heat Capacity at (" << temperature1 << "): Cp = " << heat_capacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << std::endl;
 		//Stores the results into the finalResult variable to later display it on our GUI
 		finalResult << "Enthalpy change is: " << enthalpy_evolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol" << std::endl;
-		finalResult << "Entropy change is: " << entropy_evolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) << " J/Mol*K" << std::endl;
+		finalResult << "Entropy change is: " << entropy_evolved(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1, temperature2) - (ShowPressureInclusion ? 8.31446*(logf(pressure2) - logf(pressure1)) : 0) << " J/Mol*K" << std::endl;
 		finalResult << "Heat Capacity at (" << temperature1 << "): Cp = " << heat_capacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature1) << " J/Mol*K" << std::endl;
 		finalResult << "Heat Capacity at (" << temperature2 << "): Cp = " << heat_capacity(coeff1, coeff2, coeff3, coeff4, coeff5, temperature2) << " J/Mol*K" << std::endl;
 	}
