@@ -195,7 +195,10 @@ int main()
 
 
 
-		chemotar.MainMenu(font2, file_path); //Displays the main menu
+		if(!chemotar.MainMenu(font2, file_path))
+		{
+			break;
+		}//Displays the main menu
 		chemotar.run(font); //Simulates all the tools and calculators
 		//ImGui::SetMouseCursor(ImGuiMouseCursor_None); hide Cursor
 		//Run the program and push the font into it

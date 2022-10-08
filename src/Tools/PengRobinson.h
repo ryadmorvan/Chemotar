@@ -15,7 +15,7 @@ template<typename T1, typename T2>
 std::string _Format(T1 f, T2 n);
 
 
-
+#define GAS_CONSTANT 8.3144598
 
 class PengRobinson
 {
@@ -23,10 +23,27 @@ class PengRobinson
 private:
 	//class object where we store the data of our chemical properties and heat capacity coefficient
 	PhysicalProperties m_properties;
+	//Species properties
 	std::string SpecieName = "NULL";
 	float m_Tcritical = 0;
 	float m_Pcritical = 0;
 	float m_AcentricFactor = 0;
+
+	//Our system pressure and temperature
+	float m_pressure = 0;
+	float m_temperature = 0;
+
+	//coefficients used for calculations
+	float m_Tr = 0;
+	float m_Pr = 0;
+	float m_Kappa = 0;
+	float m_Alpha = 0;
+	float m_ac = 0;
+	float m_a = 0;
+	float m_b = 0;
+	
+	float m_A = 0;
+	float m_B = 0;
 	//Heat Capacity Coefficients
 public:
 	float HeatCapacityCoefficients[5] = {0, 0, 0,0, 0};
@@ -48,10 +65,26 @@ public:
 				
 				
 				
-				"ERROR SPECIE HEAT CAPACITY NOT YET IMPLEMENTED");
+				"Specie heat capacity not yet implemented.");
+	}
+	float* returnTemperaturePointer() {return &m_temperature;}
+	float* returnPressurePointer() {return &m_pressure;}
+	float KappaCalculation(float AcentricFactor) {return (0.37464 + 1.54226*AcentricFactor - 0.26992*AcentricFactor*AcentricFactor);}
+	float AlphaCalculation() {return powf(1+ KappaCalculation(m_AcentricFactor)*(1-powf(m_Tr, 0.5)), 2);}
+	float aCalculation() {return AlphaCalculation() * 0.45723553*GAS_CONSTANT*GAS_CONSTANT*m_Tcritical*m_Tcritical/(m_Pcritical*pow(10, 6));}
+	float bCalculation() {return 0.07779607*GAS_CONSTANT*m_Tcritical/(m_Pcritical*pow(10, 6));}
+	float A_Calculation() {return m_a*m_pressure*pow(10, 6)/(GAS_CONSTANT*GAS_CONSTANT*m_temperature*m_temperature);}
+	float B_Calculation() {return m_b*m_pressure*pow(10, 6)/(GAS_CONSTANT*m_temperature);}
+
+	void Calculate() {m_Tr = m_temperature/m_Tcritical; m_Pr = m_pressure/m_Pcritical; m_Kappa = KappaCalculation(m_AcentricFactor); m_Alpha = AlphaCalculation(); m_a= aCalculation(); m_b = bCalculation();
+		m_A = A_Calculation(); m_B = B_Calculation();
 	}
 
-	float KappaCalculation(float AcentricFactor) {0.37464 + 1.54226*AcentricFactor - 0.26992*AcentricFactor*AcentricFactor;}
-	float Alpha(float temperature, float temperatureCrit, float AcentricFactor) {return powf(1+ KappaCalculation(AcentricFactor)*(1-powf(temperature/temperatureCrit, 0.5)), 2);}
+	std::string returnCoefficients()
+	{
+		return "Tr: " + _Format(m_Tr, 5) + "\nPr: " + _Format(m_Pr, 5) + "\nKappa: " + _Format(m_Kappa, 5) + "\nAlpha: " + _Format(m_Alpha, 5) + "\na: " + _Format(m_a, 5) + "\nb: " + _Format(m_b, 5) +
+			"\nA: " + _Format(m_A, 5) + "\nB: " + _Format(m_B, 5);
+			;
+	}
 };
 

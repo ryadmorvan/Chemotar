@@ -24,7 +24,7 @@ int Chemotar::MainMenu(ImFont* font, std::string file_path)
 			}
 			if (ImGui::MenuItem("Exit", NULL))
 			{
-				ImGui::SFML::Shutdown();
+				//ImGui::SFML::Shutdown();
 				return 0;
 			}
 			ImGui::EndMenu();
@@ -89,6 +89,7 @@ int Chemotar::MainMenu(ImFont* font, std::string file_path)
 			ImGui::EndMenu();
 		}
 	}
+	return 1;
 	ImGui::PopFont();
 }
 

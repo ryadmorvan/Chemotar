@@ -61,6 +61,7 @@ void PengRobinson::PengRobinsonCalculator(bool* p_open)
 		ImGui::EndCombo();
 	}
 
+	ImGui::SameLine();
 	if(ImGui::Button("Details"))
 	{
 		ImGui::OpenPopup("Details");
@@ -72,7 +73,19 @@ void PengRobinson::PengRobinsonCalculator(bool* p_open)
 		ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)), PengRobinsonCalculator.returnHeatCapacityDetails().c_str());
 		ImGui::EndPopup();
 	}
+	
 
+	ImGui::InputFloat("Input Temperature", PengRobinsonCalculator.returnTemperaturePointer(), 1.0f, 5.0f, "%.2f K",ImGuiSliderFlags_AlwaysClamp);
+	ImGui::SliderFloat("Temperature", PengRobinsonCalculator.returnTemperaturePointer(), 120, 550, "%.2f K", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::InputFloat("Input Pressure", PengRobinsonCalculator.returnPressurePointer(), 1.0f, 5.0f, "%.2f Mpa",ImGuiSliderFlags_AlwaysClamp );
+	ImGui::SliderFloat("Pressure", PengRobinsonCalculator.returnPressurePointer(), 0.01f, 80.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
+
+	if(ImGui::Button("Calculate"))
+	{
+		PengRobinsonCalculator.Calculate();
+	}
+
+	ImGui::Text(PengRobinsonCalculator.returnCoefficients().c_str());
 	//static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 	//	flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
 	//	| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
