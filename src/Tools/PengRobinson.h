@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -25,6 +25,9 @@ private:
 	PhysicalProperties m_properties;
 	//Species properties
 	std::string SpecieName = "NULL";
+
+	std::vector<float> solutions;
+
 	float m_Tcritical = 0;
 	float m_Pcritical = 0;
 	float m_AcentricFactor = 0;
@@ -44,6 +47,9 @@ private:
 	
 	float m_A = 0;
 	float m_B = 0;
+
+
+	bool solver_flag_accuracy = NULL;
 	//Heat Capacity Coefficients
 public:
 	float HeatCapacityCoefficients[5] = {0, 0, 0,0, 0};
@@ -53,6 +59,9 @@ public:
 	void setCriticalPressure(float value) {m_Pcritical = value;}
 	void setAcentricFactor(float value) {m_AcentricFactor = value;}
 	void setSpecieName(std::string name) {SpecieName = name;}
+
+	void setPressure(float pressure) {m_pressure = pressure;}
+	void setTemperature(float temperature) {m_temperature = temperature;}
 
 	std::string returnDetails() {
 		return "Name: " + SpecieName + "\nCritical Temperature: " + _Format(m_Tcritical, 5) 
@@ -76,15 +85,32 @@ public:
 	float A_Calculation() {return m_a*m_pressure*pow(10, 6)/(GAS_CONSTANT*GAS_CONSTANT*m_temperature*m_temperature);}
 	float B_Calculation() {return m_b*m_pressure*pow(10, 6)/(GAS_CONSTANT*m_temperature);}
 
+	std::vector<float> CubicEquationSolver();
+	float CalculateMolarVolume(float Z) {return Z*83.144598*m_temperature/(m_pressure*10);}
+	float CalculateFugacityCoef(float Z)
+	{
+		return Z - 1 - log(Z-m_B) - m_A/(sqrtf(8)*m_B)*log( (Z+(1+sqrtf(2))*m_B)/(Z+(1-sqrtf(2))*m_B) );
+	}
+	float CalculateFugacity(float Z) {
+		return exp(CalculateFugacityCoef(Z))*m_pressure;
+	}
 	void Calculate() {m_Tr = m_temperature/m_Tcritical; m_Pr = m_pressure/m_Pcritical; m_Kappa = KappaCalculation(m_AcentricFactor); m_Alpha = AlphaCalculation(); m_a= aCalculation(); m_b = bCalculation();
 		m_A = A_Calculation(); m_B = B_Calculation();
+			solutions = CubicEquationSolver();
 	}
 
 	std::string returnCoefficients()
 	{
-		return "Tr: " + _Format(m_Tr, 5) + "\nPr: " + _Format(m_Pr, 5) + "\nKappa: " + _Format(m_Kappa, 5) + "\nAlpha: " + _Format(m_Alpha, 5) + "\na: " + _Format(m_a, 5) + "\nb: " + _Format(m_b, 5) +
-			"\nA: " + _Format(m_A, 5) + "\nB: " + _Format(m_B, 5);
+		return "Tr: " + _Format(m_Tr, 5) + "							 Pr: " + _Format(m_Pr, 5) + "\nK: " + _Format(m_Kappa, 5) + "							  Alpha: " + _Format(m_Alpha, 5) + "\na: " + _Format(m_a, 5) + " Pa*m^3/mol		  b: " + _Format(m_b, 5) +
+			" m^3/mol\nA: " + _Format(m_A, 5) + "							  B: " + _Format(m_B, 5);
 			;
+	}
+
+	void ShowResults();
+
+	bool* solver_flag()
+	{
+		return &solver_flag_accuracy;
 	}
 };
 

@@ -571,6 +571,7 @@ void heat_capacity_calculator(bool &show_heat_capacity_calculator_calculator)
 				memset(CheckBox, 0, sizeof(CheckBox));
 				_Find_File_Delete(TableName, TABLES_SAVE_DATA::HEAT_CAPACITY); //Delete the file data from the tables save.ini
 			}
+			ImGui::Separator();
 		}
 		else
 		{
@@ -648,6 +649,7 @@ void ViscosityCalculator(bool& ShowViscosityCalculator)
 				_Find_File_Delete(TableName, TABLES_SAVE_DATA::VISCOSITY); //Delete the file data from the tables save.ini
 			}
 			ImGui::TextColored(TextColorNotif, "cP: CentiPoise\n");
+			ImGui::Separator();
 		}
 		else
 		{
