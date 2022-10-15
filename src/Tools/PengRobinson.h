@@ -63,6 +63,9 @@ public:
 	void setPressure(float pressure) {m_pressure = pressure;}
 	void setTemperature(float temperature) {m_temperature = temperature;}
 
+
+
+
 	std::string returnDetails() {
 		return "Name: " + SpecieName + "\nCritical Temperature: " + _Format(m_Tcritical, 5) 
 			+" K\nCritical Pressure: " + _Format(m_Pcritical, 5) + " Mpa\nAcentric Factor: " + _Format(m_AcentricFactor, 5);
@@ -86,6 +89,7 @@ public:
 	float B_Calculation() {return m_b*m_pressure*pow(10, 6)/(GAS_CONSTANT*m_temperature);}
 
 	std::vector<float> CubicEquationSolver();
+
 	float CalculateMolarVolume(float Z) {return Z*83.144598*m_temperature/(m_pressure*10);}
 	float CalculateFugacityCoef(float Z)
 	{
@@ -94,10 +98,19 @@ public:
 	float CalculateFugacity(float Z) {
 		return exp(CalculateFugacityCoef(Z))*m_pressure;
 	}
+
+	float CalculateEnthalpyDeparture(float Z)
+	{
+		return Z - 1 - m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/sqrtf(m_Alpha)*log((Z+(1+sqrtf(2))*m_B)/(Z+(1-sqrtf(2))*m_B)));
+	}
+
+
+
 	void Calculate() {m_Tr = m_temperature/m_Tcritical; m_Pr = m_pressure/m_Pcritical; m_Kappa = KappaCalculation(m_AcentricFactor); m_Alpha = AlphaCalculation(); m_a= aCalculation(); m_b = bCalculation();
 		m_A = A_Calculation(); m_B = B_Calculation();
 			solutions = CubicEquationSolver();
 	}
+
 
 	std::string returnCoefficients()
 	{
@@ -107,6 +120,7 @@ public:
 	}
 
 	void ShowResults();
+	void ShowResultsReference();
 
 	bool* solver_flag()
 	{
