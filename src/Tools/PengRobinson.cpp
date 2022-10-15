@@ -80,7 +80,8 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 			ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)), PengRobinsonCalculator.returnHeatCapacityDetails().c_str());
 			ImGui::EndPopup();
 		}
-	
+	if(!(PengRobinsonCalculator.HeatCapacityCoefficients[0] == 0))
+	{
 		static float specie_temperature = 0;
 		static float specie_pressure = 0;
 		ImGui::InputFloat("Input Temperature", &specie_temperature, 1.0f, 5.0f, "%.2f K",ImGuiSliderFlags_AlwaysClamp);
@@ -110,13 +111,18 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		{
 			ImGui::Separator();
 			PengRobinsonCalculator.ShowResults();
+			if(ShowExtraDetails)
+			{
+				ImGui::SameLine();
+				ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)),PengRobinsonCalculator.returnCoefficients().c_str());
+			}
 		}
 		//ImGui::Separator();
-		if(ShowExtraDetails)
-		{
-			ImGui::SameLine();
-			ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)),PengRobinsonCalculator.returnCoefficients().c_str());
-		}
+		if(ShowResults)
+			ImGui::TextColored(ImColor(100, 160, 100, 150), "Stable Root has a lower fugacity");
+	
+	
+	}
 		ImGui::EndTabItem();
 	}
 
@@ -133,57 +139,6 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		ImGui::EndTabItem();
 	}
 }
-
-	//static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
-	//	flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
-	//	| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
-	//	| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
-	//	| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
-	//	| ImGuiTableFlags_SizingFixedFit;
-
-	//if(ImGui::BeginTable("Physical Properties", 6, flags))
-	//{
-	//	ImGui::TableSetupScrollFreeze(false, true);
-	//	static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
-	//	static bool display_headers = false;
-	//	//ImGui::TableSetupColumn(" ");
-	//	ImGui::TableSetupColumn("Compound");
-	//	ImGui::TableSetupColumn("Molecular Weight (g/mol)");
-	//	ImGui::TableSetupColumn("Melting Temperature (C)");
-	//	ImGui::TableSetupColumn("Boiling Temperature (C)");
-	//	ImGui::TableSetupColumn("Critical Temperature (K)");
-	//	ImGui::TableSetupColumn("Critical Pressure (atm)");
-	//	ImGui::TableHeadersRow();
-
-	//	static int value = 0;
-	//		std::vector<bool> placeholder;
-	//		//We access our tables through accessing our m_properties object
-	//		//After, we call "returnTable" function with the arguments "PhysicalProperties::type::PhysicalProperty" or "PhysicalProperties::type::HeatCapacity" for our heat capacity table
-	//		placeholder.resize((PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty))->size()); //APPROPRIATE RESIZE OF OUR VECTOR
-	//		for (int row = 0; row < (PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty))->size(); row++)
-	//		{
-	//			ImGui::TableNextRow();
-	//			for (int column = 0; column < 6; column++)
-	//			{
-	//				ImGui::TableSetColumnIndex(column);
-	//				if ((value == row) && (value != 0))
-	//				{
-	//					//When the row is selected, we highlight it
-	//					ImGui::TextColored(ImVec4(0.3f, 0.9f, 0.8f, 0.9f), (PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty))->at(row).at(column).c_str());
-	//				}
-	//				else if (ImGui::Selectable((PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty))->at(row).at(column).c_str(), placeholder.at(row),
-	//				                           ImGuiSelectableFlags_SpanAllColumns |
-	//				                           ImGuiSelectableFlags_AllowItemOverlap))
-	//				{
-	//					placeholder.at(row) = true;
-	//					value = row;
-	//				}
-	//			}
-	//		}
-	//		ImGui::EndTable();
-	//}
-
-
 
 }
 

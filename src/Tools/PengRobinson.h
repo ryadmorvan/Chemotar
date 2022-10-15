@@ -52,7 +52,7 @@ private:
 	bool solver_flag_accuracy = NULL;
 	//Heat Capacity Coefficients
 public:
-	float HeatCapacityCoefficients[5] = {0, 0, 0,0, 0};
+	float HeatCapacityCoefficients[5] = {1, 0, 0,0, 0};
 	PengRobinson() {m_properties = PhysicalProperties(PhysicalProperties::type::Elliot);}
 	static void PengRobinsonCalculator(bool* p_open);
 	void setCriticalTemperature(float value) {m_Tcritical = value;}
