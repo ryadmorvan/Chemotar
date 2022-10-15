@@ -262,6 +262,9 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 	}
 	if(ImGui::BeginTabItem("Reference State"))
 	{
+		static const char* current_root = "Choose";
+		static std::string root = "0.0";
+
 		static bool ShowResults = false;
 		static bool ShowExtraDetails = false;
 		static std::string final_result = "";
@@ -381,7 +384,24 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		}
 		//ImGui::Separator();
 		if(ShowResults)
+		{
 			ImGui::TextColored(ImColor(100, 160, 100, 150), "Stable Root has a lower fugacity");
+			//Prompts user to choose the appropriate roots to use for calculations
+			if(ImGui::BeginCombo("Root", current_root, ImGuiComboFlags_HeightLarge))
+			{ // You can store your selection however you want, outside or inside your objects
+				for(float Z : *PengRobinsonCalculatorRef.returnSolutions())
+				{
+					bool is_selected = (current_root == _Format(Z, 5));
+					if(ImGui::Selectable(_Format(Z, 5).c_str(), is_selected))
+					{
+						root = _Format(Z, 5);
+						current_root = root.c_str();
+
+						PengRobinsonCalculatorRef.set_Z_Ref(Z);
+					}
+				}
+			}
+		}
 	
 	
 	}

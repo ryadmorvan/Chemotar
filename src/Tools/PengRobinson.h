@@ -48,7 +48,7 @@ private:
 	float m_A = 0;
 	float m_B = 0;
 
-
+	float m_Z_Ref = 0;
 
 	//Departure functions
 
@@ -65,8 +65,12 @@ public:
 
 	void setPressure(float pressure) {m_pressure = pressure;}
 	void setTemperature(float temperature) {m_temperature = temperature;}
+	void set_Z_Ref(float Z) {m_Z_Ref = Z;}
 
-
+	std::vector<float>* returnSolutions()
+	{
+		return &solutions;
+	}
 
 
 	std::string returnDetails() {
@@ -125,7 +129,7 @@ public:
 	std::string returnCoefficients()
 	{
 		return "Tr: " + _Format(m_Tr, 5) + "							 Pr: " + _Format(m_Pr, 5) + "\nK: " + _Format(m_Kappa, 5) + "							  Alpha: " + _Format(m_Alpha, 5) + "\na: " + _Format(m_a, 5) + " Pa*m^3/mol		  b: " + _Format(m_b, 5) +
-			" m^3/mol\nA: " + _Format(m_A, 5) + "							  B: " + _Format(m_B, 5);
+			" m^3/mol\nA: " + _Format(m_A, 5) + "							  B: " + _Format(m_B, 5) + ((m_Z_Ref != 0) ? "\nZ_ref: " + _Format(m_Z_Ref, 5) : "") ;
 			;
 	}
 
