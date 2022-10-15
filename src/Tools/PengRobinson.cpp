@@ -108,7 +108,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		ImGui::InputFloat("Input Temperature", &specie_temperature, 1.0f, 5.0f, "%.2f K",ImGuiSliderFlags_AlwaysClamp);
 		ImGui::SliderFloat("Temperature", &specie_temperature, 120, 550, "%.2f K", ImGuiSliderFlags_AlwaysClamp);
 		ImGui::InputFloat("Input Pressure", &specie_pressure, 1.0f, 5.0f, "%.2f Mpa",ImGuiSliderFlags_AlwaysClamp );
-		ImGui::SliderFloat("Pressure", &specie_pressure, 0.01f, 80.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::SliderFloat("Pressure", &specie_pressure, 0.1f, 30.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
 
 
 		if(ImGui::Checkbox("High Accuracy", PengRobinsonCalculator.solver_flag()))
@@ -222,7 +222,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		ImGui::InputFloat("Input Temperature", &specie_temperature, 1.0f, 5.0f, "%.2f K",ImGuiSliderFlags_AlwaysClamp);
 		ImGui::SliderFloat("Temperature", &specie_temperature, 120, 550, "%.2f K", ImGuiSliderFlags_AlwaysClamp);
 		ImGui::InputFloat("Input Pressure", &specie_pressure, 1.0f, 5.0f, "%.2f Mpa",ImGuiSliderFlags_AlwaysClamp );
-		ImGui::SliderFloat("Pressure", &specie_pressure, 0.01f, 80.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::SliderFloat("Pressure", &specie_pressure, 0.1f, 30.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
 
 
 		if(ImGui::Checkbox("High Accuracy", PengRobinsonCalculator.solver_flag()))
@@ -352,7 +352,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		ImGui::InputFloat("Input Temperature", &specie_temperature, 1.0f, 5.0f, "%.2f K",ImGuiSliderFlags_AlwaysClamp);
 		ImGui::SliderFloat("Temperature", &specie_temperature, 120, 550, "%.2f K", ImGuiSliderFlags_AlwaysClamp);
 		ImGui::InputFloat("Input Pressure", &specie_pressure, 1.0f, 5.0f, "%.2f Mpa",ImGuiSliderFlags_AlwaysClamp );
-		ImGui::SliderFloat("Pressure", &specie_pressure, 0.01f, 80.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::SliderFloat("Pressure", &specie_pressure, 0.1f, 30.0f, "%.2f Mpa", ImGuiSliderFlags_AlwaysClamp);
 
 
 		//if(ImGui::Checkbox("High Accuracy", PengRobinsonCalculatorRef.solver_flag()));
@@ -504,10 +504,13 @@ void PengRobinson::ShowResults()
 			ImGui::TableSetupColumn("Fugacity (MPa)");
 			ImGui::TableHeadersRow();
 			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(0), 5).c_str());
-			ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(0)), 5).c_str());
-			ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(1/CalculateMolarVolume(solutions.at(0)), 5).c_str());
-			ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateFugacity(solutions.at(0)), 5).c_str());
+			if(solutions.size() > 0)
+			{
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(0), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(1/CalculateMolarVolume(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateFugacity(solutions.at(0)), 5).c_str());
+			}
 
 			if(solutions.size() > 1)
 			{
@@ -523,6 +526,10 @@ void PengRobinson::ShowResults()
 				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateFugacity(solutions.at(2)), 5).c_str());
 			}
 		}
+		//if(solutions.size() == 0)
+		//{
+		//	ImGui::TextColored(ImColor(59, 254, 225), "No Root Exist");
+		//}
 		ImGui::EndTable();
 }
 
@@ -542,7 +549,7 @@ void PengRobinson::ShowResultsReference()
 			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
 			| ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoHostExtendY;
 		//////////////////////////////////////////////////////////////////////////
-		if (ImGui::BeginTable("Roots Results", 6, flags, ImVec2(980, 100)))
+		if (ImGui::BeginTable("Roots Results", 6, flags, ImVec2(900, 100)))
 		{
 			ImGui::TableSetupScrollFreeze(false, true);
 			static bool display_headers = false;
@@ -550,15 +557,20 @@ void PengRobinson::ShowResultsReference()
 			ImGui::TableSetupColumn("Roots");
 			ImGui::TableSetupColumn("Molar Volume (cm^3/mol)");
 			ImGui::TableSetupColumn("Fugacity (MPa)");
-			ImGui::TableSetupColumn("Enthalpy Departure (J/mol)");
-			ImGui::TableSetupColumn("Internal Departure (J/mol)");
-			ImGui::TableSetupColumn("Entropy Departure (J/mol)");
+			ImGui::TableSetupColumn("H - H(ig) (J/mol)");
+			ImGui::TableSetupColumn("U - U(ig) (J/mol)");
+			ImGui::TableSetupColumn("S - S(ig) (J/k*mol)");
 			ImGui::TableHeadersRow();
 			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(0), 5).c_str());
-			ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(0)), 5).c_str());
-			ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(0)), 5).c_str());
-			ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(0)), 5).c_str());
+			if(solutions.size() > 0)
+			{
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(0), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(0)), 5).c_str());
+			}
 
 			if(solutions.size() > 1)
 			{
@@ -567,12 +579,20 @@ void PengRobinson::ShowResultsReference()
 				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(1)), 5).c_str());
 				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(1)), 5).c_str());
 				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(1)), 5).c_str());
+				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(1)), 5).c_str());
+				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(1)), 5).c_str());
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(2), 5).c_str());
 				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(2)), 5).c_str());
+				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(2)), 5).c_str());
+				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(2)), 5).c_str());
 			}
 		}
 		ImGui::EndTable();
+		//if(solutions.size() == 0)
+		//{
+		//	ImGui::TextColored(ImColor(59, 254, 225), "No Root Exist");
+		//}
 }

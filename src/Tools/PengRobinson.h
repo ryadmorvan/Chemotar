@@ -49,6 +49,9 @@ private:
 	float m_B = 0;
 
 
+
+	//Departure functions
+
 	bool solver_flag_accuracy = NULL;
 	//Heat Capacity Coefficients
 public:
@@ -101,10 +104,17 @@ public:
 
 	float CalculateEnthalpyDeparture(float Z)
 	{
-		return Z - 1 - m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/sqrtf(m_Alpha)*log((Z+(1+sqrtf(2))*m_B)/(Z+(1-sqrtf(2))*m_B)));
+		return (Z - 1 - m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/(sqrtf(m_Alpha))) *log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) ))*8.3144598*m_temperature;
+	}
+	float CalculateInternalDeparture(float Z)
+	{
+		return (- m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/(sqrtf(m_Alpha))) *log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) ))*8.3144598*m_temperature;
 	}
 
-
+	float CalculateEntropyDeparture(float Z)
+	{
+		return (log(Z - m_B) - m_A/(m_B*sqrtf(8))*m_Kappa*sqrtf(m_Tr)/sqrtf(m_Alpha)*log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) )) * 8.3144598;
+	}
 
 	void Calculate() {m_Tr = m_temperature/m_Tcritical; m_Pr = m_pressure/m_Pcritical; m_Kappa = KappaCalculation(m_AcentricFactor); m_Alpha = AlphaCalculation(); m_a= aCalculation(); m_b = bCalculation();
 		m_A = A_Calculation(); m_B = B_Calculation();
