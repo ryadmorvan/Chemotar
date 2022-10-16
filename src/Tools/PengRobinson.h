@@ -133,6 +133,8 @@ public:
 			;
 	}
 
+	void ShowResultsDeparture();
+
 	void ShowResults();
 	void ShowResultsReference();
 

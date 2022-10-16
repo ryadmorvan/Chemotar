@@ -611,8 +611,65 @@ void PengRobinson::ShowResultsReference()
 			}
 		}
 		ImGui::EndTable();
-		//if(solutions.size() == 0)
-		//{
-		//	ImGui::TextColored(ImColor(59, 254, 225), "No Root Exist");
-		//}
+}
+
+
+void PengRobinson::ShowResultsDeparture()
+{
+	enum ContentsType { CT_Text, CT_FillButton };
+		static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+		static int contents_type = CT_Text;
+		//Table Flags
+		//flags |= ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH
+		//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
+		//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
+
+		flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
+			| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
+			| ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoHostExtendY;
+		//////////////////////////////////////////////////////////////////////////
+		if (ImGui::BeginTable("Roots Results", 6, flags, ImVec2(900, 100)))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+			ImGui::TableSetupColumn("Roots");
+			ImGui::TableSetupColumn("Molar Volume (cm^3/mol)");
+			ImGui::TableSetupColumn("Fugacity (MPa)");
+			ImGui::TableSetupColumn("H - H(ig) (J/mol)");
+			ImGui::TableSetupColumn("U - U(ig) (J/mol)");
+			ImGui::TableSetupColumn("S - S(ig) (J/k*mol)");
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+			if(solutions.size() > 0)
+			{
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(0), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(0)), 5).c_str());
+				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(0)), 5).c_str());
+			}
+
+			if(solutions.size() > 1)
+			{
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(1), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(1)), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(1)), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(1)), 5).c_str());
+				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(1)), 5).c_str());
+				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(1)), 5).c_str());
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(2), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(CalculateMolarVolume(solutions.at(2)), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(CalculateFugacity(solutions.at(2)), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(2)), 5).c_str());
+				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(2)), 5).c_str());
+				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(2)), 5).c_str());
+			}
+		}
+		ImGui::EndTable();
 }
