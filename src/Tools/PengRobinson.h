@@ -10,10 +10,10 @@
 #include "../src/Tools/PhysicalProperties.h"
 
 
-
 template<typename T1, typename T2>
 std::string _Format(T1 f, T2 n);
 
+inline double powerup(double temperature2, double temperature1, double power);
 
 #define GAS_CONSTANT 8.3144598
 
@@ -50,6 +50,12 @@ private:
 
 	float m_Z_Ref = 0;
 
+	//Ideal Change
+	float m_EnthalpyChangeIdeal = 0;
+	float m_InternalEnergyChangeIdeal = 0;
+	float m_EntropyChangeIdeal = 0;
+
+
 	//Departure functions
 
 	bool solver_flag_accuracy = NULL;
@@ -57,6 +63,7 @@ private:
 public:
 	float HeatCapacityCoefficients[5] = {1, 0, 0,0, 0};
 	PengRobinson() {m_properties = PhysicalProperties(PhysicalProperties::type::Elliot);}
+	//PengRobinson(float temperature, float pressure) {m_temperature = temperature; m_pressure = pressure;}
 	static void PengRobinsonCalculator(bool* p_open);
 	void setCriticalTemperature(float value) {m_Tcritical = value;}
 	void setCriticalPressure(float value) {m_Pcritical = value;}
@@ -88,6 +95,9 @@ public:
 	}
 	float* returnTemperaturePointer() {return &m_temperature;}
 	float* returnPressurePointer() {return &m_pressure;}
+	float returnTemperature() {return m_temperature;}
+	float returnPressure() {return m_pressure;}
+	float returnZref() { return m_Z_Ref;}
 	float KappaCalculation(float AcentricFactor) {return (0.37464 + 1.54226*AcentricFactor - 0.26992*AcentricFactor*AcentricFactor);}
 	float AlphaCalculation() {return powf(1+ KappaCalculation(m_AcentricFactor)*(1-powf(m_Tr, 0.5)), 2);}
 	float aCalculation() {return AlphaCalculation() * 0.45723553*GAS_CONSTANT*GAS_CONSTANT*m_Tcritical*m_Tcritical/(m_Pcritical*pow(10, 6));}
@@ -108,16 +118,16 @@ public:
 
 	float CalculateEnthalpyDeparture(float Z)
 	{
-		return (Z - 1 - m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/(sqrtf(m_Alpha))) *log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) ))*8.3144598*m_temperature;
+		return (Z - 1 - m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/(sqrtf(m_Alpha))) *log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) ))*GAS_CONSTANT*m_temperature;
 	}
 	float CalculateInternalDeparture(float Z)
 	{
-		return (- m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/(sqrtf(m_Alpha))) *log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) ))*8.3144598*m_temperature;
+		return (- m_A/(m_B*sqrtf(8))*(1+m_Kappa*sqrtf(m_Tr)/(sqrtf(m_Alpha))) *log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) ))*GAS_CONSTANT*m_temperature;
 	}
 
 	float CalculateEntropyDeparture(float Z)
 	{
-		return (log(Z - m_B) - m_A/(m_B*sqrtf(8))*m_Kappa*sqrtf(m_Tr)/sqrtf(m_Alpha)*log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) )) * 8.3144598;
+		return (log(Z - m_B) - m_A/(m_B*sqrtf(8))*m_Kappa*sqrtf(m_Tr)/sqrtf(m_Alpha)*log( (Z+(1+sqrtf(2))*m_B) / (Z+(1-sqrtf(2))*m_B) )) * GAS_CONSTANT;
 	}
 
 	void Calculate() {m_Tr = m_temperature/m_Tcritical; m_Pr = m_pressure/m_Pcritical; m_Kappa = KappaCalculation(m_AcentricFactor); m_Alpha = AlphaCalculation(); m_a= aCalculation(); m_b = bCalculation();
@@ -134,6 +144,39 @@ public:
 	}
 
 	void ShowResultsDeparture();
+
+	void IdealGasEnthalpyChange(float temperature1, float temperature2)
+	{
+			float Enthalpy = 0;
+			Enthalpy = HeatCapacityCoefficients[0] * powerup(temperature2, temperature1, 1) + HeatCapacityCoefficients[1] * powerup(temperature2, temperature1, 2) / 2 + HeatCapacityCoefficients[2] * powerup(temperature2, temperature1, 3) / 3 + HeatCapacityCoefficients[3] * powerup(temperature2, temperature1, 4) / 4 + HeatCapacityCoefficients[4] * powerup(temperature2, temperature1, 5) / 5;
+			m_EnthalpyChangeIdeal = Enthalpy;
+	}
+	void IdealGasEntropyChange(float temperature1, float temperature2, float pressure1, float pressure2)
+	{
+		float Entropy = 0;
+		Entropy = HeatCapacityCoefficients[0]*log(temperature2/temperature1) + HeatCapacityCoefficients[1] * powerup(temperature2, temperature1, 1) / 1 + HeatCapacityCoefficients[2] * powerup(temperature2, temperature1, 2) / 2 + HeatCapacityCoefficients[3] * powerup(temperature2, temperature1, 3) / 3 + HeatCapacityCoefficients[4] * powerup(temperature2, temperature1, 4) / 4;
+		Entropy = Entropy - GAS_CONSTANT*log(pressure2/pressure1);
+		m_EntropyChangeIdeal = Entropy;
+	}
+
+	void IdealGasInternalEnergyChange(float temperature1, float temperature2)
+	{
+		float InternalEnergy = 0;
+		m_InternalEnergyChangeIdeal = m_EnthalpyChangeIdeal - GAS_CONSTANT*(temperature2-temperature1);
+	}
+
+
+
+	//Shows the change in functions with respect to reference state
+	void CalculateChange(PengRobinson& reference);
+
+	//Show results of change
+	void ShowIdealGasChange(PengRobinson &reference);
+	void ShowResultsChange(PengRobinson &reference);
+
+
+
+	bool ZrefStatus() { m_Z_Ref == 0 ? false : true;}
 
 	void ShowResults();
 	void ShowResultsReference();

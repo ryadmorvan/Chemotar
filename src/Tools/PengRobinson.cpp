@@ -3,7 +3,7 @@
 void PengRobinson::PengRobinsonCalculator(bool* p_open)
 {
 	ImGui::SetNextWindowSize(ImVec2(1200, 728), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("Peng-Robinson EOS Calculator", p_open))
+	if (!ImGui::Begin("Peng-Robinson EOS Calculator", p_open, ImGuiWindowFlags_NoMove))
 	{
 		return;
 	}
@@ -16,6 +16,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 {
 	static PengRobinson PengRobinsonCalculator;
 	static PengRobinson PengRobinsonCalculatorRef;
+	static bool once = []() { PengRobinsonCalculatorRef.setPressure(0.1f); PengRobinsonCalculatorRef.setTemperature(273.15); return true; } ();
 	static const char* current_item = "Choose";
 
 	if(ImGui::BeginTabItem("Compressibility Factor"))
@@ -157,6 +158,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		//This will return to us the value from our m_properties.returnTable at certain table type (type::PhysicalProperty) at certain row and colums
 		static bool ShowResults = false;
 		static bool ShowExtraDetails = false;
+		static bool ShowIdealGasChange = false;
 		static std::string final_result = "";
 		ImGui::TextColored(ImColor(120, 240, 80, 220), "Compounds");
 		if(ImGui::BeginCombo("Specie", current_item, ImGuiComboFlags_HeightLarge)) // The second parameter is the label previewed before opening the combo.
@@ -173,6 +175,12 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 						PengRobinsonCalculator.setCriticalPressure(std::stof(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(2)));
 						PengRobinsonCalculator.setAcentricFactor(std::stof(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(3)));
 						PengRobinsonCalculator.setSpecieName(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0));
+
+						//will setup everything for our reference
+						PengRobinsonCalculatorRef.setCriticalTemperature(std::stof(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(1)));
+						PengRobinsonCalculatorRef.setCriticalPressure(std::stof(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(2)));
+						PengRobinsonCalculatorRef.setAcentricFactor(std::stof(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(3)));
+						PengRobinsonCalculatorRef.setSpecieName(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0));
 						bool success = false;
 						for(int i = 0; i < PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->size(); ++i)
 						{
@@ -183,6 +191,14 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 								PengRobinsonCalculator.HeatCapacityCoefficients[2] = std::stod(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(3));
 								PengRobinsonCalculator.HeatCapacityCoefficients[3] = std::stod(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(4));
 								PengRobinsonCalculator.HeatCapacityCoefficients[4] = std::stod(PengRobinsonCalculator.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(5));
+
+
+								//for our reference
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[0] = std::stod(PengRobinsonCalculatorRef.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(1));
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[1] = std::stod(PengRobinsonCalculatorRef.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(2));
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[2] = std::stod(PengRobinsonCalculatorRef.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(3));
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[3] = std::stod(PengRobinsonCalculatorRef.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(4));
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[4] = std::stod(PengRobinsonCalculatorRef.m_properties.returnTable(PhysicalProperties::type::HeatCapaicty)->at(i).at(5));
 								success = true;
 							}
 							if(success == true)
@@ -193,6 +209,10 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 							{PengRobinsonCalculator.HeatCapacityCoefficients[0] = 0; PengRobinsonCalculator.HeatCapacityCoefficients[1] = 0;
 								PengRobinsonCalculator.HeatCapacityCoefficients[2] = 0; PengRobinsonCalculator.HeatCapacityCoefficients[3] = 0;
 								PengRobinsonCalculator.HeatCapacityCoefficients[4] = 0;
+
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[0] = 0; PengRobinsonCalculatorRef.HeatCapacityCoefficients[1] = 0;
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[2] = 0; PengRobinsonCalculatorRef.HeatCapacityCoefficients[3] = 0;
+								PengRobinsonCalculatorRef.HeatCapacityCoefficients[4] = 0;
 							}
 						}
 						return;
@@ -217,8 +237,8 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		}
 	if(!(PengRobinsonCalculator.HeatCapacityCoefficients[0] == 0))
 	{
-		static float specie_temperature = 0;
-		static float specie_pressure = 0;
+		static float specie_temperature = 273.15;
+		static float specie_pressure = 1.5;
 		ImGui::InputFloat("Input Temperature", &specie_temperature, 1.0f, 5.0f, "%.2f K",ImGuiSliderFlags_AlwaysClamp);
 		ImGui::SliderFloat("Temperature", &specie_temperature, 120, 550, "%.2f K", ImGuiSliderFlags_AlwaysClamp);
 		ImGui::InputFloat("Input Pressure", &specie_pressure, 1.0f, 5.0f, "%.2f Mpa",ImGuiSliderFlags_AlwaysClamp );
@@ -232,12 +252,17 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		if(ImGui::Checkbox("Show Extra Details", &ShowExtraDetails))
 		{
 		}
+		ImGui::SameLine();
+		if(ImGui::Checkbox("Show Ideal Gas Change", &ShowIdealGasChange))
+		{
+		}
 
 		if(ImGui::Button("Calculate"))
 		{
 			PengRobinsonCalculator.setTemperature(specie_temperature);
 			PengRobinsonCalculator.setPressure(specie_pressure);
 			PengRobinsonCalculator.Calculate();
+			PengRobinsonCalculator.CalculateChange(PengRobinsonCalculatorRef);
 			ShowResults = true;
 		}
 
@@ -245,7 +270,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		if(ShowResults)
 		{
 			ImGui::Separator();
-			PengRobinsonCalculator.ShowResults();
+			PengRobinsonCalculator.ShowResultsDeparture();
 			if(ShowExtraDetails)
 			{
 				ImGui::SameLine();
@@ -256,7 +281,21 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		if(ShowResults)
 			ImGui::TextColored(ImColor(100, 160, 100, 150), "Stable Root has a lower fugacity");
 	
-	
+		//Checks if our reference has roots or not
+		if(PengRobinsonCalculatorRef.returnZref() != 0)
+		{
+			//if it does it will calculate the changes with respect to departure functions, ideal gas and reference state
+			PengRobinsonCalculator.ShowResultsChange(PengRobinsonCalculatorRef);
+		}
+		else
+		{
+			ImGui::TextColored(ImColor(100, 160, 100, 150), "You need to choose a reference root from the (Reference) Tab");
+		}
+
+		//Show Ideal Gas Changes
+		if(ShowIdealGasChange)
+			PengRobinsonCalculator.ShowIdealGasChange(PengRobinsonCalculatorRef);
+
 	}
 		ImGui::EndTabItem();
 	}
@@ -385,8 +424,9 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 		//ImGui::Separator();
 		if(ShowResults)
 		{
-			ImGui::TextColored(ImColor(100, 160, 100, 150), "Stable Root has a lower fugacity");
 			//Prompts user to choose the appropriate roots to use for calculations
+			ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)), "Choose a reference root");
+			ImGui::TextColored(ImColor(100, 160, 100, 150), "Stable Root has a lower fugacity");
 			if(ImGui::BeginCombo("Root", current_root, ImGuiComboFlags_HeightLarge))
 			{ // You can store your selection however you want, outside or inside your objects
 				for(float Z : *PengRobinsonCalculatorRef.returnSolutions())
@@ -496,6 +536,18 @@ if(solver_flag_accuracy == true)
 	end_process:
 	return solutions;
 }
+
+//Calculates the change for our departure function
+void PengRobinson::CalculateChange(PengRobinson& reference)
+{
+	IdealGasEnthalpyChange(reference.returnTemperature(), m_temperature);
+	IdealGasEntropyChange(reference.returnTemperature(), m_temperature, reference.returnPressure(), m_pressure);
+	IdealGasInternalEnergyChange(reference.returnTemperature(), m_temperature);
+}
+
+
+
+
 
 void PengRobinson::ShowResults()
 {
@@ -669,6 +721,111 @@ void PengRobinson::ShowResultsDeparture()
 				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateEnthalpyDeparture(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(2)), 5).c_str());
+			}
+		}
+		ImGui::EndTable();
+}
+
+
+
+void PengRobinson::ShowIdealGasChange(PengRobinson &reference)
+{
+	enum ContentsType { CT_Text, CT_FillButton };
+		static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+		static int contents_type = CT_Text;
+		//Table Flags
+		//flags |= ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH
+		//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
+		//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
+
+		flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
+			| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
+			| ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoHostExtendY;
+		//////////////////////////////////////////////////////////////////////////
+		ImGui::Separator();
+		ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)),"Ideal Gas Changes");
+		if (ImGui::BeginTable("Ideal Gas Change", 5, flags, ImVec2(800, 50)))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+			ImGui::TableSetupColumn("Reference Temperature");
+			ImGui::TableSetupColumn("Final Temperature");
+			ImGui::TableSetupColumn("H - H(R) (J/mol)");
+			ImGui::TableSetupColumn("U - U(R) (J/mol)");
+			ImGui::TableSetupColumn("S - S(R) (J/k*mol)");
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+
+			ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(reference.returnTemperature(), 5).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(m_temperature, 5).c_str());
+			ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_EnthalpyChangeIdeal, 5).c_str());
+			ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(m_InternalEnergyChangeIdeal, 5).c_str());
+			ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_EntropyChangeIdeal, 5).c_str());
+
+		}
+		ImGui::EndTable();
+}
+
+
+
+void PengRobinson::ShowResultsChange(PengRobinson &reference)
+{
+	enum ContentsType { CT_Text, CT_FillButton };
+		static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+		static int contents_type = CT_Text;
+		//Table Flags
+		//flags |= ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH
+		//	| ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
+		//flags |= ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable;
+
+		auto calculateChange = [](float Departure1, float Departure2, float IdealGasChange)
+		{
+			return Departure2 + IdealGasChange - Departure1;
+		};
+
+
+		flags |= ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable
+			| ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
+			| ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoHostExtendY;
+		//////////////////////////////////////////////////////////////////////////
+		ImGui::Separator();
+		ImGui::TextColored(ImColor(ImVec4(0.898f, 0.845f, 0.710f, 0.95f)),"Fluid changes from state 1 to state 2");
+		if (ImGui::BeginTable("Changes", 4, flags, ImVec2(600, 100)))
+		{
+			ImGui::TableSetupScrollFreeze(false, true);
+			static bool display_headers = false;
+			static int contents_type = CT_Text;
+			ImGui::TableSetupColumn("Roots");
+			ImGui::TableSetupColumn("H2 - H1 (J/mol)");
+			ImGui::TableSetupColumn("U2 - U1 (J/mol)");
+			ImGui::TableSetupColumn("S2 - S1 (J/k*mol)");
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+			if(solutions.size() > 0)
+			{
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(0), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(calculateChange(reference.CalculateEnthalpyDeparture(reference.returnZref()), CalculateEnthalpyDeparture(solutions.at(0)), m_EnthalpyChangeIdeal), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(calculateChange(reference.CalculateInternalDeparture(reference.returnZref()), CalculateInternalDeparture(solutions.at(0)), m_InternalEnergyChangeIdeal), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(calculateChange(reference.CalculateEntropyDeparture(reference.returnZref()), CalculateEntropyDeparture(solutions.at(0)), m_EntropyChangeIdeal), 5).c_str());
+			}
+
+			if(solutions.size() > 1)
+			{
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(1), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(calculateChange(reference.CalculateEnthalpyDeparture(reference.returnZref()), CalculateEnthalpyDeparture(solutions.at(1)), m_EnthalpyChangeIdeal), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(calculateChange(reference.CalculateInternalDeparture(reference.returnZref()), CalculateInternalDeparture(solutions.at(1)), m_InternalEnergyChangeIdeal), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(calculateChange(reference.CalculateEntropyDeparture(reference.returnZref()), CalculateEntropyDeparture(solutions.at(1)), m_EntropyChangeIdeal), 5).c_str());
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0); ImGui::Text(_Format(solutions.at(2), 5).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(_Format(calculateChange(reference.CalculateEnthalpyDeparture(reference.returnZref()), CalculateEnthalpyDeparture(solutions.at(2)), m_EnthalpyChangeIdeal), 5).c_str());
+				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(calculateChange(reference.CalculateInternalDeparture(reference.returnZref()), CalculateInternalDeparture(solutions.at(2)), m_InternalEnergyChangeIdeal), 5).c_str());
+				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(calculateChange(reference.CalculateEntropyDeparture(reference.returnZref()), CalculateEntropyDeparture(solutions.at(2)), m_EntropyChangeIdeal), 5).c_str());
 			}
 		}
 		ImGui::EndTable();
