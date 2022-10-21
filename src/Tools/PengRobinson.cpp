@@ -282,7 +282,7 @@ if(ImGui::BeginTabBar("PengRobinSon",tab_bar_flags))
 			ImGui::TextColored(ImColor(100, 160, 100, 150), "Stable Root has a lower fugacity");
 	
 		//Checks if our reference has roots or not
-		if(PengRobinsonCalculatorRef.returnZref() != 0)
+		if((PengRobinsonCalculatorRef.returnZref() != 0) && ShowResults)
 		{
 			//if it does it will calculate the changes with respect to departure functions, ideal gas and reference state
 			PengRobinsonCalculator.ShowResultsChange(PengRobinsonCalculatorRef);

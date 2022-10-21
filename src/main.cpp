@@ -131,7 +131,7 @@ int main()
 		
 		ImGui::SFML::Update(window, deltaClock.restart());
 
-		ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
 		//Flags that will be used for docking
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
