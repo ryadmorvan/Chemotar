@@ -1,12 +1,14 @@
 #include "PengRobinson.h"
 
+
 void PengRobinson::PengRobinsonCalculator(bool* p_open)
 {
 	ImGui::SetNextWindowSize(ImVec2(1200, 728), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("Peng-Robinson EOS Calculator", p_open, ImGuiWindowFlags_NoMove))
+	if (!ImGui::Begin("Peng-Robinson EOS Calculator", p_open))
 	{
 		return;
 	}
+
 	//We create our calculator object which also has our "PhysicalProperties" object class
 	//We access our tables through accessing our m_properties object
 	//After, we call "returnTable" function with the arguments "PhysicalProperties::type::PhysicalProperty" or "PhysicalProperties::type::HeatCapacity" for our heat capacity table
@@ -597,12 +599,13 @@ void PengRobinson::ShowResults()
 				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(1/CalculateMolarVolume(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(CalculateFugacity(solutions.at(2)), 5).c_str());
 			}
+			ImGui::EndTable();
 		}
+
 		//if(solutions.size() == 0)
 		//{
 		//	ImGui::TextColored(ImColor(59, 254, 225), "No Root Exist");
 		//}
-		ImGui::EndTable();
 }
 
 void PengRobinson::ShowResultsReference()
@@ -661,8 +664,8 @@ void PengRobinson::ShowResultsReference()
 				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(2)), 5).c_str());
 			}
+			ImGui::EndTable();
 		}
-		ImGui::EndTable();
 }
 
 
@@ -722,8 +725,8 @@ void PengRobinson::ShowResultsDeparture()
 				ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(CalculateInternalDeparture(solutions.at(2)), 5).c_str());
 				ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(CalculateEntropyDeparture(solutions.at(2)), 5).c_str());
 			}
+			ImGui::EndTable();
 		}
-		ImGui::EndTable();
 }
 
 
@@ -764,9 +767,8 @@ void PengRobinson::ShowIdealGasChange(PengRobinson &reference)
 			ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_EnthalpyChangeIdeal, 5).c_str());
 			ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(m_InternalEnergyChangeIdeal, 5).c_str());
 			ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_EntropyChangeIdeal, 5).c_str());
-
+			ImGui::EndTable();
 		}
-		ImGui::EndTable();
 }
 
 
@@ -827,6 +829,6 @@ void PengRobinson::ShowResultsChange(PengRobinson &reference)
 				ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(calculateChange(reference.CalculateInternalDeparture(reference.returnZref()), CalculateInternalDeparture(solutions.at(2)), m_InternalEnergyChangeIdeal), 5).c_str());
 				ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(calculateChange(reference.CalculateEntropyDeparture(reference.returnZref()), CalculateEntropyDeparture(solutions.at(2)), m_EntropyChangeIdeal), 5).c_str());
 			}
-		}
 		ImGui::EndTable();
+		}
 }
