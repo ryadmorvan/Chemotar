@@ -671,7 +671,7 @@ void PengRobinson::ShowResultsReference()
 
 void PengRobinson::ShowResultsDeparture()
 {
-	enum ContentsType { CT_Text, CT_FillButton };
+		enum ContentsType { CT_Text, CT_FillButton };
 		static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 		static int contents_type = CT_Text;
 		//Table Flags
