@@ -36,12 +36,13 @@ private:
 	bool ShowPengRobin = false;
 	bool ShowPhysicalProperties = false;
 	bool ShowVaporPressureCalculator = false;
+	bool ShowMixtureAnalysis = false;
 
 
 	//AddTable pointer
 public:
 	Chemotar() : _AddTable(nullptr), _Settings(nullptr), heat_capacity_calculator(nullptr), ViscosityCalc(nullptr),
-	SteamTableSimulation(nullptr), IdealGasLaw(nullptr), BoilerSimulation(nullptr), ShowInfo(nullptr) {
+	SteamTableSimulation(nullptr), IdealGasLaw(nullptr), BoilerSimulation(nullptr), ShowInfo(nullptr), MixtureAnalysis(nullptr) {
 	}
 
 	void (*_AddTable)(std::string&, int);
@@ -57,6 +58,7 @@ public:
 	void (*Peng_Robin_Calculator)(bool* p_open);
 	void (*PhysicalProperties)(bool*);
 	void (*VaporPressureCalculator)(bool*);
+	void (*MixtureAnalysis)(bool*);
 	//Main methods that will be used to run our program
 	void run(ImFont* font);
 	int MainMenu(ImFont* font, std::string file_path);

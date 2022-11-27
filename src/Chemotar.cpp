@@ -55,6 +55,9 @@ int Chemotar::MainMenu(ImFont* font, std::string file_path)
 			if(ImGui::MenuItem("Vapor Pressure Calculator", NULL, &ShowVaporPressureCalculator))
 			{
 			}
+			if(ImGui::MenuItem("Mixture Analysis", NULL, &ShowMixtureAnalysis))
+			{
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Simulations"))
@@ -170,6 +173,12 @@ void Chemotar::run(ImFont* font)
 	{
 		ImGui::PushFont(font);
 		VaporPressureCalculator(&ShowVaporPressureCalculator);
+		ImGui::PopFont();
+	}
+	if(ShowMixtureAnalysis)
+	{
+		ImGui::PushFont(font);
+		MixtureAnalysis(&ShowMixtureAnalysis);
 		ImGui::PopFont();
 	}
 }
