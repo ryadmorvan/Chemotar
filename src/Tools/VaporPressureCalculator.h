@@ -16,6 +16,7 @@ std::string _Format(T1 f, T2 n);
 class VaporPressureCalculator
 {
 	std::string filePath;
+public:
 	std::unique_ptr<std::vector<std::array<std::string, 6>>> AntoineConstants;
 
 	struct VaporPressureCalculate;

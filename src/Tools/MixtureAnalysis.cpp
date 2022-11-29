@@ -9,23 +9,27 @@ void MixtureAnalysis::MixtureAnalyisTool(bool* p_open)
 	}
 
 	static MixtureAnalysis mixtures;
-
 	static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 	if(ImGui::BeginTabBar("Mixture Analysis", tab_bar_flags))
 	{
+
 		if(ImGui::BeginTabItem("Binary Mixture"))
 		{
-			mixtures.SpeciesList();
-			if(ImGui::Button("Add Specie"))
+			mixtures.VaporPressureCalculationMethod();
+			if(!(std::get<1>(mixtures.VaporPressureMethod()) == MixtureAnalysis::VaporPressure::NONE))
 			{
-				mixtures.AddCurrentSpecie();
+				mixtures.SpeciesList();
+				if(ImGui::Button("Add Specie"))
+				{
+					mixtures.AddCurrentSpecie();
+				}
+				ImGui::SameLine();
+				if(ImGui::Button("Reset Components"))
+				{
+					mixtures.ResetCurrentComponents();
+				}
+				mixtures.ShowCurrentComponents();
 			}
-			ImGui::SameLine();
-			if(ImGui::Button("Reset Components"))
-			{
-				mixtures.ResetCurrentComponents();
-			}
-			mixtures.ShowCurrentComponents();
 			ImGui::EndTabItem();
 		}
 		if(ImGui::BeginTabItem("Multi-Component Mixture"))
@@ -37,30 +41,52 @@ void MixtureAnalysis::MixtureAnalyisTool(bool* p_open)
 
 void MixtureAnalysis::SpeciesList()
 {
-	if(ImGui::BeginCombo("Specie", current_specie, ImGuiComboFlags_HeightLarge))
+	if(std::get<1>(Method) == VaporPressure::SHORTCUT)
 	{
-		for(unsigned n = 0; n < m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->size(); n++)
+		if(ImGui::BeginCombo("Specie", current_specie, ImGuiComboFlags_HeightLarge))
 		{
-			bool is_selected = (current_specie == m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0).c_str());
-			if(ImGui::Selectable(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0).c_str(), is_selected))
+			for(unsigned n = 0; n < m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->size(); n++)
 			{
-				current_specie = m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0).c_str();
+				bool is_selected = (current_specie == m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0).c_str());
+				if(ImGui::Selectable(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0).c_str(), is_selected))
+				{
+					current_specie = m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0).c_str();
+				}
 			}
-		}
 		ImGui::EndCombo();
+		}
+	}
+	if(std::get<1>(Method) == VaporPressure::ANTOINE)
+	{
+		
+		if(ImGui::BeginCombo("Specie", current_specie, ImGuiComboFlags_HeightLarge))
+		{
+			for(unsigned n = 0; n < AntoineCalculator.AntoineConstants->size(); n++)
+			{
+				bool is_selected = (current_specie == AntoineCalculator.AntoineConstants->at(n).at(0).c_str()); //Check if we have chose it
+				if(ImGui::Selectable(AntoineCalculator.AntoineConstants->at(n).at(0).c_str(), is_selected))
+				{
+					current_specie = AntoineCalculator.AntoineConstants->at(n).at(0).c_str();
+				}
+			}
+			ImGui::EndCombo();
+		}
 	}
 }
 
 void MixtureAnalysis::AddCurrentSpecie()
 {
-	for(unsigned n = 0; n < m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->size(); n++)
+	if(std::get<1>(Method) == VaporPressure::SHORTCUT)
 	{
-		if(current_specie == m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0))
+		for(unsigned n = 0; n < m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->size(); n++)
 		{
-			Components.push_back(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0));
-			m_CriticalTemperatures.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(1)));
-			m_CriticalPressures.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(2)));
-			m_AcentricFactors.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(3)));
+			if(current_specie == m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0))
+			{
+				Components.push_back(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(0));
+				m_CriticalTemperatures.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(1)));
+				m_CriticalPressures.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(2)));
+				m_AcentricFactors.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(3)));
+			}
 		}
 	}
 }
@@ -81,30 +107,33 @@ void MixtureAnalysis::ShowCurrentComponents()
 			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
 			| ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoHostExtendY;
 		//////////////////////////////////////////////////////////////////////////
-		if(ImGui::BeginTable("Components", 5, flags, ImVec2(900, 120)))
+		if(std::get<1>(Method) == VaporPressure::SHORTCUT)
 		{
-			ImGui::TableSetupScrollFreeze(false, true);
-			static bool display_headers = false;
-			static int contents_type = CT_Text;
-			ImGui::TableSetupColumn("Component");
-			ImGui::TableSetupColumn("Name");
-			ImGui::TableSetupColumn("Temperature Critical");
-			ImGui::TableSetupColumn("Pressure Critical");
-			ImGui::TableSetupColumn("Acentric Factor");
-			ImGui::TableHeadersRow();
-			if(Components.size() > 0)
+			if(ImGui::BeginTable("Components", 5, flags, ImVec2(900, 120)))
 			{
-				for(unsigned n = 0; n < Components.size(); n++)
+				ImGui::TableSetupScrollFreeze(false, true);
+				static bool display_headers = false;
+				static int contents_type = CT_Text;
+				ImGui::TableSetupColumn("Component");
+				ImGui::TableSetupColumn("Name");
+				ImGui::TableSetupColumn("Temperature Critical");
+				ImGui::TableSetupColumn("Pressure Critical");
+				ImGui::TableSetupColumn("Acentric Factor");
+				ImGui::TableHeadersRow();
+				if(Components.size() > 0)
 				{
-					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text(std::to_string((n+1)).c_str());
-					ImGui::TableSetColumnIndex(1); ImGui::Text(Components.at(n).c_str());
-					ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_CriticalTemperatures.at(n), 4).c_str());
-					ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(m_CriticalPressures.at(n), 4).c_str());
-					ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_AcentricFactors.at(n), 4).c_str());
+					for(unsigned n = 0; n < Components.size(); n++)
+					{
+						ImGui::TableNextRow();
+						ImGui::TableSetColumnIndex(0); ImGui::Text(std::to_string((n+1)).c_str());
+						ImGui::TableSetColumnIndex(1); ImGui::Text(Components.at(n).c_str());
+						ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_CriticalTemperatures.at(n), 4).c_str());
+						ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(m_CriticalPressures.at(n), 4).c_str());
+						ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_AcentricFactors.at(n), 4).c_str());
+					}
 				}
-			}
 			ImGui::EndTable();
+			}	
 		}
 
 }
@@ -115,4 +144,24 @@ void MixtureAnalysis::ResetCurrentComponents()
 	m_CriticalTemperatures.clear();
 	m_CriticalPressures.clear();
 	m_AcentricFactors.clear();
+}
+
+void MixtureAnalysis::VaporPressureCalculationMethod()
+{
+	if(ImGui::BeginCombo("Methods", std::get<0>(Method).c_str(), ImGuiComboFlags_HeightLarge))
+	{
+		for(unsigned n = 0; n < methods.size(); n++)
+		{
+			bool is_selected = (std::get<0>(Method).c_str() == methods.at(n));
+			if(ImGui::Selectable(methods.at(n).c_str(), is_selected))
+			{
+				std::get<0>(Method) = methods.at(n);
+				if(n == 0) {std::get<1>(Method) = VaporPressure::ANTOINE;} else if(n == 1) {std::get<1>(Method) = VaporPressure::SHORTCUT;}
+				else {std::get<1>(Method) = VaporPressure::NONE;}
+				current_specie = "Choose";
+				ResetCurrentComponents();
+			}
+		}
+		ImGui::EndCombo();
+	}
 }

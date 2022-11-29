@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 #include "../src//Tools/PhysicalProperties.h"
-
+#include "../src//Tools/VaporPressureCalculator.h"
 
 template<typename T1, typename T2>
 std::string _Format(T1 f, T2 n);
@@ -22,6 +22,8 @@ class MixtureAnalysis
 	friend PhysicalProperties;
 private:
 	PhysicalProperties m_properties;
+	VaporPressureCalculator AntoineCalculator;
+
 	std::vector<std::string> Components;
 	std::vector<float> liquidFraction_Components;
 	std::vector<float> vaporFraction_Components;
@@ -29,7 +31,12 @@ private:
 	std::vector<float> m_CriticalTemperatures;
 	std::vector<float> m_CriticalPressures;
 	std::vector<float> m_AcentricFactors;
+	enum class VaporPressure
+	{ ANTOINE, SHORTCUT, NONE};
+	std::array<std::string, 2> methods {"Antoine Vapor Pressure", "Shortcut Vapor Pressure"};
 	const char* current_specie = "Choose";
+	std::tuple<std::string, VaporPressure> Method = std::make_tuple<std::string, VaporPressure>("Choose", VaporPressure::NONE);
+	//VaporPressure Method = VaporPressure::NONE;
 public:
 	static void MixtureAnalyisTool(bool* p_open);
 	MixtureAnalysis() {m_properties = PhysicalProperties(PhysicalProperties::type::Elliot);}
@@ -37,5 +44,8 @@ public:
 	void AddCurrentSpecie();
 	void ShowCurrentComponents();
 	void ResetCurrentComponents();
+	void VaporPressureCalculationMethod();
+
+	std::tuple<std::string, VaporPressure> VaporPressureMethod() {return Method;}
 };
 
