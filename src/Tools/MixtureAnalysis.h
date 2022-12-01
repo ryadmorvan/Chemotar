@@ -27,6 +27,10 @@ private:
 	float m_temperature = 150;
 	float m_pressure = 1;
 
+	enum class State
+	{
+		BUBBLEPOINT, DEWPOINT
+	};
 
 	std::vector<std::string> Components;
 	std::vector<float> liquidFraction_Components;
@@ -37,6 +41,7 @@ private:
 	std::vector<float> m_AcentricFactors;
 
 	std::vector<float> m_VaporPressures;
+	State current_state = State::BUBBLEPOINT;
 
 	enum class VaporPressure
 	{ ANTOINE, SHORTCUT, NONE};
@@ -47,6 +52,7 @@ private:
 public:
 	static void MixtureAnalyisTool(bool* p_open);
 	MixtureAnalysis() {m_properties = PhysicalProperties(PhysicalProperties::type::Elliot);}
+	void InputMolarFractions(std::tuple<bool, unsigned int> &change_molefraction);
 	void SpeciesList();
 	void AddCurrentSpecie();
 	void ShowCurrentComponents();

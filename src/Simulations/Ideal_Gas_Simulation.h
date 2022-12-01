@@ -90,6 +90,7 @@ static void IdealGasLaw(bool* p_open)
             current_process = "Constant Heat";
             current_state = Piston::process::constant_heat;
         }
+        ImGui::EndCombo();
     }
     //Set which sliderfloat will be used depending on the user choice of simulation
     if ((current_state == Piston::process::constant_pressure) or (current_state == Piston::process::constant_volume))

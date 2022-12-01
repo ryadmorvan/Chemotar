@@ -40,6 +40,24 @@ void MixtureAnalysis::MixtureAnalyisTool(bool* p_open)
 	}
 }
 
+void MixtureAnalysis::InputMolarFractions(std::tuple<bool, unsigned int> &change_molefraction)
+{
+	if(std::get<0>(change_molefraction))
+	{
+		if(current_state == State::BUBBLEPOINT)
+		{
+			ImGui::OpenPopup("Input Mole Fraction");
+			if(ImGui::BeginPopup("Input Mole Fraction"))
+			{
+				ImGui::TextColored(ImColor(59, 254, 225), "Input Mole Fraction");
+				ImGui::InputFloat("", &liquidFraction_Components.at(std::get<1>(change_molefraction)), 0.01f, 0.02f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+				if(ImGui::Button("Set")) {			change_molefraction = std::make_pair(false, 0);}
+			}
+
+		}
+	}
+}
+
 void MixtureAnalysis::SpeciesList()
 {
 	if(std::get<1>(Method) == VaporPressure::SHORTCUT)
@@ -87,7 +105,7 @@ void MixtureAnalysis::AddCurrentSpecie()
 				m_CriticalTemperatures.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(1)));
 				m_CriticalPressures.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(2)));
 				m_AcentricFactors.push_back(std::stof(m_properties.returnTable(PhysicalProperties::type::PhysicalProperty)->at(n).at(3)));
-				m_VaporPressures.push_back(0);
+				m_VaporPressures.push_back(0);	liquidFraction_Components.push_back(0); vaporFraction_Components.push_back(0);
 			}
 		}
 		CalculateVaporPressures();
@@ -109,21 +127,26 @@ void MixtureAnalysis::ShowCurrentComponents()
 			| ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBody
 			| ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
 			| ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoHostExtendY;
+
+		static std::tuple<bool, unsigned int> changevalue;
+		static bool once = []() { changevalue = std::make_tuple<bool, unsigned>(false, 0); return true; } ();
+
 		//////////////////////////////////////////////////////////////////////////
 		if(std::get<1>(Method) == VaporPressure::SHORTCUT)
 		{
-			if(ImGui::BeginTable("Components", 6, flags, ImVec2(1000, 120)))
+			if(ImGui::BeginTable("Components", 4, flags, ImVec2(1000, 200)))
 			{
 				ImGui::TableSetupScrollFreeze(false, true);
 				static bool display_headers = false;
 				static int contents_type = CT_Text;
 				ImGui::TableSetupColumn("Component");
 				ImGui::TableSetupColumn("Name");
-				ImGui::TableSetupColumn("Temperature Critical (K)");
-				ImGui::TableSetupColumn("Pressure Critical (MPa)");
-				ImGui::TableSetupColumn("Acentric Factor");
+				//ImGui::TableSetupColumn("Temperature Critical (K)");
+				//ImGui::TableSetupColumn("Pressure Critical (MPa)");
+				//ImGui::TableSetupColumn("Acentric Factor");
 				std::string VaporPressure = "Vapor Pressure @" + _Format(m_temperature, 4) + "K (Mpa)";
 				ImGui::TableSetupColumn(VaporPressure.c_str());
+				ImGui::TableSetupColumn("Mole Fraction", ImGuiTableColumnFlags_WidthFixed, 0.0f);
 				ImGui::TableHeadersRow();
 				if(Components.size() > 0)
 				{
@@ -132,14 +155,16 @@ void MixtureAnalysis::ShowCurrentComponents()
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0); ImGui::Text(std::to_string((n+1)).c_str());
 						ImGui::TableSetColumnIndex(1); ImGui::Text(Components.at(n).c_str());
-						ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_CriticalTemperatures.at(n), 4).c_str());
-						ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(m_CriticalPressures.at(n), 4).c_str());
-						ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_AcentricFactors.at(n), 4).c_str());
-						ImGui::TableSetColumnIndex(5); ImGui::Text(_Format(m_VaporPressures.at(n), 5).c_str());
+						//ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_CriticalTemperatures.at(n), 4).c_str());
+						//ImGui::TableSetColumnIndex(3); ImGui::Text(_Format(m_CriticalPressures.at(n), 4).c_str());
+						//ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_AcentricFactors.at(n), 4).c_str());
+						ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_VaporPressures.at(n), 5).c_str());
+						ImGui::TableSetColumnIndex(3); if(ImGui::SmallButton((liquidFraction_Components.at(n) == 0) ? "Input Mole Fraction" : _Format(liquidFraction_Components.at(n), 4).c_str())) changevalue = std::make_pair(true, n);
 					}
 				}
 			ImGui::EndTable();
-			}	
+			}
+			InputMolarFractions(changevalue);
 		}
 
 }
@@ -151,6 +176,8 @@ void MixtureAnalysis::ResetCurrentComponents()
 	m_CriticalPressures.clear();
 	m_AcentricFactors.clear();
 	m_VaporPressures.clear();
+	liquidFraction_Components.clear();
+	vaporFraction_Components.clear();
 }
 
 void MixtureAnalysis::VaporPressureCalculationMethod()
