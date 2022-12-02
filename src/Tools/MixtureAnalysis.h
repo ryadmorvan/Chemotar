@@ -45,9 +45,15 @@ private:
 
 	enum class VaporPressure
 	{ ANTOINE, SHORTCUT, NONE};
+	enum class FRACTIONS
+	{
+		NONE, LIQUID, VAPOR
+	};
 	std::array<std::string, 2> methods {"Antoine Vapor Pressure", "Shortcut Vapor Pressure"};
 	const char* current_specie = "Choose";
 	std::tuple<std::string, VaporPressure> Method = std::make_tuple<std::string, VaporPressure>("Choose", VaporPressure::NONE);
+
+	FRACTIONS molefraction_type = FRACTIONS::NONE;
 	//VaporPressure Method = VaporPressure::NONE;
 public:
 	static void MixtureAnalyisTool(bool* p_open);
@@ -58,6 +64,7 @@ public:
 	void ShowCurrentComponents();
 	void ResetCurrentComponents();
 	void VaporPressureCalculationMethod();
+	FRACTIONS ChooseMoleFraction();
 
 	void CalculateVaporPressures();
 	void InputTempPressure();

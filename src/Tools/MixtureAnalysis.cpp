@@ -29,6 +29,7 @@ void MixtureAnalysis::MixtureAnalyisTool(bool* p_open)
 					mixtures.ResetCurrentComponents();
 				}
 				mixtures.InputTempPressure();
+				mixtures.ChooseMoleFraction();
 				mixtures.ShowCurrentComponents();
 			}
 			ImGui::EndTabItem();
@@ -131,10 +132,11 @@ void MixtureAnalysis::ShowCurrentComponents()
 		static std::tuple<bool, unsigned int> changevalue;
 		static bool once = []() { changevalue = std::make_tuple<bool, unsigned>(false, 0); return true; } ();
 
+
 		//////////////////////////////////////////////////////////////////////////
 		if(std::get<1>(Method) == VaporPressure::SHORTCUT)
 		{
-			if(ImGui::BeginTable("Components", 4, flags, ImVec2(1000, 200)))
+			if(ImGui::BeginTable("Components", 5, flags, ImVec2(1000, 200)))
 			{
 				ImGui::TableSetupScrollFreeze(false, true);
 				static bool display_headers = false;
@@ -144,9 +146,18 @@ void MixtureAnalysis::ShowCurrentComponents()
 				//ImGui::TableSetupColumn("Temperature Critical (K)");
 				//ImGui::TableSetupColumn("Pressure Critical (MPa)");
 				//ImGui::TableSetupColumn("Acentric Factor");
+
 				std::string VaporPressure = "Vapor Pressure @" + _Format(m_temperature, 4) + "K (Mpa)";
 				ImGui::TableSetupColumn(VaporPressure.c_str());
-				ImGui::TableSetupColumn("Mole Fraction", ImGuiTableColumnFlags_WidthFixed, 0.0f);
+
+				//It will change according to what the user chooses
+				std::string fraction_type = "Mole Fraction";
+				std::string fraction_type2 = "Mole Fraction";
+				fraction_type += (molefraction_type == FRACTIONS::LIQUID) ? " (Liquid)" : " (Vapor)";
+				fraction_type2 += (molefraction_type != FRACTIONS::LIQUID) ? " (Liquid)" : " (Vapor)";
+				ImGui::TableSetupColumn(fraction_type.c_str(), ImGuiTableColumnFlags_WidthFixed, 0.0f);
+				ImGui::TableSetupColumn(fraction_type2.c_str(), ImGuiTableColumnFlags_WidthFixed, 0.0f);
+
 				ImGui::TableHeadersRow();
 				if(Components.size() > 0)
 				{
@@ -198,6 +209,17 @@ void MixtureAnalysis::VaporPressureCalculationMethod()
 		}
 		ImGui::EndCombo();
 	}
+}
+
+MixtureAnalysis::FRACTIONS MixtureAnalysis::ChooseMoleFraction()
+{
+	static int selection = 1;
+	//prompts the user to choose which fraction type they going to use
+	ImGui::RadioButton("Liquid Fraction", &selection, 1); ImGui::SameLine();
+	ImGui::RadioButton("Vapor Fraction", &selection, 2);
+	molefraction_type = (selection == 1) ? FRACTIONS::LIQUID : FRACTIONS::VAPOR;
+	//Chooses which fraction type they will use
+	return (selection == 1) ? FRACTIONS::LIQUID : FRACTIONS::VAPOR;
 }
 
 void MixtureAnalysis::CalculateVaporPressures()
