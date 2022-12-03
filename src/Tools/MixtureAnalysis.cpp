@@ -31,6 +31,7 @@ void MixtureAnalysis::MixtureAnalyisTool(bool* p_open)
 				mixtures.InputTempPressure();
 				mixtures.ChooseMoleFraction();
 				mixtures.ShowCurrentComponents();
+				mixtures.RunMixtureAnalysis();
 			}
 			ImGui::EndTabItem();
 		}
@@ -53,6 +54,7 @@ void MixtureAnalysis::InputMolarFractions(std::tuple<bool, unsigned int> &change
 				ImGui::TextColored(ImColor(59, 254, 225), "Input Mole Fraction");
 				ImGui::InputFloat("", &liquidFraction_Components.at(std::get<1>(change_molefraction)), 0.01f, 0.02f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 				if(ImGui::Button("Set")) {			change_molefraction = std::make_pair(false, 0);}
+				ImGui::EndPopup();
 			}
 
 		}
@@ -171,6 +173,7 @@ void MixtureAnalysis::ShowCurrentComponents()
 						//ImGui::TableSetColumnIndex(4); ImGui::Text(_Format(m_AcentricFactors.at(n), 4).c_str());
 						ImGui::TableSetColumnIndex(2); ImGui::Text(_Format(m_VaporPressures.at(n), 5).c_str());
 						ImGui::TableSetColumnIndex(3); if(ImGui::SmallButton((liquidFraction_Components.at(n) == 0) ? "Input Mole Fraction" : _Format(liquidFraction_Components.at(n), 4).c_str())) changevalue = std::make_pair(true, n);
+						ImGui::TableSetColumnIndex(4); if(current_state == State::BUBBLEPOINT) {ImGui::Text(_Format(vaporFraction_Components.at(n), 4).c_str());}
 					}
 				}
 			ImGui::EndTable();
@@ -218,6 +221,7 @@ MixtureAnalysis::FRACTIONS MixtureAnalysis::ChooseMoleFraction()
 	ImGui::RadioButton("Liquid Fraction", &selection, 1); ImGui::SameLine();
 	ImGui::RadioButton("Vapor Fraction", &selection, 2);
 	molefraction_type = (selection == 1) ? FRACTIONS::LIQUID : FRACTIONS::VAPOR;
+	current_state = (selection == 1) ? State::BUBBLEPOINT : State::DEWPOINT; //We choose either bubble or dewpoint
 	//Chooses which fraction type they will use
 	return (selection == 1) ? FRACTIONS::LIQUID : FRACTIONS::VAPOR;
 }
@@ -228,6 +232,35 @@ void MixtureAnalysis::CalculateVaporPressures()
 	{
 		float VaporPressure = m_CriticalPressures.at(n) * pow(10, 7.0f/3.0f*(1+ m_AcentricFactors.at(n)) * (1- (m_CriticalTemperatures.at(n)/m_temperature)));
 		m_VaporPressures.at(n) = VaporPressure;
+	}
+}
+
+void MixtureAnalysis::RunMixtureAnalysis()
+{
+	if(ImGui::Button("Run Mixture Analysis"))
+	{
+		//We check if all the fractions add to 1
+		if(current_state == State::BUBBLEPOINT)
+		{
+			//float total_fraction = 0;
+			//for(auto fraction : liquidFraction_Components)
+			//{
+			//	total_fraction += fraction;
+			//}
+			//if(total_fraction != 1.00)
+			//{
+			//	ImGui::OpenPopup("Error"); if(ImGui::BeginPopup("Error")) {ImGui::TextColored(ImColor(204, 51, 0), "All fractions must add to 1"); if(ImGui::Button("OK")) {ImGui::EndPopup(); return;}}
+			//}
+			m_pressure = 0;
+			for(unsigned n = 0; n < Components.size(); n++)
+			{
+				m_pressure += liquidFraction_Components.at(n)*m_VaporPressures.at(n);
+			}
+			for(unsigned n = 0; n < Components.size(); n++)
+			{
+				vaporFraction_Components.at(n) = (liquidFraction_Components.at(n)*m_VaporPressures.at(n))/m_pressure;
+			}
+		}
 	}
 }
 

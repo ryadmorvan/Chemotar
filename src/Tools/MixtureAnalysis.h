@@ -24,7 +24,7 @@ private:
 	PhysicalProperties m_properties;
 	VaporPressureCalculator AntoineCalculator;
 
-	float m_temperature = 150;
+	float m_temperature = 298.15;
 	float m_pressure = 1;
 
 	enum class State
@@ -67,6 +67,8 @@ public:
 	FRACTIONS ChooseMoleFraction();
 
 	void CalculateVaporPressures();
+	void RunMixtureAnalysis();
+
 	void InputTempPressure();
 
 	std::tuple<std::string, VaporPressure> VaporPressureMethod() {return Method;}
